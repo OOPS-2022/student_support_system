@@ -7,7 +7,7 @@ const mysql = require('mysql');
 const db = mysql.createPool({
     host:'localhost',
     user: 'root',
-    password: 'ICTPass7149',
+    password: 'password',
     database:'sdDataBase'
 });
 
