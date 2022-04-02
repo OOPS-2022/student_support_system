@@ -27,6 +27,14 @@ function CreateLog(){     // this is the create log page
   const [offenceLink, setOffenceLink] = useState("");
   const [offenceOther, setOffenceOther] = useState("");
 
+  const [offenceNameList, setOffenceNameList] = useState([]); 
+
+  function populateOffenceNameList(){
+    Axios.get("http://localhost:3001/getOffenceNameList").then((response) => {
+      setOffenceNameList(response.data);
+    });
+  }
+
   function proccessData( ){ 
   
     if (offenderName === "" || offenceType === "-1"  || offenceDetails === "" || offenceCode === "" || offenceLink === ""){
@@ -67,16 +75,14 @@ function CreateLog(){     // this is the create log page
         }} />
 
         <p><b>Offence* :</b>
+        
         <select id="offence_type" onChange={(e) => {
           setOffenceType(e.target.value); }} >
             <option value='-1'>Please choose an option</option>
-            <option value='Cheating'>Cheating</option>
             <option value='Plagiarism'>Plagiarism</option>
             <option value='Copying'>Copying</option>
             <option value='Impersonation'>Impersonation</option>
             <option value='Unauthorized Collaboration'>Unauthorized Collaboration</option>
-            <option value='Falsifying, misrepresenting, or forging an academic record or supporting document'>Falsifying, misrepresenting, or forging an academic record or supporting document</option>
-            <option value='Buying or otherwise obtaining term papers or assignments'>Buying or otherwise obtaining term papers or assignments</option>
             <option value='other'>Other</option>
             
         </select>
