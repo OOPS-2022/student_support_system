@@ -58,9 +58,16 @@ app.post("/createLog" , (req , res)=> {                     // post request to a
     
 });
 
-app.get("/viewOffences", (req,res)=>{ //fetch the data from the database to send to frontend
+app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the database to send to frontend
     const sqlSelect="select offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
     db.query(sqlSelect, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/viewPossibleOffences", (req,res)=>{
+    const sqlSelect="select offence_name, severity from offence_list where offence_name != 'other'";
+    db.query(sqlSelect, (error, result)=>{
         res.send(result);
     });
 });
