@@ -7,13 +7,16 @@ import Axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router , Route, Routes } from "react-router-dom";
 
-ReactDOM.render(  // bellow will contain the paths to each page
+ReactDOM.render(  // bellow will contain the paths to each page 
     <Router>
       <Routes>
-        <Route path = "/createlog" element ={<CreateLog />}/>  
+        <Route path = "/createlog" element ={<CreateLog />}/> 
+        <Route path = "/" element ={<Menu />}/> 
+        <Route path = "/academicOffenceMenu" element ={<AcademicOffenceMenu />}/>
+        <Route path = "/viewOffences" element ={<ViewOffences />}/>
       </Routes>
     </Router>,
-
+ 
   document.getElementById('root')
 );
 
@@ -122,6 +125,30 @@ function CreateLog(){     // this is the create log page
 
 
 
+}
+
+function Menu(){ //this is the menu page - notice "/" in route, shows on startup
+  return (
+    <div className='App'>
+      <h1>Menu</h1>
+    </div>
+    );
+}
+
+function AcademicOffenceMenu(){
+  return (
+    <div className='App'>
+      <h1>Academic Offence Menu</h1>
+    </div>
+    );
+}
+
+function ViewOffences(){
+  return (
+    <div className='App'>
+      <h1>View Offences</h1>
+    </div>
+    );
 }
 
 

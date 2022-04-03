@@ -58,6 +58,9 @@ app.post("/createLog" , (req , res)=> {                     // post request to a
     
 });
 
+app.get("/viewOffences", (req,res)=>{
+    const sqlSelect="Select offender_name, offence_name from "
+});
 
 app.listen(3001, () => {
     console.log("running on port 3001");
