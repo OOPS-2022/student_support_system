@@ -58,11 +58,10 @@ app.post("/createLog" , (req , res)=> {                     // post request to a
     
 });
 
-app.get("/viewOffences", (req,res)=>{
+app.get("/viewOffences", (req,res)=>{ //fetch the data from the database to send to frontend
     const sqlSelect="select offender_name, offence_name, crs_code from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id";
-    db.query(sqlSelect, (err, result) => {
-        console.log(error);
-        console.log(result);
+    db.query(sqlSelect, (error, result) => {
+        res.send(result);
     });
 });
 

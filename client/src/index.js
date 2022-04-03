@@ -144,11 +144,26 @@ function AcademicOffenceMenu(){
 }
 
 function ViewOffences(){
+  const [logged_offences, setLoggedOffences]=useState([])
+  useEffect(()=>{
+      Axios.get('http://localhost:3001/viewOffences').then((response)=>{
+        setLoggedOffences(response.data)
+      })
+    }, [])
+  
+  
+  
+  
   return (
     <div className='App'>
       <h1>View Offences</h1>
+      {logged_offences.map((val)=>{
+          return <p>Offender: {val.offender_name} | Offence:{val.offence_name} | Course: {val.crs_code}</p>
+      })}
     </div>
     );
+
+    
 }
 
 
