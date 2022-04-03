@@ -59,7 +59,11 @@ app.post("/createLog" , (req , res)=> {                     // post request to a
 });
 
 app.get("/viewOffences", (req,res)=>{
-    const sqlSelect="Select offender_name, offence_name from "
+    const sqlSelect="select offender_name, offence_name, crs_code from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id";
+    db.query(sqlSelect, (err, result) => {
+        console.log(error);
+        console.log(result);
+    });
 });
 
 app.listen(3001, () => {
