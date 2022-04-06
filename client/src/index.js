@@ -7,13 +7,17 @@ import Axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router , Route, Routes } from "react-router-dom";
 
-ReactDOM.render(  // bellow will contain the paths to each page
+ReactDOM.render(  // bellow will contain the paths to each page 
     <Router>
       <Routes>
-        <Route path = "/createlog" element ={<CreateLog />}/>  
+        <Route path = "/createlog" element ={<CreateLog />}/> 
+        <Route path = "/" element ={<Menu />}/> 
+        <Route path = "/academicOffenceMenu" element ={<AcademicOffenceMenu />}/>
+        <Route path = "/viewSubmittedOffences" element ={<ViewSubmittedOffences />}/>
+        <Route path = "/viewPossibleOffences" element ={<ViewPossibleOffences />}/>
       </Routes>
     </Router>,
-
+ 
   document.getElementById('root')
 );
 
@@ -122,6 +126,58 @@ function CreateLog(){     // this is the create log page
 
 
 
+}
+
+function Menu(){ //this is the menu page - notice "/" in route, shows on startup
+  return (
+    <div className='App'>
+      <h1>Menu</h1>
+    </div>
+    );
+}
+
+function AcademicOffenceMenu(){
+  return (
+    <div className='App'>
+      <h1>Academic Offence Menu</h1>
+    </div>
+    );
+}
+
+function ViewSubmittedOffences(){ //only for admin to see. see offences that have been logged
+  const [logged_offences, setLoggedOffences]=useState([])
+  useEffect(()=>{
+      Axios.get('http://localhost:3001/viewSubmittedOffences').then((response)=>{
+        setLoggedOffences(response.data)
+      })
+    }, [])
+  
+  return (
+    <div className='App'>
+      <h1>Offences that have been logged:</h1>
+      {logged_offences.map((val)=>{
+          return <p>Offender: {val.offender_name} | Offence:{val.offence_name} | Course: {val.crs_code}</p>
+      })}
+    </div>
+    );   
+}
+
+function ViewPossibleOffences(){ //for everyone to see. see offences that can be committed and their severity
+  const [possible_offences, setPossibleOffences]=useState([])
+  useEffect(()=>{
+      Axios.get('http://localhost:3001/viewPossibleOffences').then((response)=>{
+        setPossibleOffences(response.data)
+      })
+    }, [])
+
+  return (
+    <div className='App'>
+      <h1>View Possible Offences</h1>
+      {possible_offences.map((val)=>{
+          return <p>Offence:{val.offence_name} | Severity: {val.severity}</p>
+      })}
+    </div>
+    );
 }
 
 
