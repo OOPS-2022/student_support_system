@@ -6,4 +6,4 @@ Sprint 1:
 Finish the login screen
 Make menu screen with academic dishonesty button
 Make academic honesty report
-
+Finish dummy database
