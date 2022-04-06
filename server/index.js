@@ -16,7 +16,8 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.post("/createLog" , (req , res)=> {                     // post request to add a log
+app.post("/createLog" , (req , res)=> {   
+    // post request to add a log
     const offenderName = req.body.offenderName;
     const offenceType = req.body.offenceType;
     const offenceDetails = req.body.offenceDetails;
