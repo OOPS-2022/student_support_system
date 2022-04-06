@@ -1,0 +1,21 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      -image: circleci/node:10
+    steps:
+      -checkout
+      -run:
+        name: Install npm dependencies
+        command: 
+          npm instal --save
+      -run: cd server
+      -run: node index.js
+      -run: cd ..
+      -run: cd client
+      -run: npm start
+
+workflows:
+  build:
+    jobs:
+      -build
