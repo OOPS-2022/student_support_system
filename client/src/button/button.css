@@ -1,0 +1,14 @@
+
+
+.custom-button {
+    background-color: rgb(14,71,161);
+    min-width: 10rem;
+    height: 2rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.custom-button:hover {
+    background-color: rgb(60, 103, 173);
+}
