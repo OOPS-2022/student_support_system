@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Menu from './menu/menu';
 import AcademicOffenceMenu from './academicOffenceMenu/aofm';
+import { FileUploader } from "react-drag-drop-files";
 
 ReactDOM.render(  // bellow will contain the paths to each page 
   <Router>
@@ -33,8 +34,15 @@ function CreateLog() {     // this is the create log page
   const [offenceCode, setOffenceCode] = useState("");
   const [offenceLink, setOffenceLink] = useState("");
   const [offenceOther, setOffenceOther] = useState("");
+  const [file, setFile] = useState(null);
 
   const [offenceNameList, setOffenceNameList] = useState([]);
+
+  const fileTypes = ["JPG", "PDF"];
+  const handleChange = (file) => {
+    setFile(file);
+  };
+
 
   function populateOffenceNameList() {
     Axios.get("http://localhost:3001/getOffenceNameList").then((response) => {
@@ -119,9 +127,8 @@ function CreateLog() {     // this is the create log page
 
         <form>
           Evidence* :
-          <input type="text" name="evidence" onChange={(e) => {
-            setOffenceLink(e.target.value);
-          }} />
+          <FileUploader handleChange={handleChange} name="file" types={fileTypes} multiple='false'/>
+            
         </form>
         <button onClick={() => {
           submitLog();
