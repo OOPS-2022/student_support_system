@@ -1,5 +1,11 @@
 .App {
-  text-align: center;
+  display: flex;
+  align-items: center;
+
+}
+
+body {
+  background-color: rgb(229,229,229);
 }
 
 .form{
