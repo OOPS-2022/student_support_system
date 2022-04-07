@@ -5,7 +5,10 @@ import './aofm.css';
 import { Link } from 'react-router-dom';
 import image from '../wits_logo.png';
 import GridList from '../gridList/gridList.jsx';
+import { sendUserInfo } from '../index.js';
 
+var user_info=sendUserInfo();
+var role=user_info[0].role;
 
 
 
@@ -14,22 +17,23 @@ const gridList_props = [
     {
       header: "Log Offence",
       button_description: "LOG",
-      onclick : "" 
+      onclick : "/createLog",
+      visibility: "hidden"
     },,
     {
         header: "View Offences",
         button_description: "VIEW",
-        onclick : "" 
+        onclick : "/viewPossibleOffences" 
       },,
       {
         header: "View Submissions",
         button_description: "VIEW",
-        onclick : "" 
+        onclick : "/viewSubmittedOffences" 
       },,
       {
         header: "Edit Offences",
         button_description: "EDIT",
-        onclick : "" 
+        onclick : "/offencelist" 
       }
 ];
 const buttonStyle = {

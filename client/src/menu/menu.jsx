@@ -1,4 +1,5 @@
 import '../index.js' 
+import { sendUserInfo } from '../index.js';
 import React from 'react';
 import Button from '../button/button';
 import Card from '../card/card.jsx';
@@ -60,7 +61,7 @@ function Menu() { //this is the menu page - notice "/" in route, shows on startu
         
     }
  
-
+    var user_info=sendUserInfo();
     return (
         <>
             <div className="App" >
@@ -68,9 +69,6 @@ function Menu() { //this is the menu page - notice "/" in route, shows on startu
                     <img src={image} height={80} width={80} />
                     <Header1 text="WITS SUPPORT CENTRE" /> 
                     <Button buttonText="HELP" style={buttonStyle} />  
-                    <Link to={"/Login"}>
-                        <Button  buttonText="SIGN IN" style={buttonStyle} />
-                    </Link>
                     
                 </div>
                 
