@@ -6,36 +6,10 @@ import { Link } from 'react-router-dom';
 import image from '../wits_logo.png';
 import GridList from '../gridList/gridList.jsx';
 import { sendUserInfo } from '../index.js';
-
-var user_info=sendUserInfo();
-var role=user_info[0].role;
+import { useNavigate } from "react-router-dom";
 
 
 
-
-const gridList_props = [
-    {
-      header: "Log Offence",
-      button_description: "LOG",
-      onclick : "/createLog",
-      visibility: "hidden"
-    },,
-    {
-        header: "View Offences",
-        button_description: "VIEW",
-        onclick : "/viewPossibleOffences" 
-      },,
-      {
-        header: "View Submissions",
-        button_description: "VIEW",
-        onclick : "/viewSubmittedOffences" 
-      },,
-      {
-        header: "Edit Offences",
-        button_description: "EDIT",
-        onclick : "/offencelist" 
-      }
-];
 const buttonStyle = {
     width: "50px",
     margin : "25px",
@@ -55,14 +29,33 @@ function Header1(props){
     return <h1> {props.text}</h1>;
     
 }
+
+
+function AcademicOffenceMenu(){
+  let navigate = useNavigate();
+  var user_info=sendUserInfo();
+  if (user_info!=null){
+    var role= user_info[0].role;
+  }
+  else{
+    navigate("/");
+  }
+  
+  const gridList_props = [{header: "Log Offence", button_description: "LOG", action: () =>  navigate("/createLog"),},,
+  {header: "View Offences", button_description: "VIEW", action: () =>  navigate("/viewPossibleOffences"), } ];  
+  if (role =="admin"){ 
+    gridList_props.push(  
+      {header: "View Submissions", button_description: "VIEW", action: () =>  navigate("/viewSubmittedOffences"),  } ) 
+      gridList_props.push({header: "Edit Offences", button_description: "EDIT", action: () =>  navigate("/offencelist"),})
+  };
+
 let gridList = [];
 
 gridList_props.forEach((prop, index) => {
-    gridList.push(<GridList key={index} header={prop.header} description={prop.description} button_description={prop.button_description} onclick={prop.onclick}/>)
+    gridList.push(<GridList key={index} header={prop.header} description={prop.description} button_description={prop.button_description} action={prop.action}/>)
   });
 
-function AcademicOffenceMenu(){
-    return (
+  return (
         <>
             <div className="App" >
                 <div style={{ display: "flex",}}>

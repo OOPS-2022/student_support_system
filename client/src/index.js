@@ -11,6 +11,25 @@ import AcademicOffenceMenu from './academicOffenceMenu/aofm';
 import { FileUploader } from "react-drag-drop-files";
 import styled from "styled-components";
 import logo from './wits_logo.png';
+import image from './wits_logo.png';
+import Button from './button/button';
+
+
+const buttonStyle2 = {
+  minWidth: "10px",
+  margin : "25px",
+  backgroundColor :"white",
+  color: "black",
+}
+
+const buttonStyle = {
+  width: "50px",
+  margin : "25px",
+}
+
+function Header1(props){
+  return <h1> {props.text}</h1>;
+}
 
 ReactDOM.render(  // bellow will contain the paths to each page 
   <Router>
@@ -55,7 +74,7 @@ function CreateLog() {     // this is the create log page
 
   function proccessData() {
 
-    if (offenderName === "" || offenceType === "-1" || offenceDetails === "" || offenceCode === "" || offenceLink === "") {
+    if (offenderName === "" || offenceDetails === "" || offenceCode === "" ) {
       return false;
     }
 
@@ -82,7 +101,15 @@ function CreateLog() {     // this is the create log page
     }
   }
 
+  const [possible_offences, setPossibleOffences] = useState([]) //to display list of offences for admin to see while editing
+    useEffect(() => {
+      Axios.get('http://localhost:3001/viewPossibleOffences').then((response) => {
+        setPossibleOffences(response.data)
+      })
+    }, [])
+  
   return (
+
     <div className="App">
       <h1> CRUD App</h1>
 
@@ -97,12 +124,10 @@ function CreateLog() {     // this is the create log page
           <select id="offence_type" onChange={(e) => {
             setOffenceType(e.target.value);
           }} >
-            <option value='-1'>Please choose an option</option>
-            <option value='Plagiarism'>Plagiarism</option>
-            <option value='Copying'>Copying</option>
-            <option value='Impersonation'>Impersonation</option>
-            <option value='Unauthorized Collaboration'>Unauthorized Collaboration</option>
-            <option value='other'>Other</option>
+          {possible_offences.map((val) => {
+          return <option>{val.offence_name}</option>
+          })}
+          <option>other</option>
 
           </select>
         </p>
@@ -148,39 +173,167 @@ function CreateLog() {     // this is the create log page
 
 function ViewSubmittedOffences() { //only for admin to see. see offences that have been logged
   const [logged_offences, setLoggedOffences] = useState([])
+  const colNames = ["Offender Name", "Offence Name", "Course Code", "Status"];
+
+  let navigate = useNavigate();
+
+  function back(){
+    navigate("/AcademicOffenceMenu");
+ }
+
   useEffect(() => {
     Axios.get('http://localhost:3001/viewSubmittedOffences').then((response) => {
       setLoggedOffences(response.data)
     })
   }, [])
 
-  return (
-    <div className='App'>
-      <h1>Offences that have been logged:</h1>
-      {logged_offences.map((val) => {
-        return <p>Offender: {val.offender_name} | Offence:{val.offence_name} | Course: {val.crs_code}</p>
-      })}
-    </div>
-  );
+  
+  function Table({logged_offences, colNames, width = "700px", height = "250px"}) {
+    return (
+      <div className="viewOffences">
+            <table cellSpacing="20" style={{width: "700px", height: "250px"}}>
+                  <thead>
+                    <tr>
+                      {colNames.map((headerItem, index) =>  (
+                        <th key = {index}>
+                          {headerItem.toUpperCase()} 
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>  
+  
+                  <tbody>
+                    {Object.values(logged_offences).map((obj, index) => (
+                      <tr key={index}>
+                        {Object.values(obj).map((value, index2) =>
+                          <td key={index2}>
+                              {value}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+  
+            </table>   
+      </div>
+    );
+  }
+
+    return (
+
+      <>
+  
+        <div className='viewOffences'>
+  
+                    <div style={{ display: "flex",}}>
+  
+                      <Button  buttonText="BACK" style={buttonStyle2} action={back} />
+  
+                    </div>
+  
+                    <div style={{ display: "flex", marginLeft: "23%" }}>
+  
+                        <img src={image} height={80} width={80} />
+  
+                        <Header1 text={"SUBMITTED OFFENCES"} />
+  
+                        <Button buttonText="HELP" style={buttonStyle}  />  
+  
+                       
+  
+                       
+  
+                    </div>
+                    </div>
+
+<div style={{ display: "flex",marginLeft: "15%"}}>
+ <Table logged_offences={logged_offences} colNames={colNames} />
+</div>
+</>
+);
 }
 
 function ViewPossibleOffences() { //for everyone to see. see offences that can be committed and their severity
   const [possible_offences, setPossibleOffences] = useState([])
+  const colNames = ["Offence", "Severity"];
+
+  let navigate = useNavigate();
+
+  function back(){
+    navigate("/AcademicOffenceMenu");
+ }
+
   useEffect(() => {
     Axios.get('http://localhost:3001/viewPossibleOffences').then((response) => {
       setPossibleOffences(response.data)
     })
   }, [])
 
-  return (
-    <div className='App'>
-      <h1>View Possible Offences</h1>
-      {possible_offences.map((val) => {
-        return <p>Offence:{val.offence_name} | Severity: {val.severity}</p>
-      })}
-    </div>
-  );
+  function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
+    return (
+      <div className="viewOffences">
+            <table cellSpacing="20" style={{width: "500px", height: "250px"}}>
+                  <thead>
+                    <tr>
+                      {colNames.map((headerItem, index) =>  (
+                        <th key = {index}>
+                          {headerItem.toUpperCase()} 
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>  
+  
+                  <tbody>
+                    {Object.values(possible_offences).map((obj, index) => (
+                      <tr key={index}>
+                        {Object.values(obj).map((value, index2) =>
+                          <td key={index2}>
+                              {value}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+  
+            </table>   
+      </div>
+    );
+  }
+
+    return (
+
+      <>
+  
+        <div className='viewOffences'>
+  
+                    <div style={{ display: "flex",}}>
+  
+                      <Button  buttonText="BACK" style={buttonStyle2} action={back} />
+  
+                    </div>
+  
+                    <div style={{ display: "flex", marginLeft: "23%" }}>
+  
+                        <img src={image} height={80} width={80} />
+  
+                        <Header1 text={"POSSIBLE OFFENCES"} />
+  
+                        <Button buttonText="HELP" style={buttonStyle}  />  
+  
+                       
+  
+                       
+  
+                    </div>
+                    </div>
+
+<div style={{ display: "flex",marginLeft: "22%"}}>
+ <Table possible_offences={possible_offences} colNames={colNames} />
+</div>
+</>
+);
 }
+                   
 
 var user_info={};
 
@@ -299,73 +452,91 @@ function CreateLogin(){
 
 function EditOffences(){
   const colNames = ["Offence", "Severity"];
-  const [offencename,setOffencename]= useState("");
-  const [severity,setSeverity] = useState("");
-  const list = [{Offence: "Copy", Severity: 1}, {Offence: "Cheat", Severity: 3}, 
-  {Offence: "Plaig", Severity: 2}, {Offence: "test", Severity: 100}]
+  let navigate=useNavigate();
 
+  const [possible_offences, setPossibleOffences] = useState([]) //to display list of offences for admin to see while editing
+  useEffect(() => {
+    Axios.get('http://localhost:3001/viewPossibleOffences').then((response) => {
+      setPossibleOffences(response.data)
+    })
+  }, [])
 
-  const addoffence = () =>{
-    Axios.post('https://localhost:3000/adjustlist/insert', {
-      offencename: offencename, 
-      severity: severity
-    }).then(() =>
-    alert("New offence added"));
-  }
-
-  const editoffence = () =>{
-    Axios.post('https://localhost:3000/adjustlist/update',{
-      offencename: offencename, 
-      severity: severity
-    }).then(() =>
-    alert("offence updated"));
-  }
-
-  const deloffence = () =>{
-    Axios.post('https://localhost:3000/adjustlist/delete',{
-      offencename: offencename
-    }).then(() =>
-    alert("offence deleted"));
-  }
-   
-  function delOF(){
-    if (offencename == ""){
-      alert("fill in offence name");
-    }
-    else{
-      deloffence();
-    }
-  }
-
-  function editOF(){
-    if (offencename == "" && severity ==""){
-      alert("fill in offence name and severity level");
-    }
-    else{
-      editoffence();
-    }
-  }
-  
-  function addOF(){
-    if (offencename == "" && severity ==""){
-      alert("fill in offence name and severity level");
-    }
-    else{
-      addoffence();
-    }
-  }
-
-  function Header1(props){
-    return <h1> {props.text}</h1>;
+ 
+    const [offencename,setOffencename]= useState("");
+    const [severity,setSeverity] = useState("");
     
-  }
-
-  function Button(props) {
-    const isDisabled = props?.disabled ?? false;
-    return (
-        <button className="custom-button" onClick = {props?.click} style={props?.style} disabled={isDisabled}>{props.buttonText}</button>
-    )
-  }
+    const Button = styled.button`
+      background-color: rgb(14,71,161);
+      min-width: 10rem;
+      height: 2rem;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    `;
+  
+    function Header1(props){
+      return <h1> {props.text}</h1>;
+    }
+  
+  
+    const [arrList,setarrList] = useState([]);
+    
+    function changeSelect(name){
+      Axios.post("http://localhost:3001/selectY",{offenceName: name}).then((response)=>{
+          setarrList(response.data);
+          console.log(response.data);
+        });
+    }
+  
+    function changeAdd(){
+      if (offencename.length==0 || severity.length==0){
+        alert("Please fill in details");
+        return;
+      }
+      
+      if(arrList.length>0){
+        alert("exists");
+      }
+      else{
+        let inum = parseInt(severity, 10);
+        Axios.post("http://localhost:3001/insertY",{
+          offenceName: offencename, 
+          severity: inum,
+        }).then(alert("Added"));
+      }
+      
+    }
+  
+    function changeUpdate(){
+      if (arrList.length>0){
+        let inum = parseInt(severity, 10);
+        Axios.post("http://localhost:3001/updateY",{
+          offenceName: offencename, 
+          severity: inum,
+        }).then(alert("Updated"));
+      }
+      else{
+        alert("name does not exist");
+      }
+      
+    }
+  
+    function changeDelete(){
+      if(arrList.length>0){
+        Axios.post("http://localhost:3001/deleteY",{
+          offenceName: offencename, 
+        }).then(alert("deleted"));
+      }
+      else{
+        alert("record does not exist");
+      }
+      
+    }
+  
+    function back(){
+      navigate("/AcademicOffenceMenu");
+    }
+    
 
   const buttonStyle = {
     width: "50px",
@@ -382,7 +553,7 @@ function EditOffences(){
   
   }
 
-  function Table({list, colNames, width = "auto", height = "auto"}) {
+  function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
     return (
       <div className="App">
             <table cellSpacing="20" style={{width: "350px", height: "250px", padding: "10px 885px"}}>
@@ -397,7 +568,7 @@ function EditOffences(){
                   </thead>  
   
                   <tbody>
-                    {Object.values(list).map((obj, index) => (
+                    {Object.values(possible_offences).map((obj, index) => (
                       <tr key={index}>
                         {Object.values(obj).map((value, index2) =>
                           <td key={index2}>
@@ -420,12 +591,12 @@ function EditOffences(){
             <div style={{ display: "flex", marginLeft: "20%" }}>
               <img src={logo} height={80} width={80} />
               <Header1 text="OFFENCE LIST AND OFFENCE EDITING" />
-              <Button buttonText="HELP" style={buttonStyle} />         
+              <Button buttonText="HELP" style={buttonStyle} >HELP</Button>         
             </div>
           </div>
 
           <div id="table">
-            <Table list={list} colNames={colNames} />
+            <Table possible_offences={possible_offences} colNames={colNames} />
           </div>
           
           <div id="inText">
@@ -436,7 +607,9 @@ function EditOffences(){
             <form id = "input1">
               <text>Offence name:</text>
               <input type="text" name="inOffence"  onChange={(e) => {
-                setOffencename(e.target.value); }}/> 
+                setOffencename(e.target.value); 
+                changeSelect(e.target.value);
+                }}/> 
             </form>
 
             <form>
@@ -446,14 +619,16 @@ function EditOffences(){
             </form>
 
             <form>
-              <Button onClick={addOF} buttonText="ADD" style={buttonStyle} />
-              <Button onClick={editOF} buttonText="Edit" style={buttonStyle} />
-              <Button onClick={delOF} buttonText="Delete" style={buttonStyle} />
+            
+              <Button onClick={changeAdd} marginLeft="4px">add</Button>
+              <Button onClick={changeUpdate} >edit</Button>
+              <Button onClick={changeDelete}>delete</Button>
+            
             </form>
           </div>
 
           <div id="buttons">
-              <Button  buttonText="BACK" style={buttonStyle2} />
+              <Button  buttonText="BACK" style={buttonStyle2} onClick={back}>BACK</Button>
           </div>          
 
     </div>

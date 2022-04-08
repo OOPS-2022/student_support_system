@@ -23,9 +23,7 @@ function GridList(props) {
         </div>
 
         <div className="bottom-div">
-          <Link to={props?.onclick}>
-              <Button  buttonText= {props?.button_description} style={buttonStyle} />
-          </Link>
+          <Button  buttonText= {props?.button_description} style={buttonStyle} action={props?.action}/>
         </div>
 
       </div>

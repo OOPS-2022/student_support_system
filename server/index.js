@@ -61,14 +61,15 @@ app.post("/createLog" , (req , res)=> {
 });
 
 app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the database to send to frontend
-    const sqlSelect="select offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
+    const sqlSelect="select offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code, offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
     db.query(sqlSelect, (error, result) => {
         res.send(result);
+        console.log(result);
     });
 });
 
 app.get("/viewPossibleOffences", (req,res)=>{
-    const sqlSelect="select offence_name, severity from offence_list where offence_name != 'other'";
+    const sqlSelect="select offence_id, offence_name, severity from offence_list where offence_name != 'other'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
     });
@@ -87,63 +88,44 @@ app.post("/apiLogin/getInfo",(req, res) => {
 //-------------------------------------------------------------end login
 
 //-------------------------------------------------------------viewedit offence list
-app.post("/adjustlist/select", (req, res)=> {
-    const offencename = "Plagiarism";
-    const sqlSelect = "SELECT offence_name FROM offence_list WHERE offence_name = ?";
-    db.query(sqlSelect,[offencename],(err,result) =>{
-        console.log(result);
+app.post("/insertY",(req, res)=>{
+    const offenceName = req.body.offenceName;
+    const severity = req.body.severity;
+    console.log(offenceName);
+    const sqlSelect = "Insert into offence_list(offence_name, severity) values(?,?)";
+    db.query(sqlSelect,[offenceName,severity],(err,result)=>{
+        console.log("inserted");
+        res.send("inserted");
     });
 });
-     
-app.post("/adjustlist/insert", (req, res)=>{
-    const offencename = req.body.offencename;
-    const severity = req.body.severity;
-    
-    const sqlSelect = "SELECT offence_name FROM offence_list WHERE offence_name = ?";
-    db.query(sqlSelect,[offencename],(err,result) => {
-        console.log(err);
+
+app.post("/selectY",(req, res)=>{
+    const offenceName = req.body.offenceName;
+    const sqlSelect = "select * from offence_list where offence_name = ?";
+    db.query(sqlSelect,[offenceName],(err,result)=>{
+         console.log(result);
         res.send(result);
-        let offlength = result.length;
-        console.log(offlength);
-        if  (offlength> 0){
-            alert('Offense already added');
-        } 
-        else{
-            const sqlinsert = "INSERT INTO offence_list(offence_name,severity) VALUES(?,?)";
-            db.query(sqlinsert,[offencename,severity],[err,request ]);
-            alert('New offence added');
-        }
     });
 });
 
-app.post("/adjustlist/update",(req, res) =>{
-    const severity = req.body.severity;
-    const uOffencename = req.body.offencename;
-
-    const sqlSelect = "SELECT FROM offence_list WHERE offence_name = ?";
-    
-    db.query(sqlSelect,[uOffencename],(err,result) => {
-        let offlength = result.length;
-        if  (offlength> 0){
-            alert("Offence not found");
-        }
-        else{
-            const sqlupdate= "UPDATE offence_list SET severity = ? WHERE offence_name = ?";
-            db.query(sqlupdate,[severity,uOffencename],(err,result));
-            alert("Offence updated");
-        }
+app.post("/deleteY",(req, res)=>{
+    const offenceName = req.body.offenceName;
+    const sqlSelect = "Delete from offence_list where offence_name = ?";
+    db.query(sqlSelect,[offenceName],(err,result)=>{
+        console.log("delete");
+        res.send("delete");
     });
-    
-
 });
 
-app.post("/adjustlist/delete", (req, res) => {
-    const dOffencename = req.body.offencename;
-    const sqldelete= "DELETE FROM offence_list WHERE offence_name = ?";
-    db.query(sqldelete,[dOffencename],(err,result));
-    alert("Offence deleted")
+app.post("/updateY",(req, res)=>{
+    const offenceName = req.body.offenceName;
+    const serverity = req.body.severity;
+    const sqlSelect = "UPDATE offence_list SET severity = ? WHERE offence_name = ?";
+    db.query(sqlSelect,[serverity,offenceName],(err,result)=>{
+        console.log("update");
+        res.send("update");
+    });
 });
-
 //-------------------------------------------------------------end viewedit offence list
 
 
