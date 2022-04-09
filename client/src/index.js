@@ -255,7 +255,7 @@ function ViewSubmittedOffences() { //only for admin to see. see offences that ha
 
 function ViewPossibleOffences() { //for everyone to see. see offences that can be committed and their severity
   const [possible_offences, setPossibleOffences] = useState([])
-  const colNames = ["Offence", "Severity"];
+  const colNames = ["Offence Id","Offence", "Description","Severity"];
 
   let navigate = useNavigate();
 
@@ -276,7 +276,7 @@ function ViewPossibleOffences() { //for everyone to see. see offences that can b
                   <thead>
                     <tr>
                       {colNames.map((headerItem, index) =>  (
-                        <th key = {index}>
+                        <th key = {index} >
                           {headerItem.toUpperCase()} 
                         </th>
                       ))}
@@ -451,7 +451,7 @@ function CreateLogin(){
 
 
 function EditOffences(){
-  const colNames = ["Offence", "Severity"];
+  const colNames = ["Offence Id","Offence", "Description","Severity"];
   let navigate=useNavigate();
 
   const [possible_offences, setPossibleOffences] = useState([]) //to display list of offences for admin to see while editing

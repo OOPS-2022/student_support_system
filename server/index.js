@@ -69,7 +69,7 @@ app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the databas
 });
 
 app.get("/viewPossibleOffences", (req,res)=>{
-    const sqlSelect="select offence_id, offence_name, severity from offence_list where offence_name != 'other'";
+    const sqlSelect="select offence_id, offence_name, offence_desc, severity from offence_list where offence_name != 'other'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
     });
