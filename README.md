@@ -7,3 +7,5 @@ Finish the login screen
 Make menu screen with academic dishonesty button
 Make academic honesty report
 Try to configure CI
+
+[![OOPS-2022](https://circleci.com/gh/OOPS-2022/https://github.com/OOPS-2022/student_support_system.git.svg?style=svg)]
