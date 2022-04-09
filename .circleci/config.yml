@@ -18,7 +18,7 @@ jobs:
   test:
   docker:
     - image: cimg/node:16.10
-    steps:
+  steps:
     - checkout
     - run:
         name: Run tests
