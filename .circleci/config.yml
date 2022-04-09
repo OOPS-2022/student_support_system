@@ -13,9 +13,7 @@ jobs:
       - run:
           command: npm run test
           name: Run tests
-      - run:
-          command: npm run build
-          name: Build app
+     
 
   deploy: # this can be any name you choose
     docker:
