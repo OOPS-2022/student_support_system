@@ -8,4 +8,4 @@ Make menu screen with academic dishonesty button
 Make academic honesty report
 Try to configure CI
 
-[![<ORG_NAME>](https://circleci.com/<VCS>/<ORG_NAME>/<PROJECT_NAME>.svg?style=svg)]
+[![OOPS-2022](https://circleci.com/<VCS>/OOPS-2022/student_support_system.svg?style=svg)]
