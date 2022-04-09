@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/public
     docker:
-      - image: circleci/node:16.10
+      - image: cimg/node:16.10
     steps:
       - checkout
       - node/install-packages:
@@ -14,10 +14,15 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json"}}
           paths:
-            
-      - run:
-          name: Run tests
-          command: npm test
+
+  test:
+  docker:
+    - image: cimg/node:16.10
+    steps:
+    - checkout
+    - run:
+        name: Run tests
+        command: npm test
 
 workflows:
   # Below is the definition of your workflow.
@@ -25,6 +30,9 @@ workflows:
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
     jobs:
-      - build
+      build_and_test:
+        jobs:
+          - build
+          - test
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
