@@ -1,5 +1,5 @@
 # student_support_system
-
+[![NPM Package](https://img.shields.io/npm/v/npm)]
 Build student support system website. More details to come
 
 Sprint 1: 
