@@ -1,5 +1,4 @@
 import '../index.js' 
-import { sendUserInfo } from '../index.js';
 import React from 'react';
 import Button from '../button/button';
 import Card from '../card/card.jsx';
@@ -62,7 +61,6 @@ const CARD_PROPS = [
         
     }
  
-    var user_info=sendUserInfo();
     return (
         <>
             <div className="App" >

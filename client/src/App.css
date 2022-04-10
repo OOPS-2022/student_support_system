@@ -58,3 +58,31 @@ th
   background-color: rgb(145, 114, 72);
   color:black;
 }
+
+.column-wrapper3 {
+
+  width: calc(90% - 1rem);
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(1, 7fr);
+  grid-auto-rows: 50px;
+
+
+ 
+}
+.wrapper{
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+
+}
+
+.block{
+  background-color: white;
+  width: calc(40% - 4rem);
+  margin-left: auto;
+  margin-right: auto;
+
+}

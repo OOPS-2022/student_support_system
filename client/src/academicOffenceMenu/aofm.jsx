@@ -5,7 +5,6 @@ import './aofm.css';
 import { Link } from 'react-router-dom';
 import image from '../wits_logo.png';
 import GridList from '../gridList/gridList.jsx';
-import { sendUserInfo } from '../index.js';
 import { useNavigate } from "react-router-dom";
 
 
@@ -33,11 +32,8 @@ function Header1(props){
 
 function AcademicOffenceMenu(){
   let navigate = useNavigate();
-  var user_info=sendUserInfo();
-  if (user_info!=null){
-    var role= user_info[0].role;
-  }
-  else{
+  var role= localStorage.getItem("user_role")
+  if (role==null){
     navigate("/");
   }
   

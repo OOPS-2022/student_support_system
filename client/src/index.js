@@ -66,6 +66,11 @@ function CreateLog() {     // this is the create log page
   };
 
 
+  let navigate = useNavigate();
+  function back(){
+    navigate("/AcademicOffenceMenu");
+ }
+
   function populateOffenceNameList() {
     Axios.get("http://localhost:3001/getOffenceNameList").then((response) => {
       setOffenceNameList(response.data);
@@ -74,12 +79,17 @@ function CreateLog() {     // this is the create log page
 
   function proccessData() {
 
-    if (offenderName === "" || offenceDetails === "" || offenceCode === "" ) {
+    if (offenderName === "" || offenceDetails === "" ) {
       return false;
     }
 
-    if (offenceType === "other" && offenceOther === "") {
-      return false;
+    if (offenceType == -1) {
+      if(offenceOther === ""){
+        return false;
+      } else{
+        offenceType = "other";
+        return true;
+      }
     }
     return true;
   }
@@ -95,6 +105,8 @@ function CreateLog() {     // this is the create log page
         offenceCode: offenceCode,
         offenceLink: offenceLink,
         offenceOther: offenceOther,
+        submittedBy : localStorage.getItem("user_id"),
+        offenceStatus: "Pending"
       }).then((res) => {
         alert(res.data);
       });
@@ -103,68 +115,77 @@ function CreateLog() {     // this is the create log page
 
   const [possible_offences, setPossibleOffences] = useState([]) //to display list of offences for admin to see while editing
     useEffect(() => {
-      Axios.get('http://localhost:3001/viewPossibleOffences').then((response) => {
+      Axios.get('http://localhost:3001/offences').then((response) => {
         setPossibleOffences(response.data)
       })
     }, [])
   
   return (
-
+<>
     <div className="App">
-      <h1> CRUD App</h1>
+      <div style={{ display: "flex",}}>
+                   <Button  buttonText="BACK" style={buttonStyle2} action={back} />
+      </div>
+             
+      <div style={{ display: "flex", marginLeft: "25%" }}>
+                      <img src={image} height={80} width={80} />
+                      <Header1 text="CREATE LOG" /> 
+                      <Button buttonText="HELP" style={buttonStyle} />
+      </div>
+    </div>
+      <div className='block'>
+        <div className='column-wrapper3'>
 
-      <div>
-        <label>Offender name:</label>
+
+        
+        <label style={{marginTop: "10px", fontSize: 22}}>Student Number:</label>
         <input type="text" name="offenderName" onChange={(e) => {
           setOffenderName(e.target.value);
         }} />
 
-        <p><b>Offence* :</b>
+        <p style={{marginTop: "10px", fontSize: 22}}><b>Offence* :</b>
 
-          <select id="offence_type" onChange={(e) => {
+          <select select style={{marginTop: "10px", fontSize: 15}} id="offence_type" onChange={(e) => {
             setOffenceType(e.target.value);
           }} >
           {possible_offences.map((val) => {
           return <option>{val.offence_name}</option>
           })}
-          <option>other</option>
+          <option value="5">other</option>
 
           </select>
         </p>
 
-        <form>
-          Other : (please specify)
+        <label style={{marginTop: "10px", fontSize: 22}}>
+          Other : (please specify)</label>
           <input type="text" name="offence_type_other" onChange={(e) => {
             setOffenceOther(e.target.value);
           }} />
-        </form>
+        
 
-        <form>
-          Details of offence* :
+        <label style={{marginTop: "10px", fontSize: 22}}> Details of offence* :</label> 
           <input type="text" name="offence_details" onChange={(e) => {
             setOffenceDetails(e.target.value);
           }} />
-        </form>
 
-        <form>
-          Course Code* :
+        <label style={{marginTop: "10px", fontSize: 22}}>  Course Code* :</label>
           <input type="text" name="course_code" onChange={(e) => {
             setOffenceCode(e.target.value);
           }} />
-        </form>
+        
           
-        <form>
-          Evidence* : 
+        <label style={{marginTop: "10px", fontSize: 22}}>  Evidence* :</label>  
           <FileUploader handleChange={handleChange} name="file" types={fileTypes} multiple='false'/>
             
-        </form>
-        <button onClick={() => {
-          submitLog();
-        }}>Create Log</button>
+        
+
+         <div className = "wrapper">
+            <Button buttonText={"CREATE"} style={{width: "50px",marginTop: "10px"}} action={submitLog} />
+          </div>
       </div>
 
     </div>
-
+</>
   );
 
 
@@ -187,7 +208,6 @@ function ViewSubmittedOffences() { //only for admin to see. see offences that ha
     })
   }, [])
 
-  
   function Table({logged_offences, colNames, width = "700px", height = "250px"}) {
     return (
       <div className="viewOffences">
@@ -255,9 +275,11 @@ function ViewSubmittedOffences() { //only for admin to see. see offences that ha
 
 function ViewPossibleOffences() { //for everyone to see. see offences that can be committed and their severity
   const [possible_offences, setPossibleOffences] = useState([])
-  const colNames = ["Offence Id","Offence", "Description","Severity"];
+  const colNames = ["Offence", "Description","Severity"];
 
   let navigate = useNavigate();
+
+  
 
   function back(){
     navigate("/AcademicOffenceMenu");
@@ -268,6 +290,8 @@ function ViewPossibleOffences() { //for everyone to see. see offences that can b
       setPossibleOffences(response.data)
     })
   }, [])
+
+
 
   function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
     return (
@@ -333,59 +357,32 @@ function ViewPossibleOffences() { //for everyone to see. see offences that can b
 </>
 );
 }
-                   
-
-var user_info={};
-
-export function sendUserInfo(){
-    return user_info;
-  }
 
 function CreateLogin(){
   const [lgEmail, setlgEmail] = useState("");
   const [lgPassword, setlgPassword] = useState("");
-  const [lgUserList,setlgUserList] = useState([]);
-  //const [lgcUser_ID,setlgcUser_ID] = useState("");
-  //const [lgcPassword,setlgcPassword] = useState("");
-  //const [lgRole,setlgRole] = useState("");
   var lgcUser_id ="";
   var lgRole ="";
   const navigate = useNavigate();
-
-  
-
-  function setlgUserInfo(email){
-      Axios.post("http://localhost:3001/apiLogin/getInfo",{setlgEmail: email}).then((response)=>{
-        setlgUserList(response.data);
-        user_info=response.data;
-        console.log(response.data);
-      });
-
-  }
-
-  
 
   function checkPassEmail(){
     if(lgPassword == ""){
      alert('Please type username and password');
      return;
    }
-  if(lgUserList.length>0){
-    //-----------------------------------------get the user ID and role
-    lgcUser_id = lgUserList[0]["user_id"];
-    //setlgcPassword(lgUserList[0]["password"]);
-    lgRole =lgUserList[0]["role"];
-    if(lgPassword == lgUserList[0]["password"]){
-      //---------------------------------------------change page
-      navigate("/menu");
-    }
-    else{
-      alert("Incorrect password");
-    }
-  }else{
-    alert('Incorrect email');
-  }
-    
+   Axios.post("http://localhost:3001/apiLogin/getInfo",{setlgEmail: lgEmail, setlgPassword: lgPassword }).then((response)=>{
+        if(response.data != "incorrect"){
+          lgcUser_id = response.data[0]["user_id"];
+          lgRole =response.data[0]["role"];
+          localStorage.setItem("user_id",lgcUser_id );
+          localStorage.setItem("user_role",lgRole );
+          navigate("/menu");
+        }else{
+          alert("The email or password is incorrect");
+          console.log("incorrect");
+        }
+        console.log(response.data);
+      });
  }
 
  const Button = styled.button`
@@ -423,7 +420,7 @@ function CreateLogin(){
       <label>
         Username:{" "}
         <input type="text" name="lgEmail"  onChange={(e) => {
-        setlgUserInfo(e.target.value); }}/>
+        setlgEmail(e.target.value); }}/>
       </label>
     </form>
     </div>
@@ -451,7 +448,7 @@ function CreateLogin(){
 
 
 function EditOffences(){
-  const colNames = ["Offence Id","Offence", "Description","Severity"];
+  const colNames = ["Offence", "Description","Severity"];
   let navigate=useNavigate();
 
   const [possible_offences, setPossibleOffences] = useState([]) //to display list of offences for admin to see while editing
