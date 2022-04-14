@@ -25,13 +25,15 @@ app.post("/createLog" , (req , res)=> {
     const offenceLink = req.body.offenceLink;
     const offenceOther = req.body.offenceOther;
     const file=req.body.file;
+    const submittedBy=req.body.submittedBy;
+    const offenceStatus=req.body.offenceStatus;
     let offenceID;
     let ticket_id;
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = " + mysql.escape(offenceType);  // get offence_id from table
     db.query(sqlSelect, (err, result) => {
         offenceID = result[0].offence_id;
-        const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code) VALUES (?,?,?,?);";   // insert into log table
-        db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode], (err , result) =>{ 
+        const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id) VALUES (?,?,?,?,?,?);";   // insert into log table
+        db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus, submittedBy], (err , result) =>{ 
             if (err !== null){
                 res.send("Failed");
                 return;
@@ -69,11 +71,21 @@ app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the databas
 });
 
 app.get("/viewPossibleOffences", (req,res)=>{
-    const sqlSelect="select offence_id, offence_name, severity from offence_list where offence_name != 'other'";
+    const sqlSelect="select offence_name, offence_desc, severity from offence_list where offence_name != 'other'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
+        console.log(result)
     });
 });
+
+app.get("/offences", (req,res)=>{
+    const sqlSelect="select offence_id, offence_name from offence_list where offence_name != 'other'";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+        console.log(result)
+    });
+});
+
 
 //------------------------------------------------------------login
 app.post("/apiLogin/getInfo",(req, res) => {
