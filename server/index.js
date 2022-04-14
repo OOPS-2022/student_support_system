@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors")
 const mysql = require('mysql');
+const nodemailer = require("nodemailer");
 
 const db = mysql.createPool({
     host:'localhost',
@@ -25,15 +26,17 @@ app.post("/createLog" , (req , res)=> {
     const offenceLink = req.body.offenceLink;
     const offenceOther = req.body.offenceOther;
     const file=req.body.file;
-    const submittedBy=req.body.submittedBy;
-    const offenceStatus=req.body.offenceStatus;
+    const submittedBy = req.body.submittedBy;
+    const offenceStatus = req.body.offenceStatus;
+    let offenderEmail = req.body.offenderEmail;
+
     let offenceID;
     let ticket_id;
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = " + mysql.escape(offenceType);  // get offence_id from table
     db.query(sqlSelect, (err, result) => {
         offenceID = result[0].offence_id;
-        const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id) VALUES (?,?,?,?,?,?);";   // insert into log table
-        db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus, submittedBy], (err , result) =>{ 
+        const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
+        db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus ,submittedBy], (err , result) =>{ 
             if (err !== null){
                 res.send("Failed");
                 return;
@@ -57,6 +60,34 @@ app.post("/createLog" , (req , res)=> {
             });
         });
     }
+
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "sdteamoops@gmail.com",
+            pass: "SD1Team1OOPS!"
+        },
+        tls: {
+            rejectUnauthorised: false,
+        }
+    })
+
+    offenderEmail = "fabien.chiotti@gmail.com"
+    let mailOptions = {
+        from: "sdteamoops@gmail.com",
+        to: offenderEmail,
+        subject: "Logged Offence",
+        text: "This is an auto generated email.\nA student has reported an offence against you under the category of " + offenceType + ", an investigation into this case will follow."
+    }
+    
+    transporter.sendMail(mailOptions, function(err, success){
+        if(err){
+            console.log(err);
+            res.send("Unable to send email to offender");
+        }else{
+            console.log("Email sent to "+ offenderEmail)
+        }
+    })
 
     res.send("Successful");
     
