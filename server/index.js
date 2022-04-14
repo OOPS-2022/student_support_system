@@ -8,7 +8,7 @@ const nodemailer = require("nodemailer");
 const db = mysql.createPool({
     host:'localhost',
     user: 'root',
-    password: 'password',
+    password: 'ICTPass7149',
     database:'sdDataBase'
 });
 
@@ -121,11 +121,16 @@ app.get("/offences", (req,res)=>{
 //------------------------------------------------------------login
 app.post("/apiLogin/getInfo",(req, res) => {
     const setlgEmail = req.body.setlgEmail;
+    const setlgPassword = req.body.setlgPassword;
     console.log( setlgEmail);
-    const sqlLgget = "Select user_id, password, role from users where email = ?";
-    db.query(sqlLgget,[setlgEmail],(err, result) => {
+    const sqlLgget = "Select user_id, role from users where email = ? and password = ?";
+    db.query(sqlLgget,[setlgEmail,setlgPassword],(err, result) => {
+        if (result[0] == null){
+            res.send("incorrect");
+        }else{
+            res.send(result);
+        }
         console.log(result);
-        res.send(result);
     });
 });
 //-------------------------------------------------------------end login
