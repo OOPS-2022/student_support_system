@@ -34,32 +34,33 @@ app.post("/createLog" , (req , res)=> {
     let ticket_id;
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = " + mysql.escape(offenceType);  // get offence_id from table
     db.query(sqlSelect, (err, result) => {
-        offenceID = result[0].offence_id;
-        const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
-        db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus ,submittedBy], (err , result) =>{ 
-            if (err !== null){
-                res.send("Failed");
-                return;
-            }
-        });
-    });
-    if (offenceType === "other"){
-        const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
-        db.query(sqlSelect, (err, result) => {
-            ticket_id = result[0].ticket_id;
-            const sqlInsert= "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
-            db.query(sqlInsert, [ticket_id,offenceOther], (err , result) =>{ 
+        if(result[0] != null){
+            offenceID = result[0].offence_id;
+            const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
+            db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus ,submittedBy], (err , result) =>{ 
                 if (err !== null){
                     res.send("Failed");
-
-                    const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  
-                    db.query(sqlDelete, (err, result));
-
                     return;
+                }else{
+                    if (offenceType === "other"){
+                        const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
+                        db.query(sqlSelect, (err, result) => {
+                            ticket_id = result[0].ticket_id;
+                            const sqlInsert= "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
+                            db.query(sqlInsert, [ticket_id,offenceOther], (err , result) =>{ 
+                                if (err !== null){
+                                    const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  
+                                    db.query(sqlDelete, (err, result));
+                                    res.send("Failed");
+                                    return;
+                                }
+                            });
+                        });
+                    }
                 }
             });
-        });
-    }
+        }
+    });
 
     let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -79,7 +80,6 @@ app.post("/createLog" , (req , res)=> {
         subject: "Logged Offence",
         text: "This is an auto generated email.\nA student has reported an offence against you under the category of " + offenceType + ", an investigation into this case will follow."
     }
-    
     transporter.sendMail(mailOptions, function(err, success){
         if(err){
             console.log(err);
@@ -90,7 +90,6 @@ app.post("/createLog" , (req , res)=> {
     })
 
     res.send("Successful");
-    
 });
 
 app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the database to send to frontend
