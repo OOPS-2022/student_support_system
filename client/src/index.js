@@ -41,6 +41,8 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path="/viewPossibleOffences" element={<ViewPossibleOffences />} />
       <Route path = "/" element ={<CreateLogin />}/>
       <Route path = "/offencelist" element ={<EditOffences />}/>
+      <Route path = "/createSignedPledge" element ={<CreateSignedPledge />}/>
+      <Route path = "/viewPledges" element ={<ViewPledges />}/>
     </Routes>
   </Router>,
 
@@ -630,6 +632,72 @@ function EditOffences(){
 
     </div>
   );
+
+}
+
+function CreateSignedPledge(){
+  const [file, setFile]=useState({})
+  const [name, setName]=useState("")
+  const [desc, setDesc]=useState("")
+
+  const fileChange=(event)=>{
+    setFile(event.target.files[0]);
+  };
+
+ 
+
+  const upload=(event)=>{
+    let formData=new FormData();
+    formData.append("file", file);
+    formData.append("name", name);
+    formData.append("desc", desc);
+    console.log(formData);
+    fetch("http://localhost:3001/createSignedPledge", {
+      method: "post",
+      body: formData
+    })
+  };
+  
+  return (
+    <div className='App'>
+      <input type="file" onChange={fileChange}/>
+      <lable>Name of pledge</lable>
+      <input type="text" name="name" onChange={(e) => {
+          setName(e.target.value);
+        }} />
+      <label>Description</label>
+      <input type="text" name="description" onChange={(e) => {
+          setDesc(e.target.value);
+        }} />
+      <button onClick={upload}>upload</button>
+    </div>
+  )
+}
+
+function ViewPledges(){
+  const [pledges, setPledges]=useState([]);
+  const links=[];
+  useEffect(() => {
+    Axios.get('http://localhost:3001/viewPledges').then((response) => {
+      setPledges(response.data)
+    })
+  }, [])
+
+  for (const p in pledges){
+    let url=pledges[p].pledge_link;
+    let link='../../../server/'+url.split("./")[1]
+    links.push(link)
+    console.log(links)
+  }
+
+  //return(
+    //<div className='App'>
+      //<h1>View Pledges</h1>
+      //{pledges.map((val=>{
+        //return <h3>{val.pledge_name} || {val.pledge_desc} || {val.pledge_type} || {val.pledge_link}</h3>
+      //}))}
+    //</div>
+  //)
 
 }
 

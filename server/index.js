@@ -4,6 +4,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors")
 const mysql = require('mysql');
 const nodemailer = require("nodemailer");
+const multer=require('multer');
+const uploadSignedPledge=multer({dest: "./Uploads/Pledges/SignedPledges"});
+const fs=require('fs');
 
 const db = mysql.createPool({
     host:'localhost',
@@ -175,7 +178,32 @@ app.post("/updateY",(req, res)=>{
 });
 //-------------------------------------------------------------end viewedit offence list
 
+app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ //creating a signed pledge
+    //let fileType=req.file.mimetype.split("/")[1];
+    let newFileName=Date.now()+req.file.originalname;
+    let oldPath="./Uploads/Pledges/SignedPledges/"+req.file.filename;
+    let newPath="./Uploads/Pledges/SignedPledges/"+newFileName
+    fs.rename(oldPath, newPath, function(err){
+        console.log(err);
+        res.send("200");
+    } );
+    const name=req.body.name;
+    const desc=req.body.desc;
+    const type="Signed Pledge"
+    const sqlInsert= "INSERT INTO pledges ( pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
+    db.query(sqlInsert, [name,desc, type,newPath], (err , res) =>{ 
+        if (err!=null){
+            console.log(err)
+        }
+    });
+})
 
+app.get("/viewPledges", (req,res)=>{
+    const sqlSelect="select pledge_name, pledge_desc, pledge_type, pledge_link from pledges";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+    });
+})
 
 app.listen(3001, () => {
     console.log("running on port 3001");
