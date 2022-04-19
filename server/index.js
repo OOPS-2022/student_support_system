@@ -28,6 +28,7 @@ app.post("/createLog" , (req , res)=> {
     const file=req.body.file;
     const submittedBy = req.body.submittedBy;
     const offenceStatus = req.body.offenceStatus;
+    const currDate = req.body.currDate;
     let offenderEmail = req.body.offenderEmail;
 
     let offenceID;
@@ -42,21 +43,32 @@ app.post("/createLog" , (req , res)=> {
                     res.send("Failed");
                     return;
                 }else{
-                    if (offenceType === "other"){
-                        const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
-                        db.query(sqlSelect, (err, result) => {
-                            ticket_id = result[0].ticket_id;
-                            const sqlInsert= "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
-                            db.query(sqlInsert, [ticket_id,offenceOther], (err , result) =>{ 
-                                if (err !== null){
-                                    const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  
-                                    db.query(sqlDelete, (err, result));
-                                    res.send("Failed");
-                                    return;
+                    const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
+                    db.query(sqlSelect, (err, result) => {
+                        ticket_id = result[0].ticket_id;
+                        let desc = "Student logged ticket and sent to HOD"
+                        const sqlInsert= "INSERT INTO investigation_record ( ticket_id, description , date) VALUES (?,?,?);";   // insert into log table
+                        db.query(sqlInsert, [ticket_id , desc , currDate], (err , result) =>{ 
+                            if (err !== null){
+                                res.send("Failed");
+                                return;
+                            }else{
+                                if (offenceType === "other"){
+                                    const sqlInsert= "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
+                                    db.query(sqlInsert, [ticket_id,offenceOther], (err , result) =>{ 
+                                        if (err !== null){
+                                            const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  
+                                            db.query(sqlDelete, (err, result));
+                                            sqlDelete = "DELETE FROM investigation_record ORDER BY ticket_id DESC LIMIT 1";  
+                                            db.query(sqlDelete, (err, result));
+                                            res.send("Failed");
+                                            return;
+                                        }
+                                    });
                                 }
-                            });
+                            }
                         });
-                    }
+                    });
                 }
             });
         }
