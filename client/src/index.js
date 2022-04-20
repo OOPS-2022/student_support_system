@@ -106,7 +106,7 @@ function CreateLog() {     // this is the create log page
         offenceLink: offenceLink,
         offenceOther: offenceOther,
         submittedBy : localStorage.getItem("user_id"),
-        currDate: new Date().getTime(),
+        currDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
         offenceStatus: "Pending"
       }).then((res) => {
         alert(res.data);

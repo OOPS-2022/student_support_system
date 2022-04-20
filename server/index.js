@@ -33,6 +33,8 @@ app.post("/createLog" , (req , res)=> {
 
     let offenceID;
     let ticket_id;
+    console.log(currDate);
+    let succ = true;
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = " + mysql.escape(offenceType);  // get offence_id from table
     db.query(sqlSelect, (err, result) => {
         if(result[0] != null){
@@ -40,6 +42,7 @@ app.post("/createLog" , (req , res)=> {
             const sqlInsert= "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
             db.query(sqlInsert, [offenderName,offenceID, offenceDetails,offenceCode, offenceStatus ,submittedBy], (err , result) =>{ 
                 if (err !== null){
+                    succ = false;
                     res.send("Failed");
                     return;
                 }else{
@@ -50,6 +53,7 @@ app.post("/createLog" , (req , res)=> {
                         const sqlInsert= "INSERT INTO investigation_record ( ticket_id, description , date) VALUES (?,?,?);";   // insert into log table
                         db.query(sqlInsert, [ticket_id , desc , currDate], (err , result) =>{ 
                             if (err !== null){
+                                succ = false;
                                 res.send("Failed");
                                 return;
                             }else{
@@ -57,22 +61,24 @@ app.post("/createLog" , (req , res)=> {
                                     const sqlInsert= "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
                                     db.query(sqlInsert, [ticket_id,offenceOther], (err , result) =>{ 
                                         if (err !== null){
-                                            const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  
+                                            const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";  // undo all inserts
                                             db.query(sqlDelete, (err, result));
                                             sqlDelete = "DELETE FROM investigation_record ORDER BY ticket_id DESC LIMIT 1";  
                                             db.query(sqlDelete, (err, result));
+                                            succ = false;
                                             res.send("Failed");
                                             return;
                                         }
                                     });
                                 }
                             }
-                        });
+                        }); 
                     });
                 }
             });
         }
     });
+    if(succ){
 
     let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -102,6 +108,9 @@ app.post("/createLog" , (req , res)=> {
     })
 
     res.send("Successful");
+    }
+
+
 });
 
 app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the database to send to frontend
