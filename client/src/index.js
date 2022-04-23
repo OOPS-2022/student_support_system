@@ -13,6 +13,17 @@ import styled from "styled-components";
 import logo from './wits_logo.png';
 import image from './wits_logo.png';
 import Button from './button/button';
+//import 'bootstrap/dist/css/bootsrap.css';
+import {Viewer} from '@react-pdf-viewer/core';
+import{defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import {Worker} from '@react-pdf-viewer/core';
+
+import { Document, Page,pdfjs } from 'react-pdf';
+//import './pdf.css'
+
+//import pdfFile from '../../../server/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf'
 
 
 const buttonStyle2 = {
@@ -676,28 +687,53 @@ function CreateSignedPledge(){
 
 function ViewPledges(){
   const [pledges, setPledges]=useState([]);
-  const links=[];
+  const [viewId, setViewId]=useState(3);
+  
+
   useEffect(() => {
     Axios.get('http://localhost:3001/viewPledges').then((response) => {
       setPledges(response.data)
     })
   }, [])
 
-  for (const p in pledges){
-    let url=pledges[p].pledge_link;
-    let link='../../../server/'+url.split("./")[1]
-    links.push(link)
-    console.log(links)
+  const viewPDF = (event)=>{
+    setViewId(3);
+    Axios('http://localhost:3001/viewFile', {
+    method: 'GET',
+    responseType: 'blob', //Force to receive data in a Blob Format
+    params: {'id': viewId}
+  })
+  .then(response => {
+  //Create a Blob from the PDF Stream
+    const file = new Blob(
+      [response.data], 
+      {type: 'application/pdf'});
+      console.log(response)
+    //Build a URL from the file
+    const fileURL = URL.createObjectURL(file);
+    //Open the URL on new Window
+    window.open(fileURL);
+  })
+  .catch(error => {
+    console.log(error);
+  });
   }
+  console.log(viewId);
 
-  //return(
-    //<div className='App'>
-      //<h1>View Pledges</h1>
-      //{pledges.map((val=>{
-        //return <h3>{val.pledge_name} || {val.pledge_desc} || {val.pledge_type} || {val.pledge_link}</h3>
-      //}))}
-    //</div>
-  //)
+
+
+  return(
+    
+    <div className='App'>
+      <h1>View Pledges</h1>
+      <h3>View Pdf</h3>
+      <button onClick={viewPDF}>View PDF</button>
+      <div className='pdf-container'>
+
+      </div>
+    </div>
+    
+  )
 
 }
 

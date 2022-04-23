@@ -183,6 +183,7 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ 
     let newFileName=Date.now()+req.file.originalname;
     let oldPath="./Uploads/Pledges/SignedPledges/"+req.file.filename;
     let newPath="./Uploads/Pledges/SignedPledges/"+newFileName
+    let saveLink="/Uploads/Pledges/SignedPledges/"+newFileName
     fs.rename(oldPath, newPath, function(err){
         console.log(err);
         res.send("200");
@@ -191,7 +192,7 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ 
     const desc=req.body.desc;
     const type="Signed Pledge"
     const sqlInsert= "INSERT INTO pledges ( pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
-    db.query(sqlInsert, [name,desc, type,newPath], (err , res) =>{ 
+    db.query(sqlInsert, [name,desc, type,saveLink], (err , res) =>{ 
         if (err!=null){
             console.log(err)
         }
@@ -199,11 +200,35 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ 
 })
 
 app.get("/viewPledges", (req,res)=>{
-    const sqlSelect="select pledge_name, pledge_desc, pledge_type, pledge_link from pledges";
+    const sqlSelect="select pledge_name, pledge_desc, pledge_type from pledges";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
     });
 })
+
+app.get('/viewFile', function (req, res) {
+    //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
+    const id=req.query['id']; //gets id from frontend
+    //var filePath1;
+    const sqlSelect="select pledge_link from pledges where pledge_id = ?";
+    db.query(sqlSelect, [id], (error, result)=>{
+        //res.send(result);
+        //console.log(result[0].pledge_link)
+        const filePath=result[0].pledge_link;
+
+        if (error!=null){
+            console.log(error)
+        }
+
+         fs.readFile(__dirname + filePath , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+        //console.log(__dirname);
+    });
+    });
+    
+   
+});
 
 app.listen(3001, () => {
     console.log("running on port 3001");
