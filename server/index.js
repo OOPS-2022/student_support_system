@@ -6,6 +6,7 @@ const mysql = require('mysql');
 const nodemailer = require("nodemailer");
 const multer=require('multer');
 const uploadSignedPledge=multer({dest: "./Uploads/Pledges/SignedPledges"});
+const uploadStudentPledge=multer({dest: "./Uploads/Pledges/Test"})
 const fs=require('fs');
 
 const db = mysql.createPool({
@@ -119,7 +120,6 @@ app.get("/offences", (req,res)=>{
     });
 });
 
-
 //------------------------------------------------------------login
 app.post("/apiLogin/getInfo",(req, res) => {
     const setlgEmail = req.body.setlgEmail;
@@ -191,7 +191,7 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ 
     const name=req.body.name;
     const desc=req.body.desc;
     const type="Signed Pledge"
-    const sqlInsert= "INSERT INTO pledges ( pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
+    const sqlInsert= "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
     db.query(sqlInsert, [name,desc, type,saveLink], (err , res) =>{ 
         if (err!=null){
             console.log(err)
@@ -200,7 +200,7 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req,res)=>{ 
 })
 
 app.get("/viewPledges", (req,res)=>{
-    const sqlSelect="select pledge_name, pledge_desc, pledge_type from pledges";
+    const sqlSelect="select pledge_id, pledge_name, pledge_desc, pledge_type from pledges";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
     });
@@ -229,6 +229,91 @@ app.get('/viewFile', function (req, res) {
     
    
 });
+
+app.post('/createTest', (req,res)=>{
+    const testName=req.body.testName;
+    const pledgeID=req.body.pledgeID;
+    const courseCode=req.body.courseCode;
+    const testDate=req.body.testDate;
+    const creatorID=req.body.creatorID;
+    const dir = './Uploads/Pledges/Test/'+testName +courseCode;
+    fs.mkdir(dir, err=>{
+        if (err){
+            throw err;
+        }
+    })
+    const sqlInsert= "INSERT INTO tests (test_name, test_date, course_code, creator_id, test_link, pledge_id) VALUES (?,?,?,?,?,?);";   // insert into log table
+    db.query(sqlInsert, [testName,testDate, courseCode,creatorID, dir, pledgeID], (err , res) =>{ 
+        if (err!=null){
+            console.log(err)
+        }
+    });
+});
+
+app.get('/testPledge', function (req, res) {
+    //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
+    const id=req.query['testID']; //gets id from frontend
+    console.log(id)
+    //var filePath1;
+    const sqlSelect="SELECT pledge_link FROM tests left join pledges on tests.pledge_id=pledges.pledge_id where test_id= ?";
+    db.query(sqlSelect, [id], (error, result)=>{
+        //res.send(result);
+        //console.log(result[0].pledge_link)
+        const filePath=result[0].pledge_link;
+
+        if (error!=null){
+            console.log(error)
+        }
+
+         fs.readFile(__dirname + filePath , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+        //console.log(__dirname);
+    });
+    });
+    
+   
+});
+
+app.post("/doTest", uploadStudentPledge.single("file"), (req,res)=>{ //uploading the pledge that student signed before test
+    //get student nr from database and then do upload!!!!
+    const studentID=req.body.studentID;
+    const paragraph=req.body.paragraph;
+    const testID= req.body.testID;
+    
+    const sqlSelect="select organization_nr from users where user_id =?";
+    db.query(sqlSelect, [studentID],(error, result)=>{
+        const studentNr= result[0].organization_nr;
+
+        const sqlSelectURL="select test_link from tests where test_id=?";
+        db.query(sqlSelectURL, [testID], (error, result)=>{
+            const testLink=result[0].test_link;
+            console.log(testLink);
+
+            let newFileName=studentNr+".pdf";
+            let oldPath="./Uploads/Pledges/Test/"+req.file.filename;
+            let newPath=testLink+"/"+newFileName;
+            let saveLink="/Uploads/Pledges/Test/"+newFileName
+            fs.rename(oldPath, newPath, function(err){
+                console.log(err);
+                res.send("200");
+            });
+            
+            const sqlInsert= "INSERT INTO pledge_submissions (student_id, test_id, pledge_link, paragraph) VALUES (?,?,?,?);";   // insert into log table
+            db.query(sqlInsert, [studentID,testID,saveLink, paragraph], (err , res) =>{ 
+                if (err!=null){
+                    console.log(err)
+                }
+            }); 
+
+        });
+
+           
+    });
+    
+
+    
+})
 
 app.listen(3001, () => {
     console.log("running on port 3001");

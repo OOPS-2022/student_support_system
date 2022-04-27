@@ -54,6 +54,8 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/offencelist" element ={<EditOffences />}/>
       <Route path = "/createSignedPledge" element ={<CreateSignedPledge />}/>
       <Route path = "/viewPledges" element ={<ViewPledges />}/>
+      <Route path = "/createTest" element ={<CreateTest />}/>
+      <Route path = "/doTest" element ={<DoTest />}/>
     </Routes>
   </Router>,
 
@@ -459,7 +461,6 @@ function CreateLogin(){
   
 }
 
-
 function EditOffences(){
   const colNames = ["Offence", "Description","Severity"];
   let navigate=useNavigate();
@@ -735,6 +736,117 @@ function ViewPledges(){
     
   )
 
+}
+
+function CreateTest(){
+  const [pledges, setPledges]=useState([]);
+  const [testName, setTestName]=useState("");
+  const [pledgeID, setPledgeID]=useState("3");
+  const [courseCode, setCourseCode]=useState("");
+  const [testDate, setTestDate]=useState("");
+
+  useEffect(() => {
+    Axios.get('http://localhost:3001/viewPledges').then((response) => {
+      setPledges(response.data)
+    })
+  }, [])
+
+  const createTest=(event)=>{
+    Axios.post("http://localhost:3001/createTest", {
+      testName : testName,
+      pledgeID: pledgeID,
+      courseCode: courseCode,
+      testDate:testDate,
+      creatorID: 4 //change later using local storage or whatever
+    }).then((res) => {
+      alert(res.data);
+      });
+  }
+
+  return(
+    <div className='App'>
+      <div>
+        <label>Test name:</label>
+        <input type='text' onChange={(e)=>{setTestName(e.target.value)}}/>
+        <br></br>
+        <label>Course code:</label>
+        <input type='text' onChange={(e)=>{setCourseCode(e.target.value)}}/>
+        <br></br>
+        <label>Test Date:</label>
+        <input type='text' onChange={(e)=>{setTestDate(e.target.value)}}/>
+        <br></br>
+        <label>Please choose pledge:  </label>
+        <select select style={{marginTop: "10px", fontSize: 15}} id="pledge_name" onChange={(e) => {
+            setPledgeID(e.target.value);
+          }} >
+          {pledges.map((val) => {
+          return <option value={val.pledge_id}>{val.pledge_name}</option>
+          })}
+          </select>
+          <button onClick={createTest}>Submit:</button>
+      </div>
+    </div>
+  );
+}
+
+function DoTest(){ //for now do default test id=2, extend to stuff later
+  const [paragraph, setParagraph]=useState("");
+  const [file, setFile]=useState({});
+
+  const view=(event)=>{
+   Axios('http://localhost:3001/testPledge', {
+    method: 'GET',
+    responseType: 'blob', //Force to receive data in a Blob Format
+    params: {'testID': 2}
+  })
+  .then(response => {
+  //Create a Blob from the PDF Stream
+    const file = new Blob(
+      [response.data], 
+      {type: 'application/pdf'});
+      console.log(response)
+    //Build a URL from the file
+    const fileURL = URL.createObjectURL(file);
+    //Open the URL on new Window
+    window.open(fileURL);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+  }
+  
+  const fileChange=(event)=>{
+    setFile(event.target.files[0]);
+  };
+
+  const upload=(event)=>{
+    let formData=new FormData();
+    formData.append("file", file);
+    formData.append("paragraph", paragraph);
+    formData.append("studentID", 3); //hardcoded for now. Get id from user login
+    formData.append("testID", 2); //also hardcoded for now
+    fetch("http://localhost:3001/doTest", {
+      method: "post",
+      body: formData
+    })
+  };
+
+
+
+  return(
+    <div className='App'>
+      <label>Please write a paragraph to show your understanding of the pledge:</label>
+      <br></br>
+      <textarea id="story" name="story" rows="5" cols="33" onChange={(e)=>setParagraph(e.target.value)}/>
+      <br></br>
+      <label>Please upload your signed pledge here:</label>
+      <br></br>
+      <input type="file" onChange={fileChange}/>
+      <br></br>
+      <button onClick={upload}>upload</button>
+      <button onClick={view}>View pledge</button>
+    </div>
+  )
 }
 
 export default App;
