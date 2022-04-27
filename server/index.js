@@ -8,6 +8,7 @@ const multer=require('multer');
 const uploadSignedPledge=multer({dest: "./Uploads/Pledges/SignedPledges"});
 const uploadStudentPledge=multer({dest: "./Uploads/Pledges/Test"})
 const fs=require('fs');
+const { dirname } = require("path");
 
 const db = mysql.createPool({
     host:'localhost',
@@ -260,7 +261,6 @@ app.get('/testPledge', function (req, res) {
         //res.send(result);
         //console.log(result[0].pledge_link)
         const filePath=result[0].pledge_link;
-
         if (error!=null){
             console.log(error)
         }
@@ -288,12 +288,11 @@ app.post("/doTest", uploadStudentPledge.single("file"), (req,res)=>{ //uploading
         const sqlSelectURL="select test_link from tests where test_id=?";
         db.query(sqlSelectURL, [testID], (error, result)=>{
             const testLink=result[0].test_link;
-            console.log(testLink);
 
             let newFileName=studentNr+".pdf";
             let oldPath="./Uploads/Pledges/Test/"+req.file.filename;
             let newPath=testLink+"/"+newFileName;
-            let saveLink="/Uploads/Pledges/Test/"+newFileName
+            let saveLink=newPath.slice(1);
             fs.rename(oldPath, newPath, function(err){
                 console.log(err);
                 res.send("200");
@@ -314,6 +313,37 @@ app.post("/doTest", uploadStudentPledge.single("file"), (req,res)=>{ //uploading
 
     
 })
+
+app.get("/testReport", (req,res)=>{ ///this is to display which students have completed the pledge
+    const id=req.query['testID'];
+    const sqlSelect="select organization_nr, name, surname, paragraph from pledge_submissions left join users on user_id = student_id where test_id=?";
+    db.query(sqlSelect, [id],(error, result)=>{
+        res.send(result);
+    });
+})
+
+app.get('/viewSignedPledge', function (req, res) {
+    //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
+    const testID=req.query['testID']; //gets test id from frontend
+    const userID=req.query['userID']; //gets user id from frontend
+    const sqlSelect="select pledge_link from pledge_submissions where test_id = ? and student_id=?";
+    db.query(sqlSelect, [testID, userID], (error, result)=>{
+        //console.log(result[0].pledge_link)
+        const filePath=result[0].pledge_link;
+        
+        if (error!=null){
+            console.log(error)
+        }
+
+         fs.readFile(__dirname + filePath , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+        //console.log(__dirname);
+    });
+    });
+    
+   
+});
 
 app.listen(3001, () => {
     console.log("running on port 3001");

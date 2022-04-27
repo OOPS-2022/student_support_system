@@ -56,6 +56,7 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/viewPledges" element ={<ViewPledges />}/>
       <Route path = "/createTest" element ={<CreateTest />}/>
       <Route path = "/doTest" element ={<DoTest />}/>
+      <Route path = "/testReport" element ={<TestReport />}/>
     </Routes>
   </Router>,
 
@@ -719,7 +720,7 @@ function ViewPledges(){
     console.log(error);
   });
   }
-  console.log(viewId);
+  console.log(pledges)
 
 
 
@@ -789,7 +790,7 @@ function CreateTest(){
   );
 }
 
-function DoTest(){ //for now do default test id=2, extend to stuff later
+function DoTest(){ //for now do default test id=2, extend to stuff later, this is where student will upload their signed pledge after viewing the pledge they have to sign
   const [paragraph, setParagraph]=useState("");
   const [file, setFile]=useState({});
 
@@ -846,6 +847,55 @@ function DoTest(){ //for now do default test id=2, extend to stuff later
       <button onClick={upload}>upload</button>
       <button onClick={view}>View pledge</button>
     </div>
+  )
+}
+
+function TestReport(){
+  const [signedPledges, setSignedPledges]=useState([]);
+  const [testID, setTestID]=useState(2);
+  const [userID, setUserID]=useState(3);
+
+  useEffect(()=>{
+    Axios('http://localhost:3001/testReport', {
+    method: 'GET',
+    params: {'testID': 2}
+    }).then(response=>{
+    setSignedPledges(response);
+    })
+  },[])
+  
+  const viewPDF = (event)=>{
+    //setViewId(3);
+    Axios('http://localhost:3001/viewSignedPledge', {
+    method: 'GET',
+    responseType: 'blob', //Force to receive data in a Blob Format
+    params: {'testID': testID, 'userID':userID}
+  })
+  .then(response => {
+  //Create a Blob from the PDF Stream
+    const file = new Blob(
+      [response.data], 
+      {type: 'application/pdf'});
+      console.log(response)
+    //Build a URL from the file
+    const fileURL = URL.createObjectURL(file);
+    //Open the URL on new Window
+    window.open(fileURL);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+  }
+  console.log(signedPledges);
+
+  return(
+    
+    <div className='App'>
+      <h1>View Signed Pledges for test</h1>
+      <h3>View Pdf</h3>
+      <button onClick={viewPDF}>View PDF</button>
+    </div>
+    
   )
 }
 
