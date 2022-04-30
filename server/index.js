@@ -101,7 +101,6 @@ app.get("/viewSubmittedOffences", (req,res)=>{ //fetch the data from the databas
     const sqlSelect="select offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code, offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
     db.query(sqlSelect, (error, result) => {
         res.send(result);
-        console.log(result);
     });
 });
 
@@ -109,7 +108,7 @@ app.get("/viewPossibleOffences", (req,res)=>{
     const sqlSelect="select offence_name, offence_desc, severity from offence_list where offence_name != 'other'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
-        console.log(result)
+       
     });
 });
 
@@ -117,7 +116,6 @@ app.get("/offences", (req,res)=>{
     const sqlSelect="select offence_id, offence_name from offence_list where offence_name != 'other'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
-        console.log(result)
     });
 });
 
@@ -125,7 +123,6 @@ app.get("/offences", (req,res)=>{
 app.post("/apiLogin/getInfo",(req, res) => {
     const setlgEmail = req.body.setlgEmail;
     const setlgPassword = req.body.setlgPassword;
-    console.log( setlgEmail);
     const sqlLgget = "Select user_id, role from users where email = ? and password = ?";
     db.query(sqlLgget,[setlgEmail,setlgPassword],(err, result) => {
         if (result[0] == null){
@@ -133,7 +130,6 @@ app.post("/apiLogin/getInfo",(req, res) => {
         }else{
             res.send(result);
         }
-        console.log(result);
     });
 });
 //-------------------------------------------------------------end login
@@ -142,10 +138,8 @@ app.post("/apiLogin/getInfo",(req, res) => {
 app.post("/insertY",(req, res)=>{
     const offenceName = req.body.offenceName;
     const severity = req.body.severity;
-    console.log(offenceName);
     const sqlSelect = "Insert into offence_list(offence_name, severity) values(?,?)";
     db.query(sqlSelect,[offenceName,severity],(err,result)=>{
-        console.log("inserted");
         res.send("inserted");
     });
 });
@@ -154,7 +148,6 @@ app.post("/selectY",(req, res)=>{
     const offenceName = req.body.offenceName;
     const sqlSelect = "select * from offence_list where offence_name = ?";
     db.query(sqlSelect,[offenceName],(err,result)=>{
-         console.log(result);
         res.send(result);
     });
 });
@@ -163,7 +156,6 @@ app.post("/deleteY",(req, res)=>{
     const offenceName = req.body.offenceName;
     const sqlSelect = "Delete from offence_list where offence_name = ?";
     db.query(sqlSelect,[offenceName],(err,result)=>{
-        console.log("delete");
         res.send("delete");
     });
 });
@@ -173,7 +165,6 @@ app.post("/updateY",(req, res)=>{
     const serverity = req.body.severity;
     const sqlSelect = "UPDATE offence_list SET severity = ? WHERE offence_name = ?";
     db.query(sqlSelect,[serverity,offenceName],(err,result)=>{
-        console.log("update");
         res.send("update");
     });
 });
@@ -254,7 +245,6 @@ app.post('/createTest', (req,res)=>{
 app.get('/testPledge', function (req, res) {
     //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
     const id=req.query['testID']; //gets id from frontend
-    console.log(id)
     //var filePath1;
     const sqlSelect="SELECT pledge_link FROM tests left join pledges on tests.pledge_id=pledges.pledge_id where test_id= ?";
     db.query(sqlSelect, [id], (error, result)=>{
@@ -344,6 +334,26 @@ app.get('/viewSignedPledge', function (req, res) {
     
    
 });
+
+app.post('/createClickedPledge', function (req,res){
+    const name=req.body.name;
+    const desc=req.body.desc;
+    const pledge_type="Clicked Pledge"
+    const sqlInsert="INSERT INTO pledges (pledge_name, pledge_desc, pledge_type) VALUES (?,?,?);";
+    db.query(sqlInsert, [name,desc,pledge_type], (error, result)=>{
+        if(error!=null){
+            console.log(error)
+        }
+    })
+})
+
+app.get('/pledgeType', function (req,res){
+    const testID=req.query['testID'];
+    sqlSelect='SELECT pledge_type, pledge_desc FROM tests left join pledges on tests.pledge_id=pledges.pledge_id where test_id=?;';
+    db.query(sqlSelect, [testID], (error, result)=>{
+        res.send(result[0]);
+    })
+})
 
 app.listen(3001, () => {
     console.log("running on port 3001");

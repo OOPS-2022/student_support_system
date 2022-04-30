@@ -57,12 +57,12 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/createTest" element ={<CreateTest />}/>
       <Route path = "/doTest" element ={<DoTest />}/>
       <Route path = "/testReport" element ={<TestReport />}/>
+      <Route path = "/createClickedPledge" element ={<CreateClickedPledge />}/>
     </Routes>
   </Router>,
 
   document.getElementById('root')
 );
-
 
 function CreateLog() {     // this is the create log page
 
@@ -781,7 +781,7 @@ function CreateTest(){
             setPledgeID(e.target.value);
           }} >
           {pledges.map((val) => {
-          return <option value={val.pledge_id}>{val.pledge_name}</option>
+          return <option value={val.pledge_id}>{val.pledge_name} ({val.pledge_type})</option>
           })}
           </select>
           <button onClick={createTest}>Submit:</button>
@@ -792,8 +792,26 @@ function CreateTest(){
 
 function DoTest(){ //for now do default test id=2, extend to stuff later, this is where student will upload their signed pledge after viewing the pledge they have to sign
   const [paragraph, setParagraph]=useState("");
-  const [file, setFile]=useState({});
+  const [file, setFile]=useState({}); //file uploaded by student if signed pledge
+  const [message, setMessage]=useState(""); //the plege message if clicked pledge
+  const [type, setType]=useState(""); //type of pledge
 
+  //first get whether the test has a signed or clicked pledge. This will determine what the frontend shows
+  useEffect(()=>{
+    Axios('http://localhost:3001/pledgeType', {
+    method: 'GET',
+    params: {'testID': 4}
+    }).then(response=>{
+    setType(response.data.pledge_type);
+    setMessage(response.data.pledge_desc);
+    })
+  },[])
+  
+  if(type=="Clicked Pledge"){
+
+  }
+
+  //viewing the signed pledge they have to download and sign. Not to be seen if clicked pledge
   const view=(event)=>{
    Axios('http://localhost:3001/testPledge', {
     method: 'GET',
@@ -816,10 +834,12 @@ function DoTest(){ //for now do default test id=2, extend to stuff later, this i
   });
   }
   
+  //Only if have to upload signed plegde
   const fileChange=(event)=>{
     setFile(event.target.files[0]);
   };
 
+  //uploading signed pledge
   const upload=(event)=>{
     let formData=new FormData();
     formData.append("file", file);
@@ -832,7 +852,16 @@ function DoTest(){ //for now do default test id=2, extend to stuff later, this i
     })
   };
 
-
+  //raw html code to embed onto do test if there is a clicked pledge
+  const rawHTML = `
+  <div>
+    <label>
+    <input type="checkbox" id="myCheck">
+    `+message +`</label>
+    <div>
+    </div>
+  </div>
+  `;
 
   return(
     <div className='App'>
@@ -846,6 +875,7 @@ function DoTest(){ //for now do default test id=2, extend to stuff later, this i
       <br></br>
       <button onClick={upload}>upload</button>
       <button onClick={view}>View pledge</button>
+      <div dangerouslySetInnerHTML={{ __html: rawHTML }}></div>
     </div>
   )
 }
@@ -896,6 +926,46 @@ function TestReport(){
       <button onClick={viewPDF}>View PDF</button>
     </div>
     
+  )
+}
+
+function CreateClickedPledge(){
+
+  const [message, setMessage]=useState("");
+  const [name, setName]=useState("");
+
+  const rawHTML = `
+  <div>
+    <label>
+    <input type="checkbox" id="myCheck">
+    `+message +`</label>
+    <div>
+    </div>
+  </div>
+  `;
+
+  const upload=(event)=>{
+    Axios.post("http://localhost:3001/createClickedPledge", {
+      name: name,
+      desc: message
+    }).then((res) => {
+      alert(res.data);
+      });
+  };
+
+  return(
+    <div className='App'>
+      <h1>Create Clicked Pledge</h1>
+        <label>What do you want your clicked pledge to say?</label>
+        <br></br>
+        <textarea id="story" name="story" rows="5" cols="33" onChange={(e)=>setMessage(e.target.value)}/> 
+        <br></br>
+        <label>Name of your pledge:</label>
+        <input type='text'onChange={(e)=>setName(e.target.value)}/>
+        <h2> Preview of your clicked pledge:</h2>
+        <div dangerouslySetInnerHTML={{ __html: rawHTML }}></div>
+      <button onClick={upload}>Upload</button>
+    </div>
   )
 }
 
