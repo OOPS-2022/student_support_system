@@ -47,6 +47,27 @@ app.post("/createLog" , (req , res)=> {
                     res.send("Failed");
                     return;
                 }else{
+                    //create file named for the ticket id
+                    const sqlGetId="SELECT ticket_id FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";
+                    db.query(sqlGetId, (err,result)=>{
+                        let id=result[0].ticket_id;
+                        const dir = './Uploads/Evidence/ticket' +id;
+                        const saveLink='/Uploads/Evidence/ticket' +id;
+                        fs.mkdir(dir, err=>{
+                            if (err){
+                            throw err;
+                            }
+                        })
+                        //now insert this directory into database
+                        const sqlUpdateLink='Update logged_offences set ticket_link=? where ticket_id=?';
+                        db.query(sqlUpdateLink,[saveLink,id], (err,result)=>{
+                            if(err!=null){
+                                console.log(err)
+                            }
+                        })
+                    })
+                    
+
                     if (offenceType === "other"){
                         const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
                         db.query(sqlSelect, (err, result) => {
