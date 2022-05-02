@@ -1,15 +1,9 @@
 {
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest"
   },
 
   "devDependencies": {
     "jest": "^27.5.1"
-  },
-
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
   }
-  
 }
