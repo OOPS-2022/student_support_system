@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.7.0
+  coveralls: coveralls/coveralls@x.y.z
 
 jobs:
   build_and_test:
@@ -13,6 +14,7 @@ jobs:
       - run:
           command: npm run test
           name: Run tests
+      - coveralls/upload
      
 
   deploy: # this can be any name you choose
