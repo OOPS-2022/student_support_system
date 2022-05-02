@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage && coveralls < coverage/lcov.info"
   },
 
   "devDependencies": {
