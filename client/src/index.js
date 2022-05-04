@@ -977,7 +977,7 @@ function CreateClickedPledge(){
 
 
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++Sprint 2+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function OIMenu(){
  
   function Header1(props){
@@ -991,10 +991,7 @@ function OIMenu(){
     function UE(){
       navigate("/UploadEvidence");
    }
-   function SRC()
-   {
-     navigate("/SRC")
-   }
+  
    function SM()
    {
      navigate("/Schedule")
@@ -1004,6 +1001,11 @@ function OIMenu(){
    {
     navigate("/SupportDocuments")
    }
+
+   function SRC()
+  {
+    navigate("/SRC")
+  }
    
   
   const Button = styled.button`
@@ -1027,7 +1029,7 @@ function OIMenu(){
     <div id="head">
     <div style={{ display: "flex", marginLeft: "20%" }}>
       <img src={logo} height={80} width={80} />
-      <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
+      <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
       <Button style={buttonStyle}>HELP</Button> 
     </div>
   
@@ -1037,8 +1039,8 @@ function OIMenu(){
     </div>
   
     <div style={{ display: "flex", marginBottom: "5%" }}> </div>
-    <div style={{ display: "flex", marginLeft: "40%" }}>
-    <Optbutton  onClick={SD} >Upload Supporting Documents and edit offense outcome</Optbutton>
+    <div style={{ display: "flex", marginLeft: "45%" }}>
+    <Optbutton  onClick={SD} >Upload Supporting Documents/Status</Optbutton>
     </div>
   
     <div style={{ display: "flex", marginBottom: "5%" }}> </div>
@@ -1047,18 +1049,13 @@ function OIMenu(){
     </div>
 
     <div style={{ display: "flex", marginBottom: "5%" }}> </div>
-  <div style={{ display: "flex", marginLeft: "45%" }}>
-  <Optbutton  onClick={SRC} >Request assistance from SRC</Optbutton>
-  </div>
-
+    <div style={{ display: "flex", marginLeft: "45%" }}>
+    <Optbutton  onClick={SRC} >SRC help</Optbutton>
+    </div>
   
   </div>
   );
-  }// end of menu return 
-
-
-
-
+}// end of menu return 
 
 function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
     return (
@@ -1091,47 +1088,34 @@ function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
     );
 }// end of table function
 
-function SRC()
-{
-  function Header1(props){
-    return <h1> {props.text}</h1>;
-  }
-  const buttonStyle = {
-    width: "60px",
-    margin : "25px",
-  }
-  
-  const Button = styled.button`
-  background-color: rgb(14,71,161);
-  min-width: 10rem;
-  height: 2rem;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  `;
-  return (
-    <div id="head">
-    <div style={{ display: "flex", marginLeft: "20%" }}>
-      <img src={logo} height={80} width={80} />
-      <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
-      <Button style={buttonStyle}>HELP</Button> 
-    </div>
-
-    <div style={{ display: "flex", marginBottom: "2%" }}></div>
-    <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
-    <div style={{ display: "flex", marginBottom: "2%" }}></div>
-    <div style={{ display: "flex", marginLeft: "46%" }}> </div><Button onclick={null}>Contact SRC</Button> 
-    </div>
-  );
-  
-}
 function SupportingDocuments()
   {
+
+  
+    const [name, setName]=useState("")
+    const [desc, setDesc]=useState("")
+
     const [logged_offences, setLoggedOffences] = useState([])
     const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
 
     const [ticket_id,setTicket_id]= useState("");
-    const [offence_status,setOffence_status] = useState("");
+    const [offence_status,setOffence_status] = useState("Not Guilty");
+
+    const fileChange=(event)=>{
+      setFile(event.target.files[0]);
+    };
+  
+    const upload=(event)=>{
+      let formData=new FormData();
+      formData.append("file", file);
+      formData.append("name", name);
+      formData.append("desc", desc);
+      console.log(formData);
+      fetch("http://localhost:3001/UploadEvidence", {
+        method: "post",
+        body: formData
+      })
+    };
 
     useEffect(() => {
       Axios.get('http://localhost:3001/SupportingDocuments').then((response) => {
@@ -1140,7 +1124,11 @@ function SupportingDocuments()
     }, [])
 
   
-    
+    const [file, setFile] = useState(null);
+    const fileTypes = ["JPG", "PDF"]; //allowed file types
+      const handleChange = (file) => { //handle change for uploading file
+        setFile(file);
+      };
     function Header1(props){
       return <h1> {props.text}</h1>;
     }
@@ -1169,6 +1157,20 @@ function SupportingDocuments()
   
     const [student, setStudent] = React.useState('null');
     const [outcome, setOutcome] = React.useState('null');
+
+    const [possible_users, setPossibleUsers] = useState([]) //to display list of offences for admin to see while editing
+    useEffect(() => {
+      Axios.get('http://localhost:3001/getUserids').then((response) => {
+        setPossibleUsers(response.data)
+      })
+    }, [])
+
+    const [possible_tickets, setPossibleTickets] = useState([]) //to display list of offences for admin to see while editing
+    useEffect(() => {
+      Axios.get('http://localhost:3001/getTicketids').then((response) => {
+        setPossibleTickets(response.data)
+      })
+    }, [])
   
     const handleStudentChange = (event) => {
       setStudent(event.target.value);
@@ -1191,50 +1193,45 @@ function SupportingDocuments()
     };
 
     function changeUpdate(){
+      if (ticket_id.length==0){
+        alert("Please fill in details");
+        return;
+      }
+      console.log(offence_status);
       let inum = parseInt(ticket_id, 10);
         Axios.post("http://localhost:3001/updateOI",{
           ticket_id: inum, 
           offence_status: offence_status,
         }).then(alert("Updated"));
-      }
-      const [file, setFile]=useState({})
-      const [name, setName]=useState("")
-      const [desc, setDesc]=useState("")
+    }
     
-      const fileChange=(event)=>{
-        setFile(event.target.files[0]);
-      };
-    
-      const upload=(event)=>{
-        let formData=new FormData();
-        formData.append("file", file);
-        formData.append("name", name);
-        formData.append("desc", desc);
-        console.log(formData);
-        fetch("http://localhost:3001/UploadEvidence", {
-          method: "post",
-          body: formData
-        })
-      };
+    const handleStatusChange = (event) => {
+      setOffence_status(event.target.value);
+    };
+
+
+      
 
     return (
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
         <img src={logo} height={80} width={80} />
-        <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
+        <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
         <Button style={buttonStyle}>HELP</Button> 
       </div>
       <div style={{ display: "flex", marginBottom: "1%" }}></div>
       <div style={{ display: "flex", marginLeft: "42%" }}>Please select student being investigated: </div>
       <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "42%" }}> <Dropdown
-          label="Student:"
-          options={[
-            { label: 'null', value: 'null' }
-          ]}
-          value={student}
-          onChange={handleStudentChange}
-        />
+      <div style={{ display: "flex", marginLeft: "37%" }}> 
+      <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
+            setStudent(e.target.value);
+          }} >
+            <option>choose user id</option>
+          {possible_users.map((val) => {
+          return <option>{val.user_id}</option>
+          })}
+         
+          </select>
   
            </div>
   
@@ -1243,52 +1240,66 @@ function SupportingDocuments()
       <div id="table">
         <Table possible_offences={logged_offences} colNames={colNames} />
       </div>
-
       <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      
-      
-      <div style={{ display: "flex", marginLeft: "42%" }}>Please select ticket to edit: </div>
+      <div style={{ display: "flex", marginLeft: "42%" }}>Please edit outcome of offense: </div>
       <div style={{ display: "flex", marginBottom: "1%" }}></div>
       <form>
-          <div style={{ display: "flex", marginLeft: "42%" }}>
-          <input type = 'text' onChange=
-                  {
-                    (e) => {
-                      setTicket_id(e.target.value);
-                    }
-                  } 
-                  /> 
+          <div style={{ display: "flex", marginLeft: "37%" }}>
+          <select select style={{marginTop: "10px", fontSize: 15}} id="ticket_ids" onChange={(e) => {
+            setTicket_id(e.target.value);
+          }} >
+            <option>choose ticket id</option>
+          {possible_tickets.map((val) => {
+          return <option>{val.ticket_id}</option>
+          })}
+         
+          </select>
                   </div>
                   </form>
                 
                   <div style={{ display: "flex", marginBottom: "1%" }}></div>
-                  
+                  <div style={{ display: "flex", marginLeft: "37%" }}>
       
-      <div style={{ display: "flex", marginLeft: "42%" }}>Please edit outcome of offense: </div>
-      <div style={{ display: "flex", marginLeft: "42%" }}> <input type = 'text' onChange=
-                  {
-                    (e) => {
-                      setOffence_status(e.target.value);
-                    }
-                  } 
-                  /> </div>
+      
+      
 
-  <div style={{ display: "flex", marginBottom: "1%" }}></div>
-<div style={{ display: "flex", marginLeft: "42%" }}> <Button onClick={changeUpdate}>Edit</Button> </div>
-
-<div style={{ display: "flex", marginBottom: "1%" }}></div>
-<div style={{ display: "flex", marginLeft: "42%" }}>Please upload any supporting documents: </div>  
-
-<div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <Dropdown
+          label="Choice:"
+          options={[
+            { label: 'Not Guilty', value: 'Not Guilty' },{ label: 'Pending', value: 'Pending' },{ label: 'Guilty', value: 'Guilty' }
+          ]}
+          //value={Choice}
+        onChange={handleStatusChange}
+        />          </div>    
+      <div> 
+      <div style={{ display: "flex", marginBottom: "1%" }}></div>
+      <div style={{ display: "flex", marginLeft: "37%" }}> <Button onClick={changeUpdate}>Edit</Button> </div>
+      </div>
+      <div style={{ display: "flex", marginBottom: "1%" }}></div>
+      <div style={{ display: "flex", marginLeft: "37%" }}> Please upload any Supporting documents pertaining to student: </div>
+      <div style={{ display: "flex", marginBottom: "1%" }}></div>
       <div style={{ display: "flex", marginLeft: "37%" }}>
   
       <div>
         <input type="file" onChange={fileChange}/>
-       
-        <button onClick={upload}>upload</button>
+        <div> 
+        <div style={{ display: "flex", marginBottom: "2%" }}></div>
+        <lable>Supporting document File Name:</lable>
+        <input type="text" name="name" onChange={(e) => {
+            setName(e.target.value);
+          }} />
+          </div>
+          <div style={{ display: "flex", marginBottom: "1%" }}></div>
+        <label>Description of Supporting document File:</label>   
+        <input type="text" name="description" onChange={(e) => {
+            setDesc(e.target.value);
+          }} />
+           <div style={{ display: "flex", marginBottom: "1%" }}></div>
+       <div><button onClick={upload}>upload</button> </div>
       </div>
-  
+          
       </div>
+     
     </div>
     
   
@@ -1298,7 +1309,14 @@ function SupportingDocuments()
 
 function UploadEvidence()
   {
-    
+    const [logged_offences, setLoggedOffences] = useState([])
+    const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
+    useEffect(() => {
+      Axios.get('http://localhost:3001/SupportingDocuments1').then((response) => {
+        setLoggedOffences(response.data)
+      })
+    }, [])
+
     const [file, setFile]=useState({})
     const [name, setName]=useState("")
     const [desc, setDesc]=useState("")
@@ -1349,27 +1367,49 @@ function UploadEvidence()
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
         <img src={logo} height={80} width={80} />
-        <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
+        <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
         <Button style={buttonStyle}>HELP</Button> 
       </div>
       <div style={{ display: "flex", marginLeft: "37%" }}> Please upload any evidence pertaining to student: </div>
-      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <div style={{ display: "flex", marginBottom: "1%" }}></div>
       <div style={{ display: "flex", marginLeft: "37%" }}>
   
       <div>
+      
         <input type="file" onChange={fileChange}/>
-       
-        <button onClick={upload}>upload</button>
+        <div style={{ display: "flex", marginBottom: "2%" }}></div>
+        
+        <div> 
+        <lable>Evidence File Name:</lable></div>
+        
+
+        <input type="text" name="name" onChange={(e) => {
+            setName(e.target.value);
+          }} />
+          <div>
+        <label>Description of Evidence File:</label>
+        </div>
+        <input type="text" name="description" onChange={(e) => {
+            setDesc(e.target.value);
+          }} />
+          <div style={{ display: "flex", marginBottom: "2%" }}></div>
+          <div>
+
+        <button onClick={upload}>upload</button></div>
       </div>
-  
+          
       </div>
+    
+      <div id="table">
+        <Table possible_offences={logged_offences} colNames={colNames} />
+      </div>
+
     </div>
   
     );
 }// end of upload evidence
 
-function ScheduleMeetings()
-  {
+function ScheduleMeetings(){
     const colNames = ["Student Number", "Date","Meeting"];
     
     const [possible_meetings, setPossibleMeetings] = useState([]) //to display list of offences for admin to see while editing
@@ -1391,47 +1431,41 @@ function ScheduleMeetings()
           console.log(response.data);
         });
     }
-  
+    //--------------------------------------------------------------------------------------button add function
     function changeAdd(){
-      if (studNo.length==0 || meetLink.length==0){
-        alert("Please fill in details");
+      if ( meetLink.length==0 || studNo.length == 0 ){
+        alert("Please fill-in/choose all details");
         return;
       }
       
-      console.log(year +"/"+month + "/"+ day);
+      console.log(year +"-"+month + "-"+ day);
       console.log(studNo);
       console.log(meetLink);
       Axios.post("http://localhost:3001/insertOI",{
           studNo: studNo, 
-          meetDate: year +"/"+month + "/"+ day,
+          meetDate: year +"-"+month + "-"+ day,
           meetLink: meetLink,
         }).then(alert("Added"));
     }
+
+    //--------------------------------------------------------------------------------------button delete function
   
     function changeDelete(){
       if (studNo.length==0 ){
         alert("Please fill in details");
         return;
       }
-      /*if(arrList.length>=0){
-        Axios.post("http://localhost:3001/deleteOI",{
-          studNo: studNo, 
-        }).then(alert("deleted"));
-      }
-      else{
-        alert("record does not exist");
-      }*/
-      console.log(year +"/"+month + "/"+ day);
+      console.log(year +"-"+month + "-"+ day);
       console.log(studNo);
       console.log(meetLink);
       Axios.post("http://localhost:3001/deleteOI",{
           studNo: studNo,
-          meetDate: year +"/"+month + "/"+ day, 
+          meetDate: year +"-"+month + "-"+ day, 
         }).then(alert("deleted"));
     }
 
     // displays
-    const [day, setDay] = React.useState('1');
+    const [day, setDay] = React.useState('01');
     const [month, setMonth] = React.useState('01');
     const [year, setYear] = React.useState('2022');
     const [student, setStudent] = React.useState('1');
@@ -1448,6 +1482,8 @@ function ScheduleMeetings()
         </label>
       );
     };
+
+    //grab data from front end
     const handleDayChange = (event) => {
       setDay(event.target.value);
     };
@@ -1481,12 +1517,21 @@ function ScheduleMeetings()
     cursor: pointer;
     border-radius: 4px;
     `;
+
+    
+    const [possible_users, setPossibleUsers] = useState([]) 
+    useEffect(() => {
+      Axios.get('http://localhost:3001/getUserids').then((response) => {
+        setPossibleUsers(response.data);
+        
+      })
+    }, [])
   
     return (
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
         <img src={logo} height={80} width={80} />
-        <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
+        <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
         <Button style={buttonStyle}>HELP</Button> 
       </div>
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
@@ -1562,14 +1607,15 @@ function ScheduleMeetings()
       <div style={{ display: "flex", marginLeft: "42%" }}>Please select student being investigated: </div>
 
       <div style={{ display: "flex", marginLeft: "42%" }}>
-      <input type = 'text' onChange=
-                  {
-                    (e) => {
-                      setStudNo(e.target.value);
-                      changeSelect(e.target.value);
-                    }
-                  } 
-                  />
+      <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
+            setStudNo(e.target.value);
+          }} >
+            <option>choose user id</option>
+          {possible_users.map((val) => {
+          return <option>{val.user_id}</option>
+          })}
+         
+          </select>
                   </div>
       
       { /* <div style={{ display: "flex", marginBottom: "1%" }}></div>
@@ -1591,15 +1637,61 @@ function ScheduleMeetings()
            <Button onClick={changeAdd}>Add</Button> </div>
            <div style={{ display: "flex", marginBottom: "1%" }}></div>
            <div style={{ display: "flex", marginLeft: "42%" }}>
-          
            <Button onClick={changeDelete}>Delete</Button> </div>
            
   
        {/*<p>Day:{day} Month:{month} Year:{year}</p>*/}
         
-   
+       
     </div>
     );
-  }// end of schedule meetings 
+}// end of schedule meetings 
+
+//IMPORTANT needs user email or user id  
+function SRC(){
+    function Header1(props){
+      return <h1> {props.text}</h1>;
+    }
+    const buttonStyle = {
+      width: "60px",
+      margin : "25px",
+    }
+    
+    const Button = styled.button`
+    background-color: rgb(14,71,161);
+    min-width: 10rem;
+    height: 2rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    `;
+
+    function sendSRC(){
+      console.log(2);
+      //Axios.post("http://localhost:3001/sendmail").then(alert("Added"));
+    }
+
+    function btnSend(){
+      console.log(1);
+      sendSRC();
+    }
+
+    return (
+      <div id="head">
+      <div style={{ display: "flex", marginLeft: "20%" }}>
+        <img src={logo} height={80} width={80} />
+        <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
+        <Button style={buttonStyle}>HELP</Button> 
+      </div>
+  
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <div style={{ display: "flex", marginLeft: "46%" }}> 
+      <Button onclick={btnSend}>Contact SRC</Button></div>
+      </div>
+    );
+    
+}//end of src email 
 
 export default App;
