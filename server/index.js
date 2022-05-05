@@ -9,6 +9,7 @@ const uploadSignedPledge=multer({dest: "./Uploads/Pledges/SignedPledges"});
 const uploadStudentPledge=multer({dest: "./Uploads/Pledges/Test"})
 const fs=require('fs');
 const { dirname } = require("path");
+const Blob = require('node-blob');
 
 const db = mysql.createPool({
     host:'localhost',
@@ -105,6 +106,39 @@ app.post("/createLog" , (req , res)=> {
         to: offenderEmail,
         subject: "Logged Offence",
         text: "This is an auto generated email.\nA student has reported an offence against you under the category of " + offenceType + ", an investigation into this case will follow."
+    }
+    transporter.sendMail(mailOptions, function(err, success){
+        if(err){
+            console.log(err);
+            res.send("Unable to send email to offender");
+        }else{
+            console.log("Email sent to "+ offenderEmail)
+        }
+    })
+
+    res.send("Successful");
+});
+
+//kiaran code send help
+
+app.post("/sendhelp" , (req , res)=> {   
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "sdteamoops@gmail.com",
+            pass: "SD1Team1OOPS!"
+        },
+        tls: {
+            rejectUnauthorised: false,
+        }
+    })
+
+    offenderEmail = "kiaranre@gmail.com"
+    let mailOptions = {
+        from: "sdteamoops@gmail.com",
+        to: offenderEmail,
+        subject: "Help Report",
+        text: "This is an auto generated email.\nYour Help request has been sent and will be attended to shortly. \n Thank you"
     }
     transporter.sendMail(mailOptions, function(err, success){
         if(err){
@@ -233,7 +267,7 @@ app.get('/viewFile', function (req, res) {
             console.log(error)
         }
 
-         fs.readFile(__dirname + filePath , function (err,data){
+        fs.readFile(__dirname + filePath , function (err,data){
         res.contentType("application/pdf");
         res.send(data);
         //console.log(__dirname);
@@ -374,6 +408,26 @@ app.get('/pledgeType', function (req,res){
     db.query(sqlSelect, [testID], (error, result)=>{
         res.send(result[0]);
     })
+})
+
+app.get('/viewTicketFiles', function (req,res){
+    let directory_name='Uploads/Evidence/ticket13'
+    let filenames = fs.readdirSync(directory_name);
+    var output=[];
+    filenames.forEach((file) => {
+        let filePath=directory_name+'/'+file;
+        //console.log(filePath)
+        fs.readFile(__dirname + filePath , function (err,data){
+             //res.contentType("application/pdf");
+             //res.write(data);
+            let blob = new Blob([data], {type: 'application / PDF'});
+            output.push(blob);
+    //console.log("File:", file);
+        });
+       
+    })
+    console.log(output)
+    res.send(output);
 })
 
 app.listen(3001, () => {

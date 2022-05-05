@@ -58,6 +58,8 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/doTest" element ={<DoTest />}/>
       <Route path = "/testReport" element ={<TestReport />}/>
       <Route path = "/createClickedPledge" element ={<CreateClickedPledge />}/>
+      <Route path = "/kiaranTest" element ={<KiaranTest />}/>
+      <Route path = "/viewTicket" element ={<ViewTicket />}/>
     </Routes>
   </Router>,
 
@@ -965,6 +967,87 @@ function CreateClickedPledge(){
         <h2> Preview of your clicked pledge:</h2>
         <div dangerouslySetInnerHTML={{ __html: rawHTML }}></div>
       <button onClick={upload}>Upload</button>
+    </div>
+  )
+}
+
+function KiaranTest(){
+
+
+function consrc()
+{
+  Axios.post("http://localhost:3001/sendhelp", {
+    }).then((res) => {
+      alert("Sent");
+      });
+}
+    function Header1(props){
+      return <h1> {props.text}</h1>;
+    }
+    const buttonStyle = {
+      width: "60px",
+      margin : "25px",
+    }
+    
+    const Button = styled.button`
+    background-color: rgb(14,71,161);
+    min-width: 10rem;
+    height: 2rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    `;
+    return (
+      <div id="head">
+      <div style={{ display: "flex", marginLeft: "20%" }}>
+        <img src={logo} height={80} width={80} />
+        <Header1 text="COMMITEE INVESITGATION: THE OFFENSE" />
+        <Button style={buttonStyle}>HELP</Button> 
+      </div>
+  
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+      <div style={{ display: "flex", marginLeft: "46%" }}> <Button onClick={consrc}>Contact SRC</Button> </div>
+      </div>
+     
+  
+      
+    
+  
+    );
+    
+}
+
+function ViewTicket(){
+  const [viewId, setViewId]=useState(3);
+  const [files, setFiles]=useState([]);
+  const viewPDF = (event)=>{
+    setViewId(3);
+    Axios('http://localhost:3001/viewTicketFiles', {
+    method: 'GET',
+    //responseType: 'blob', //Force to receive data in a Blob Format
+    params: {'id': viewId}
+  })
+  .then(response => {
+  //Create a Blob from the PDF Stream
+    // const file = new Blob(
+    //   [response.data], 
+    //   {type: 'application/pdf'});
+      setFiles(response);
+    //Build a URL from the file
+    //const fileURL = URL.createObjectURL(file);
+    //Open the URL on new Window
+    //window.open(fileURL);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+  }
+
+  return(
+    <div className='App'>
+      <button onClick={viewPDF}>View</button>
     </div>
   )
 }
