@@ -4,6 +4,7 @@ import './card.css';
 import { Link } from 'react-router-dom';
 
 
+
 function Card(props) {
 
   const buttonStyle = {
@@ -23,9 +24,8 @@ function Card(props) {
         </div>
 
         <div className="bottom-div">
-          <Link to={props?.onclick}>
-              <Button  buttonText= {props?.button_description} style={buttonStyle} />
-          </Link>
+          <Button  buttonText= {props?.button_description} style={buttonStyle} action={props?.action}/>
+         
         </div>
 
       </div>

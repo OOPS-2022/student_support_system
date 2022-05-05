@@ -5,33 +5,10 @@ import './aofm.css';
 import { Link } from 'react-router-dom';
 import image from '../wits_logo.png';
 import GridList from '../gridList/gridList.jsx';
+import { useNavigate } from "react-router-dom";
 
 
 
-
-
-const gridList_props = [
-    {
-      header: "Log Offence",
-      button_description: "LOG",
-      onclick : "" 
-    },,
-    {
-        header: "View Offences",
-        button_description: "VIEW",
-        onclick : "" 
-      },,
-      {
-        header: "View Submissions",
-        button_description: "VIEW",
-        onclick : "" 
-      },,
-      {
-        header: "Edit Offences",
-        button_description: "EDIT",
-        onclick : "" 
-      }
-];
 const buttonStyle = {
     width: "50px",
     margin : "25px",
@@ -51,14 +28,30 @@ function Header1(props){
     return <h1> {props.text}</h1>;
     
 }
+
+
+function AcademicOffenceMenu(){
+  let navigate = useNavigate();
+  var role= localStorage.getItem("user_role")
+  if (role==null){
+    navigate("/");
+  }
+  
+  const gridList_props = [{header: "Log Offence", button_description: "LOG", action: () =>  navigate("/createLog"),},,
+  {header: "View Offences", button_description: "VIEW", action: () =>  navigate("/viewPossibleOffences"), } ];  
+  if (role =="admin"){ 
+    gridList_props.push(  
+      {header: "View Submissions", button_description: "VIEW", action: () =>  navigate("/viewSubmittedOffences"),  } ) 
+      gridList_props.push({header: "Edit Offences", button_description: "EDIT", action: () =>  navigate("/offencelist"),})
+  };
+
 let gridList = [];
 
 gridList_props.forEach((prop, index) => {
-    gridList.push(<GridList key={index} header={prop.header} description={prop.description} button_description={prop.button_description} onclick={prop.onclick}/>)
+    gridList.push(<GridList key={index} header={prop.header} description={prop.description} button_description={prop.button_description} action={prop.action}/>)
   });
 
-function AcademicOffenceMenu(){
-    return (
+  return (
         <>
             <div className="App" >
                 <div style={{ display: "flex",}}>

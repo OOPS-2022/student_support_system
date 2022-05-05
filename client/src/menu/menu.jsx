@@ -5,45 +5,46 @@ import Card from '../card/card.jsx';
 import './menu.css';
 import { Link } from 'react-router-dom';
 import image from '../wits_logo.png';
+import { useNavigate } from "react-router-dom";
 
 
+
+
+
+
+function Menu() { //this is the menu page - notice "/" in route, shows on startup
+    let cards = [];
+    let navigate = useNavigate();
 const CARD_PROPS = [
     {
       header: "Lodge Academic Dishonesty ",
       description: "Brief description",
       button_description: "SUBMIT COMPLAINT",
-      onclick : "/AcademicOffenceMenu" 
+      action: () =>  navigate("/AcademicOffenceMenu"),
     }
    ,,
       {
         header: "",
         description: "",
         button_description: "",
-        onclick : "",
+        action : () => {},
       }
      ,
      {
         header: "",
         description: "",
         button_description: "",
-        onclick : "",
+        action : () => {},
       }
       ,
       {
         header: "",
         description: "",
         button_description: "",
-        onclick : "",
+        action : () => {},
       }
     
   ];
-
-
-
-function Menu() { //this is the menu page - notice "/" in route, shows on startup
-    let cards = [];
-    
-
 
     const buttonStyle = {
         width: "50px",
@@ -53,14 +54,13 @@ function Menu() { //this is the menu page - notice "/" in route, shows on startu
       }
 
     CARD_PROPS.forEach((prop, index) => {
-      cards.push(<Card key={index} header={prop.header} description={prop.description} button_description={prop.button_description} onclick={prop.onclick}/>)
+      cards.push(<Card key={index} header={prop.header} description={prop.description} button_description={prop.button_description} action={prop.action}/>)
     });
     function Header1(props){
         return <h1> {props.text}</h1>;
         
     }
  
-
     return (
         <>
             <div className="App" >
@@ -68,9 +68,6 @@ function Menu() { //this is the menu page - notice "/" in route, shows on startu
                     <img src={image} height={80} width={80} />
                     <Header1 text="WITS SUPPORT CENTRE" /> 
                     <Button buttonText="HELP" style={buttonStyle} />  
-                    <Link to={"/Login"}>
-                        <Button  buttonText="SIGN IN" style={buttonStyle} />
-                    </Link>
                     
                 </div>
                 
