@@ -1540,30 +1540,25 @@ function ScheduleMeetings(){
 
     const [studNo,setStudNo]= useState("");
     const [meetLink,setMeetLink] = useState("");
+    const [stdEmail,setstdEmail] = useState("");
 
-    function ChangeEmail(stdID){
-      Axios.get('http://localhost:3001/getStEmail',{
-        stdNo:stdID,
+    function changeEmail(stdNo){
+      Axios.post('http://localhost:3001/Emailret',{
+        stdNo:stdNo,
       }).then((response) => {
-      console.log(response.data)
-    })
+        setstdEmail(response.data);
+      })
     }
-    //--------------------------------------------------------------------------------------button add function
-        //######################################make a function that gets student email from user_id
-    var testemail = 'rashay.jcdaya@gmail.com'
+    
     function changeAdd(){
-      ChangeEmail(studNo);
       if ( meetLink.length==0 || studNo.length == 0 ){
         alert("Please fill-in/choose all details");
         return;
       }
-      
-      
-
       Axios.post("http://localhost:3001/snedMeetEmail",{
           date: year +"-"+month + "-"+ day,
           link: meetLink,
-          stdEmail: testemail,
+          stdEmail: stdEmail,
         });
 
       Axios.post("http://localhost:3001/insertOI",{
@@ -1726,7 +1721,7 @@ function ScheduleMeetings(){
 
       <div style={{ display: "flex", marginLeft: "42%" }}>
       <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
-            setStudNo(e.target.value); 
+            setStudNo(e.target.value); changeEmail(e.target.value);
           }} >
             <option>choose user id</option>
           {possible_users.map((val) => {

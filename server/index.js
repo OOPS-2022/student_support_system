@@ -499,12 +499,13 @@ app.get("/getUserids", (req,res)=>{
     });
 });
 // fix one of thes functions #coo#####l# ###################################
-app.post("/getStEmail", (req,res)=>{
+app.post("/Emailret", (req,res)=>{
     const stdNo = req.body.stdNo;
+    console.log(stdNo);
     const sqlSelect="select email from users where user_id = ?";
     db.query(sqlSelect,[stdNo], (error, result)=>{
-       res.send(result);
-       console.log(result);
+       res.send(result[0].email);
+       console.log(result[0].email);
     });
 });
 
@@ -512,7 +513,7 @@ app.get('/getStEmail1', function (req,res){
     const stdNo=req.query['stdNo'];
     sqlSelect='select email from users where user_id = ?;';
     db.query(sqlSelect, [stdNo], (error, result)=>{
-        res.send(result[0]);
+        res.send(result);
     })
 })
 
