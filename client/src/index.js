@@ -1542,7 +1542,7 @@ function ScheduleMeetings(){
                   <input type = 'text' onChange=
                   { 
                     (e) => {
-                      handleLinkChange;
+
                       setMeetLink(e.target.value);
                     }
                   } 
