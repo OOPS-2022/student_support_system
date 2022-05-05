@@ -16,7 +16,7 @@ const db = mysql.createPool({
     host:'localhost',
     user: 'root',
     password: 'password',
-    database:'sdDataBase1'
+    database:'sdDataBase'
 });
 
 
@@ -427,7 +427,6 @@ app.post("/updateOI",(req, res)=>{
 
 //-------------------------------------------------------------------start of upload evidence pdfs
 app.post("/UploadEvidence", uploadEvidenceDoc.single("file"), (req,res)=>{ 
-    //let fileType=req.file.mimetype.split("/")[1];
     let newFileName=Date.now()+req.file.originalname;
     let oldPath="./Uploads/Evidence/"+req.file.filename;
     let newPath="./Uploads/Evidence/"+newFileName
@@ -436,17 +435,35 @@ app.post("/UploadEvidence", uploadEvidenceDoc.single("file"), (req,res)=>{
         console.log(err);
         res.send("200");
     } );
-    
-    /*
     const name=req.body.name;
     const desc=req.body.desc;
-    const type="Signed Pledge"
-    const sqlInsert= "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
-    db.query(sqlInsert, [name,desc, type,saveLink], (err , res) =>{ 
+    const ticketID = req.body.ticketID;
+    const sqlInsert= "INSERT INTO evidence (evidence_name, evidence_desc,evidence_link,ticket_id) VALUES (?,?,?,?);";
+    db.query(sqlInsert, [name,desc,saveLink,ticketID], (err , res) =>{ 
         if (err!=null){
             console.log(err)
         }
-    }); */
+    });
+})
+
+app.post("/UploadSuppEvidence", uploadEvidenceDoc.single("file"), (req,res)=>{ 
+    let newFileName=Date.now()+req.file.originalname;
+    let oldPath="./Uploads/Evidence/"+req.file.filename;
+    let newPath="./Uploads/Evidence/"+newFileName
+    let saveLink="/Uploads/Evidence/"+newFileName
+    fs.rename(oldPath, newPath, function(err){
+        console.log(err);
+        res.send("200");
+    } );
+    const name=req.body.name;
+    const desc=req.body.desc;
+    const ticketID = req.body.ticketID;
+    const sqlInsert= "INSERT INTO support_evidence (suppevi_name, suppevi_desc,suppevi_link,ticket_id) VALUES (?,?,?,?);";
+    db.query(sqlInsert, [name,desc,saveLink,ticketID], (err , res) =>{ 
+        if (err!=null){
+            console.log(err)
+        }
+    });
 })
 //-------------------------------------------------------------end of upload evidence pdfs
 
@@ -460,6 +477,14 @@ app.get("/SupportingDocuments", (req,res)=>{
 
 app.get("/SupportingDocuments1", (req,res)=>{
     const sqlSelect="select ticket_id, offender_name, details, crs_code, offence_status from logged_offences where ticket_id != 'other' and offence_status = 'Pending'";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       
+    });
+});
+
+app.get("/SupportingDocuments2", (req,res)=>{
+    const sqlSelect="select ticket_id, offender_name, details, crs_code, offence_status from logged_offences where ticket_id != 'other' and offence_status != 'Pending'";
     db.query(sqlSelect, (error, result)=>{
         res.send(result);
        
