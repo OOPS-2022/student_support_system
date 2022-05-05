@@ -65,7 +65,7 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path="/SupportDocuments" element={<SupportingDocuments/>} />
       <Route path="/SRC" element={<SRC/>}/>
       <Route path="/ChangeStatus" element={<ChangeStatus/>}/>
-      
+
     </Routes>
   </Router>,
 
@@ -1181,6 +1181,22 @@ function ChangeStatus(){
     }
     console.log(offence_status);
     let inum = parseInt(ticket_id, 10);
+
+    Axios.post("http://localhost:3001/snedStatusUpdate",{
+      status: offence_status,  
+      ticket_id: inum, 
+    })
+
+    var today = new Date();
+
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+    Axios.post("http://localhost:3001/logevent",{
+      ticket_id: inum,
+      desc:"Status has been updated to " + offence_status,
+      date: date,
+    })
+    
       Axios.post("http://localhost:3001/updateOI",{
         ticket_id: inum, 
         offence_status: offence_status,
@@ -1282,6 +1298,8 @@ function SupportingDocuments(){
         alert("Please fill in all the detials/upload a file")
         return;
       }
+
+
       let formData=new FormData();
       formData.append("file", file);
       formData.append("name", name);
@@ -1291,6 +1309,19 @@ function SupportingDocuments(){
       fetch("http://localhost:3001/UploadSuppEvidence", {
         method: "post",
         body: formData
+      })
+      Axios.post('http://localhost:3001/sendSuppEvenceMail',{
+        filename:name,
+        ticket_id:ticketID
+      });
+      var today = new Date();
+
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+      Axios.post("http://localhost:3001/logevent",{
+        ticket_id: ticketID,
+        desc:"Supporting document " + name + " has been uploaded",
+        date: date,
       })
       window.location.reload(1);
     };
@@ -1404,6 +1435,22 @@ function UploadEvidence(){
         method: "post",
         body: formData
       })
+
+      Axios.post('http://localhost:3001/sendEvenceMail',{
+        filename:name,
+        ticket_id:ticketID
+      });
+
+      var today = new Date();
+
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+      Axios.post("http://localhost:3001/logevent",{
+        ticket_id: ticketID,
+        desc:"Supporting document " + name + " has been uploaded",
+        date: date,
+      })
+      
       window.location.reload(1);
     };
 
@@ -1492,12 +1539,18 @@ function ScheduleMeetings(){
     const [studNo,setStudNo]= useState("");
     const [meetLink,setMeetLink] = useState("");
 
-    
+      function ChangeEmail(stdID){
+        Axios.get('http://localhost:3001/getStEmail',{
+          stdNo:stdID,
+        }).then((response) => {
+        console.log(response.data)
+      })
+      }
     //--------------------------------------------------------------------------------------button add function
 
     var testemail = 'rashay.jcdaya@gmail.com'
     function changeAdd(){
-      ;
+      ChangeEmail(studNo);
       if ( meetLink.length==0 || studNo.length == 0 ){
         alert("Please fill-in/choose all details");
         return;
