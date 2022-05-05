@@ -11,6 +11,8 @@ const fs=require('fs');
 const { dirname } = require("path");
 const Blob = require('node-blob');
 
+const uploadEvidenceDoc=multer({dest: "./Uploads/Evidence"});
+
 const db = mysql.createPool({
     host:'localhost',
     user: 'root',
@@ -429,6 +431,153 @@ app.get('/viewTicketFiles', function (req,res){
     console.log(output)
     res.send(output);
 })
+//-----------------------------------------------------------------------------Schedule meetings
+
+app.get("/Schedule", (req,res)=>{
+    const sqlSelect="select stdNo, meetDate, meetLink from meetings Order by meetDate";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       
+    });
+});
+
+app.post("/insertOI",(req, res)=>{
+    const studNo = req.body.studNo;
+    const meetDate = req.body.meetDate;
+    const meetLink = req.body.meetLink;
+    const sqlSelect = "Insert into meetings (stdNo, meetDate, meetLink) values(?,?,?)";
+    db.query(sqlSelect,[studNo,meetDate,meetLink],(err,result)=>{
+        res.send("inserted");
+    });
+});
+
+app.post("/deleteOI",(req, res)=>{
+    const studNo = req.body.studNo;
+    const meetDate = req.body.meetDate;
+    const sqlSelect = "Delete from meetings where stdNo = ? and meetDate = ?";
+    db.query(sqlSelect,[studNo,meetDate],(err,result)=>{
+        res.send("delete");
+    });
+});
+
+app.post("/selectOI",(req, res)=>{
+    const studNo = req.body.studNo;
+    const sqlSelect = "select * from meetings where stdNo = ?";
+    db.query(sqlSelect,[studNo],(err,result)=>{
+        res.send(result);
+    });
+});
+
+app.post("/updateOI",(req, res)=>{
+    const ticket_id = req.body.ticket_id;
+    const offence_status = req.body.offence_status;
+    const sqlSelect = "UPDATE logged_offences SET offence_status = ? WHERE ticket_id = ?";
+    db.query(sqlSelect,[offence_status,ticket_id],(err,result)=>{
+        res.send("update");
+    });
+});
+//-------------------------------------------------------------------end Schedule meetings
+
+//-------------------------------------------------------------------start of upload evidence pdfs
+app.post("/UploadEvidence", uploadEvidenceDoc.single("file"), (req,res)=>{ 
+    //let fileType=req.file.mimetype.split("/")[1];
+    let newFileName=Date.now()+req.file.originalname;
+    let oldPath="./Uploads/Evidence/"+req.file.filename;
+    let newPath="./Uploads/Evidence/"+newFileName
+    let saveLink="/Uploads/Evidence/"+newFileName
+    fs.rename(oldPath, newPath, function(err){
+        console.log(err);
+        res.send("200");
+    } );
+    
+    /*
+    const name=req.body.name;
+    const desc=req.body.desc;
+    const type="Signed Pledge"
+    const sqlInsert= "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into log table
+    db.query(sqlInsert, [name,desc, type,saveLink], (err , res) =>{ 
+        if (err!=null){
+            console.log(err)
+        }
+    }); */
+})
+//-------------------------------------------------------------end of upload evidence pdfs
+
+app.get("/SupportingDocuments", (req,res)=>{
+    const sqlSelect="select ticket_id, offender_name, details, crs_code, offence_status from logged_offences where ticket_id != 'other'";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       
+    });
+});
+
+app.get("/SupportingDocuments1", (req,res)=>{
+    const sqlSelect="select ticket_id, offender_name, details, crs_code, offence_status from logged_offences where ticket_id != 'other' and offence_status = 'Pending'";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       
+    });
+});
+
+app.get("/getUserids", (req,res)=>{
+    const sqlSelect="select user_id from users";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       console.log(result);
+    });
+});
+
+app.get("/getOffenderNames", (req,res)=>{
+    const sqlSelect="select distinct offender_name from logged_offences";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       console.log(result);
+    });
+});
+
+app.get("/getTicketids", (req,res)=>{
+    const sqlSelect="select ticket_id from logged_offences order by ticket_id";
+    db.query(sqlSelect, (error, result)=>{
+        res.send(result);
+       console.log(result);
+    });
+});
+
+//-------------------------------------------------------------------------------------send emails
+app.post("/sendmail" , (req , res)=> {  
+    //let offenderEmail = req.body.offenderEmail;
+    const offenceType = req.body.offenceType;
+    console.log("start");
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "sdteamoops@gmail.com",
+            pass: "SD1Team1OOPS!"
+        },
+        tls: {
+            rejectUnauthorised: false,
+        }
+    })
+
+    let offenderEmail = "kiaranre@gmail.com"
+    let mailOptions = {
+        from: "sdteamoops@gmail.com",
+        to: offenderEmail,
+        subject: "Logged Offence",
+        text: "This is an auto generated email.\nA student has reported an offence against you under the category of , an investigation into this case will follow."
+    }
+    transporter.sendMail(mailOptions, function(err, success){
+        if(err){
+            console.log(err);
+            res.send("Unable to send email to offender");
+        }else{
+            console.log("Email sent to "+ offenderEmail)
+        }
+    })
+
+    res.send("Successful");
+});
+
 
 app.listen(3001, () => {
     console.log("running on port 3001");
