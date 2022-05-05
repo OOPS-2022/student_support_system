@@ -498,7 +498,7 @@ app.get("/getUserids", (req,res)=>{
        console.log(result);
     });
 });
-
+// fix one of thes functions #coo#####l# ###################################
 app.post("/getStEmail", (req,res)=>{
     const stdNo = req.body.stdNo;
     const sqlSelect="select email from users where user_id = ?";

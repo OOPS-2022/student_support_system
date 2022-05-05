@@ -1450,7 +1450,7 @@ function UploadEvidence(){
         desc:"Supporting document " + name + " has been uploaded",
         date: date,
       })
-      
+
       window.location.reload(1);
     };
 
@@ -1526,6 +1526,8 @@ function UploadEvidence(){
     );
 }// end of upload evidence
 
+//-------------------------------------------------------------------kiaran this function 
+
 function ScheduleMeetings(){
     const colNames = ["Student Number", "Date","Meeting"];
     
@@ -1539,15 +1541,15 @@ function ScheduleMeetings(){
     const [studNo,setStudNo]= useState("");
     const [meetLink,setMeetLink] = useState("");
 
-      function ChangeEmail(stdID){
-        Axios.get('http://localhost:3001/getStEmail',{
-          stdNo:stdID,
-        }).then((response) => {
-        console.log(response.data)
-      })
-      }
+    function ChangeEmail(stdID){
+      Axios.get('http://localhost:3001/getStEmail',{
+        stdNo:stdID,
+      }).then((response) => {
+      console.log(response.data)
+    })
+    }
     //--------------------------------------------------------------------------------------button add function
-
+        //######################################make a function that gets student email from user_id
     var testemail = 'rashay.jcdaya@gmail.com'
     function changeAdd(){
       ChangeEmail(studNo);
