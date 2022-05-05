@@ -65,6 +65,7 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path="/SupportDocuments" element={<SupportingDocuments/>} />
       <Route path="/SRC" element={<SRC/>}/>
       <Route path="/ChangeStatus" element={<ChangeStatus/>}/>
+      
     </Routes>
   </Router>,
 
@@ -1112,7 +1113,6 @@ function ChangeStatus(){
     })
   }, [])
 
-
   const [file, setFile] = useState(null);
   const fileTypes = ["JPG", "PDF"]; //allowed file types
     const handleChange = (file) => { //handle change for uploading file
@@ -1145,7 +1145,7 @@ function ChangeStatus(){
   `;
 
   const [student, setStudent] = React.useState('null');
-  const [outcome, setOutcome] = React.useState('null');
+
 
   const [possible_users, setPossibleUsers] = useState([]) //to display list of offender names
   useEffect(() => {
@@ -1161,13 +1161,6 @@ function ChangeStatus(){
     })
   }, [])
 
-  const handleStudentChange = (event) => {
-    setStudent(event.target.value);
-  };
-
-  const handleOutcomeChange = (event) => {
-    setOutcome(event.target.value);
-  };
   const Dropdown = ({ label, value, options, onChange }) => {
     return (
       <label>
@@ -1198,9 +1191,6 @@ function ChangeStatus(){
   const handleStatusChange = (event) => {
     setOffence_status(event.target.value);
   };
-
-
-    
 
   return (
     <div id="head">
@@ -1248,10 +1238,6 @@ function ChangeStatus(){
               
                 <div style={{ display: "flex", marginBottom: "1%" }}></div>
                 <div style={{ display: "flex", marginLeft: "37%" }}>
-    
-    
-    
-
     <Dropdown
         label="Choice:"
         options={[
@@ -1506,20 +1492,25 @@ function ScheduleMeetings(){
     const [studNo,setStudNo]= useState("");
     const [meetLink,setMeetLink] = useState("");
 
-    const [arrList,setarrList] = useState([]);
     
-    function changeSelect(name){
-      Axios.post("http://localhost:3001/selectOI",{studNo: name}).then((response)=>{
-          setarrList(response.data);
-          console.log(response.data);
-        });
-    }
     //--------------------------------------------------------------------------------------button add function
+
+    var testemail = 'rashay.jcdaya@gmail.com'
     function changeAdd(){
+      ;
       if ( meetLink.length==0 || studNo.length == 0 ){
         alert("Please fill-in/choose all details");
         return;
       }
+      
+      
+
+      Axios.post("http://localhost:3001/snedMeetEmail",{
+          date: year +"-"+month + "-"+ day,
+          link: meetLink,
+          stdEmail: testemail,
+        });
+
       Axios.post("http://localhost:3001/insertOI",{
           studNo: studNo, 
           meetDate: year +"-"+month + "-"+ day,
@@ -1680,7 +1671,7 @@ function ScheduleMeetings(){
 
       <div style={{ display: "flex", marginLeft: "42%" }}>
       <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
-            setStudNo(e.target.value);
+            setStudNo(e.target.value); 
           }} >
             <option>choose user id</option>
           {possible_users.map((val) => {

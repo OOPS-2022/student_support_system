@@ -16,7 +16,7 @@ const db = mysql.createPool({
     host:'localhost',
     user: 'root',
     password: 'password',
-    database:'sdDataBase'
+    database:'sdDataBase1'
 });
 
 
@@ -499,6 +499,23 @@ app.get("/getUserids", (req,res)=>{
     });
 });
 
+app.post("/getStEmail", (req,res)=>{
+    const stdNo = req.body.stdNo;
+    const sqlSelect="select email from users where user_id = ?";
+    db.query(sqlSelect,[stdNo], (error, result)=>{
+        res.send(result);
+       console.log(result[0]['email']);
+    });
+});
+
+app.get('/getStEmail1', function (req,res){
+    const stdNo=req.query['stdNo'];
+    sqlSelect='select email from users where user_id = ?;';
+    db.query(sqlSelect, [stdNo], (error, result)=>{
+        res.send(result[0]);
+    })
+})
+
 app.get("/getOffenderNames", (req,res)=>{
     const sqlSelect="select distinct offender_name from logged_offences";
     db.query(sqlSelect, (error, result)=>{
@@ -565,7 +582,7 @@ app.post("/snedSrcEmail",(req,res)=>{
 
     let mailOptionss ={
         from: '<sdteamoops@gmail.com',
-        to: 'kiaranre@gmail.com', //-------------------put src email after testing src.academics@students.wits.ac.za
+        to: 'rashay.jcdaya@gmail.com', //-------------------put src email after testing src.academics@students.wits.ac.za
         subject: 'Student - SRC Help',
         text: "This is an auto generated email , please dont reply to this email.\n \n Student " + stdNo 
         + " is requesting for help. \n Contact info: \n Email: " + stdEmail
@@ -585,6 +602,76 @@ app.post("/snedSrcEmail",(req,res)=>{
     smtpTransport.close();
 })
 
+app.post("/snedSrcEmail",(req,res)=>{
+    const stdNo = req.body.stdNo;
+    const stdEmail = req.body.stdEmail;
+    let smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        port: 465,
+        auth:{
+            user: 'sdteamoops@gmail.com',
+            pass: 'SD1Team1OOPS!'
+        }
+    });
+
+
+    let mailOptionss ={
+        from: '<sdteamoops@gmail.com',
+        to: 'rashay.jcdaya@gmail.com', //-------------------put src email after testing src.academics@students.wits.ac.za
+        subject: 'Student - SRC Help',
+        text: "This is an auto generated email , please dont reply to this email.\n \n Student " + stdNo 
+        + " is requesting for help. \n Contact info: \n Email: " + stdEmail
+
+    };
+
+    smtpTransport.sendMail(mailOptionss, (error,response)=>{
+        if(error){
+            res.send(error)
+            console.log(error)
+        }
+        else{
+            res.send('Success')
+            console.log("success")
+        }
+    })
+    smtpTransport.close();
+})
+
+app.post("/snedMeetEmail",(req,res)=>{
+    const date = req.body.date;
+    const link = req.body.link;
+    const stdEmail = req.body.stdEmail;
+    let smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        port: 465,
+        auth:{
+            user: 'sdteamoops@gmail.com',
+            pass: 'SD1Team1OOPS!'
+        }
+    });
+
+
+    let mailOptionss ={
+        from: '<sdteamoops@gmail.com',
+        to: stdEmail, //-------------------put stdEmail 
+        subject: '111 Hearing - schedualed date',
+        text: "This is an auto generated email , please dont reply to this email.\n \n You have a hearing on the " + date 
+        + " \n \n Link for meeeting: " + link 
+
+    };
+
+    smtpTransport.sendMail(mailOptionss, (error,response)=>{
+        if(error){
+            res.send(error)
+            console.log(error)
+        }
+        else{
+            res.send('Success')
+            console.log("success")
+        }
+    })
+    smtpTransport.close();
+})
 app.listen(3001, () => {
     console.log("running on port 3001");
 });
