@@ -1268,7 +1268,7 @@ function ChangeStatus(){
 
   );
 
-}
+}//end of Change Status
 
 function SupportingDocuments(){
   const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
@@ -1720,10 +1720,10 @@ function ScheduleMeetings(){
 
 //IMPORTANT needs user email or user id  
 function SRC(){
-    function Header1(props){
+    /*function Header1(props){
       return <h1> {props.text}</h1>;
-    }
-    const buttonStyle = {
+    }*/
+    /*const buttonStyle = {
       width: "60px",
       margin : "25px",
     }
@@ -1735,14 +1735,25 @@ function SRC(){
     color: white;
     cursor: pointer;
     border-radius: 4px;
-    `;
+    `;*/
+    var studno = 1;
+    var studemail = 'test@gmail.com';
 
     function sendSRC(){
       //console.log(2);
-      Axios.post("http://localhost:3001/sendmail").then(alert("Added"));
+      Axios.post("http://localhost:3001/snedSrcEmail",{
+        stdNo: studno,
+        stdEmail: studemail
+      }).then(alert("Added"));
     }
 
-    return (
+    return(
+      <div >
+        <button onClick={sendSRC}>Send</button>
+      </div>
+    );
+
+    /*return (
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
         <img src={logo} height={80} width={80} />
@@ -1754,9 +1765,12 @@ function SRC(){
       <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
       <div style={{ display: "flex", marginLeft: "46%" }}> </div>
-      <Button onclick={sendSRC}>Contact SRC</Button>
+      
+      <Button onclick={UE}>Contact SRC</Button>
+      <button onclick={UE}>Contact SRC</button>
       </div>
-    );
+      
+    );*/
     
 }//end of src email 
 

@@ -550,6 +550,41 @@ app.post("/sendmail" , (req , res)=> {
     res.send("Successful");
 });
 
+app.post("/snedSrcEmail",(req,res)=>{
+    const stdNo = req.body.stdNo;
+    const stdEmail = req.body.stdEmail;
+    let smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        port: 465,
+        auth:{
+            user: 'sdteamoops@gmail.com',
+            pass: 'SD1Team1OOPS!'
+        }
+    });
+
+
+    let mailOptionss ={
+        from: '<sdteamoops@gmail.com',
+        to: 'kiaranre@gmail.com', //-------------------put src email after testing src.academics@students.wits.ac.za
+        subject: 'Student - SRC Help',
+        text: "This is an auto generated email , please dont reply to this email.\n \n Student " + stdNo 
+        + " is requesting for help. \n Contact info: \n Email: " + stdEmail
+
+    };
+
+    smtpTransport.sendMail(mailOptionss, (error,response)=>{
+        if(error){
+            res.send(error)
+            console.log(error)
+        }
+        else{
+            res.send('Success')
+            console.log("success")
+        }
+    })
+    smtpTransport.close();
+})
+
 app.listen(3001, () => {
     console.log("running on port 3001");
 });
