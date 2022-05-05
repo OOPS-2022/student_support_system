@@ -60,13 +60,6 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/createClickedPledge" element ={<CreateClickedPledge />}/>
       <Route path = "/kiaranTest" element ={<KiaranTest />}/>
       <Route path = "/viewTicket" element ={<ViewTicket />}/>
-
-      <Route path="/oimenu" element={<OIMenu/>} />
-      <Route path="/UploadEvidence" element={<UploadEvidence/>} />
-      <Route path="/Schedule" element={<ScheduleMeetings/>} />
-      <Route path="/SupportDocuments" element={<SupportingDocuments/>} />
-      <Route path="/SRC" element={<SRC/>}/>
-      <Route path = "/updateStudent" element ={<UpdateStudentstat/>}/>
     </Routes>
   </Router>,
 
@@ -979,8 +972,6 @@ function CreateClickedPledge(){
 }
 
 function KiaranTest(){
-
-
 function consrc()
 {
   Axios.post("http://localhost:3001/sendhelp", {
@@ -1691,53 +1682,75 @@ function ViewTicket(){
     
 }//end of src email 
 
+function ViewTicket(){
+  const [viewId, setViewId]=useState(3);
+  const [files, setFiles]=useState([]);
+  const [ticket_id, setID]=useState("");
+  const [fileNum, setFileNUm]=useState(0);
 
-function UpdateStudentstat()
-{
-  function Header1(props){
-    return <h1> {props.text}</h1>;
-  }
-  const buttonStyle = {
-    width: "60px",
-    margin : "25px",
-  }
-  
-  const Button = styled.button`
-  background-color: rgb(14,71,161);
-  min-width: 10rem;
-  height: 2rem;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  `;
-
-  const [logged_offences, setLoggedOffences] = useState([])
-  const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
-
-  useEffect(() => {
-    Axios.get('http://localhost:3001/SupportingDocuments').then((response) => {
-      setLoggedOffences(response.data)
+  useEffect(()=>{
+    Axios('http://localhost:3001/fileNumber', {
+    method: 'GET',
+    params: {'ticket_id': 13} //hardcoded for now
+    }).then(response=>{
+    setFileNUm(Number(response.data))
     })
-  }, [])
+    for (let i=0; i<fileNum; i++){
+      Axios('http://localhost:3001/viewTicketFiles', {
+    method: 'GET',
+    responseType: 'blob', //Force to receive data in a Blob Format
+    params: {'id': 13, 'i':i}
+  })
+  .then(response => {
+  //Create a Blob from the PDF Stream
+    const file = new Blob(
+      [response.data], 
+      {type: 'application/pdf'});
+    //console.log(response)
+      //setFiles(response);
+    //Build a URL from the file
+    const fileURL = URL.createObjectURL(file);
+    //Open the URL on new Window
+    window.open(fileURL);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+    }
+  })
 
-
-
-  return (
-    <div id="head">
-    <div style={{ display: "flex", marginLeft: "20%" }}>
-      <img src={logo} height={80} width={80} />
-      <Header1 text="Status" />
-      <Button style={buttonStyle}>HELP</Button> 
-    </div>
-    <div style={{ display: "flex", marginBottom: "1%" }}></div>
-    <div style={{ display: "flex", marginLeft: "42%" }}>Please view status of offenses</div>
-    <div id="table">
-            <Table possible_offences={logged_offences} colNames={colNames} />
-           </div>
-
-    </div>
-  );
   
-}// end of updatestudent
+
+  // const viewPDF = (event)=>{
+  //   setViewId(3);
+  //   Axios('http://localhost:3001/viewTicketFiles', {
+  //   method: 'GET',
+  //   responseType: 'blob', //Force to receive data in a Blob Format
+  //   params: {'id': viewId}
+  // })
+  // .then(response => {
+  // //Create a Blob from the PDF Stream
+  //   const file = new Blob(
+  //     [response.data], 
+  //     {type: 'application/pdf'});
+  //   //console.log(response)
+  //     //setFiles(response);
+  //   //Build a URL from the file
+  //   const fileURL = URL.createObjectURL(file);
+  //   //Open the URL on new Window
+  //   window.open(fileURL);
+  // })
+  // .catch(error => {
+  //   console.log(error);
+  // });
+  // }
+
+
+  // return(
+  //   <div className='App'>
+  //     <button onClick={viewPDF}>View</button>
+  //   </div>
+  // )
+}
 
 export default App;

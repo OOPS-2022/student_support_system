@@ -412,25 +412,29 @@ app.get('/pledgeType', function (req,res){
     })
 })
 
-app.get('/viewTicketFiles', function (req,res){
-    let directory_name='Uploads/Evidence/ticket13'
+app.get('/fileNumber', function (req,res){
+    const id=req.query['ticket_id'];
+    let directory_name='Uploads/Evidence/ticket'+id;
     let filenames = fs.readdirSync(directory_name);
-    var output=[];
-    filenames.forEach((file) => {
-        let filePath=directory_name+'/'+file;
-        //console.log(filePath)
+    let result=filenames.length.toString();
+    res.send(result);  
+})
+
+app.get('/viewTicketFiles', function (req,res){
+    const id=req.query['id'];
+    const i=req.query['i'];
+    let directory_name='Uploads/Evidence/ticket'+id;
+    let filenames = fs.readdirSync(directory_name);
+    let filePath='/'+directory_name+'/'+filenames[i];
         fs.readFile(__dirname + filePath , function (err,data){
-             //res.contentType("application/pdf");
-             //res.write(data);
-            let blob = new Blob([data], {type: 'application / PDF'});
-            output.push(blob);
+             res.contentType("application/pdf");
+             res.send(data);
+            //let blob = new Blob([data], {type: 'application / PDF'});
     //console.log("File:", file);
         });
        
     })
-    console.log(output)
-    res.send(output);
-})
+   
 //-----------------------------------------------------------------------------Schedule meetings
 
 app.get("/Schedule", (req,res)=>{
