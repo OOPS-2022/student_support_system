@@ -64,6 +64,8 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path="/Schedule" element={<ScheduleMeetings/>} />
       <Route path="/SupportDocuments" element={<SupportingDocuments/>} />
       <Route path="/SRC" element={<SRC/>}/>
+      <Route path="/ChangeStatus" element={<ChangeStatus/>}/>
+
     </Routes>
   </Router>,
 
@@ -996,6 +998,10 @@ function OIMenu(){
    {
      navigate("/Schedule")
    }
+   function CS()
+  {
+    navigate("/ChangeStatus")
+  }
   
    function SD()
    {
@@ -1040,7 +1046,12 @@ function OIMenu(){
   
     <div style={{ display: "flex", marginBottom: "5%" }}> </div>
     <div style={{ display: "flex", marginLeft: "45%" }}>
-    <Optbutton  onClick={SD} >Upload Supporting Documents/Status</Optbutton>
+    <Optbutton  onClick={SD} >Upload Supporting Documents</Optbutton>
+    </div>
+
+    <div style={{ display: "flex", marginBottom: "5%" }}> </div>
+    <div style={{ display: "flex", marginLeft: "45%" }}>
+    <Optbutton  onClick={CS} >Change Ticket Status</Optbutton>
     </div>
   
     <div style={{ display: "flex", marginBottom: "5%" }}> </div>
@@ -1088,47 +1099,235 @@ function Table({possible_offences, colNames, width = "auto", height = "auto"}) {
     );
 }// end of table function
 
-function SupportingDocuments()
-  {
 
+function ChangeStatus(){
+  const [logged_offences, setLoggedOffences] = useState([])
+  const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
+
+  const [ticket_id,setTicket_id]= useState("");
+  const [offence_status,setOffence_status] = useState("Not Guilty");
+
+  useEffect(() => {
+    Axios.get('http://localhost:3001/SupportingDocuments').then((response) => {
+      setLoggedOffences(response.data)
+    })
+  }, [])
+
+  const [file, setFile] = useState(null);
+  const fileTypes = ["JPG", "PDF"]; //allowed file types
+    const handleChange = (file) => { //handle change for uploading file
+      setFile(file);
+    };
+  function Header1(props){
+    return <h1> {props.text}</h1>;
+  }
+  const buttonStyle = {
+    width: "60px",
+    margin : "25px",
+  }
   
+  const Button = styled.button`
+  background-color: rgb(14,71,161);
+  min-width: 10rem;
+  height: 2rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  `;
+  
+  const Optbutton = styled.button`
+  background-color: rgb(14,71,161);
+  min-width: 12rem;
+  height: 4rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  `;
+
+  const [student, setStudent] = React.useState('null');
+
+
+  const [possible_users, setPossibleUsers] = useState([]) //to display list of offender names
+  useEffect(() => {
+    Axios.get('http://localhost:3001/getOffenderNames').then((response) => {
+      setPossibleUsers(response.data)
+    })
+  }, [])
+
+  const [possible_tickets, setPossibleTickets] = useState([]) //to display list of tickets
+  useEffect(() => {
+    Axios.get('http://localhost:3001/getTicketids').then((response) => {
+      setPossibleTickets(response.data)
+    })
+  }, [])
+
+  const Dropdown = ({ label, value, options, onChange }) => {
+    return (
+      <label>
+        {label}
+        <select value={value} onChange={onChange}>
+          {options.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </label>
+    );
+  };
+
+  function changeUpdate(){
+    if (ticket_id.length==0){
+      alert("Please fill in details");
+      return;
+    }
+    console.log(offence_status);
+    let inum = parseInt(ticket_id, 10);
+
+    Axios.post("http://localhost:3001/snedStatusUpdate",{
+      status: offence_status,  
+      ticket_id: inum, 
+    })
+
+    var today = new Date();
+
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+    Axios.post("http://localhost:3001/logevent",{
+      ticket_id: inum,
+      desc:"Status has been updated to " + offence_status,
+      date: date,
+    })
+    
+      Axios.post("http://localhost:3001/updateOI",{
+        ticket_id: inum, 
+        offence_status: offence_status,
+      }).then(alert("Updated"));
+      window.location.reload(1);
+  }
+  
+  const handleStatusChange = (event) => {
+    setOffence_status(event.target.value);
+  };
+
+  return (
+    <div id="head">
+    <div style={{ display: "flex", marginLeft: "20%" }}>
+      <img src={logo} height={80} width={80} />
+      <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
+      <Button style={buttonStyle}>HELP</Button> 
+    </div>
+    <div style={{ display: "flex", marginBottom: "1%" }}></div>
+    <div style={{ display: "flex", marginLeft: "42%" }}>Please select student being investigated: </div>
+    <div style={{ display: "flex", marginBottom: "1%" }}></div>
+    <div style={{ display: "flex", marginLeft: "37%" }}> 
+    <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
+          setStudent(e.target.value);
+        }} >
+          <option>choose offender name</option>
+        {possible_users.map((val) => {
+        return <option>{val.offender_name}</option>
+        })}
+        </select>
+
+         </div>
+
+         <div style={{ display: "flex", marginBottom: "1%" }}></div>
+    
+    <div id="table">
+      <Table possible_offences={logged_offences} colNames={colNames} />
+    </div>
+    
+    <div style={{ display: "flex", marginLeft: "42%" }}>Please edit outcome of offense: </div>
+    <div style={{ display: "flex", marginBottom: "1%" }}></div>
+    <form>
+        <div style={{ display: "flex", marginLeft: "37%" }}>
+        <select select style={{marginTop: "10px", fontSize: 15}} id="ticket_ids" onChange={(e) => {
+          setTicket_id(e.target.value);
+        }} >
+          <option>choose ticket id</option>
+        {possible_tickets.map((val) => {
+        return <option>{val.ticket_id}</option>
+        })}
+       
+        </select>
+                </div>
+                </form>
+              
+                <div style={{ display: "flex", marginBottom: "1%" }}></div>
+                <div style={{ display: "flex", marginLeft: "37%" }}>
+    <Dropdown
+        label="Choice:"
+        options={[
+          { label: 'Not Guilty', value: 'Not Guilty' },{ label: 'Pending', value: 'Pending' },{ label: 'Guilty', value: 'Guilty' }
+        ]}
+        //value={Choice}
+      onChange={handleStatusChange}
+      />              </div>
+    <div>
+    <div style={{ display: "flex", marginBottom: "1%" }}> </div> 
+    <div style={{ display: "flex", marginLeft: "36.5%" }}>  <Button onClick={changeUpdate}>Edit</Button> </div> </div>
+   
+  </div>
+  
+
+  );
+
+}//end of Change Status
+
+function SupportingDocuments(){
+  const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
+    //variables
+    const [logged_offences, setLoggedOffences] = useState([])
+    const [file, setFile]=useState({})
     const [name, setName]=useState("")
     const [desc, setDesc]=useState("")
-
-    const [logged_offences, setLoggedOffences] = useState([])
-    const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
-
-    const [ticket_id,setTicket_id]= useState("");
-    const [offence_status,setOffence_status] = useState("Not Guilty");
-
+    const [ticketID, setTicketID]=useState("")
+    
+    //set variables
+    useEffect(() => {
+      Axios.get('http://localhost:3001/SupportingDocuments2').then((response) => {
+        setLoggedOffences(response.data)
+      })
+    }, [])
+  
     const fileChange=(event)=>{
       setFile(event.target.files[0]);
     };
-  
+
+    //button function
     const upload=(event)=>{
+      if(!file.size>0||name.length == 0||desc.length == 0||ticketID.length ==0){
+        alert("Please fill in all the detials/upload a file")
+        return;
+      }
+
+
       let formData=new FormData();
       formData.append("file", file);
       formData.append("name", name);
       formData.append("desc", desc);
+      formData.append("ticketID", ticketID);
       console.log(formData);
-      fetch("http://localhost:3001/UploadEvidence", {
+      fetch("http://localhost:3001/UploadSuppEvidence", {
         method: "post",
         body: formData
       })
+      Axios.post('http://localhost:3001/sendSuppEvenceMail',{
+        filename:name,
+        ticket_id:ticketID
+      });
+      var today = new Date();
+
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+      Axios.post("http://localhost:3001/logevent",{
+        ticket_id: ticketID,
+        desc:"Supporting document " + name + " has been uploaded",
+        date: date,
+      })
+      window.location.reload(1);
     };
 
-    useEffect(() => {
-      Axios.get('http://localhost:3001/SupportingDocuments').then((response) => {
-        setLoggedOffences(response.data)
-      })
-    }, [])
-
-  
-    const [file, setFile] = useState(null);
-    const fileTypes = ["JPG", "PDF"]; //allowed file types
-      const handleChange = (file) => { //handle change for uploading file
-        setFile(file);
-      };
+    //css design
     function Header1(props){
       return <h1> {props.text}</h1>;
     }
@@ -1154,64 +1353,8 @@ function SupportingDocuments()
     cursor: pointer;
     border-radius: 4px;
     `;
-  
-    const [student, setStudent] = React.useState('null');
-    const [outcome, setOutcome] = React.useState('null');
 
-    const [possible_users, setPossibleUsers] = useState([]) //to display list of offences for admin to see while editing
-    useEffect(() => {
-      Axios.get('http://localhost:3001/getUserids').then((response) => {
-        setPossibleUsers(response.data)
-      })
-    }, [])
-
-    const [possible_tickets, setPossibleTickets] = useState([]) //to display list of offences for admin to see while editing
-    useEffect(() => {
-      Axios.get('http://localhost:3001/getTicketids').then((response) => {
-        setPossibleTickets(response.data)
-      })
-    }, [])
-  
-    const handleStudentChange = (event) => {
-      setStudent(event.target.value);
-    };
-  
-    const handleOutcomeChange = (event) => {
-      setOutcome(event.target.value);
-    };
-    const Dropdown = ({ label, value, options, onChange }) => {
-      return (
-        <label>
-          {label}
-          <select value={value} onChange={onChange}>
-            {options.map((option) => (
-              <option value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
-      );
-    };
-
-    function changeUpdate(){
-      if (ticket_id.length==0){
-        alert("Please fill in details");
-        return;
-      }
-      console.log(offence_status);
-      let inum = parseInt(ticket_id, 10);
-        Axios.post("http://localhost:3001/updateOI",{
-          ticket_id: inum, 
-          offence_status: offence_status,
-        }).then(alert("Updated"));
-    }
-    
-    const handleStatusChange = (event) => {
-      setOffence_status(event.target.value);
-    };
-
-
-      
-
+    //display on screen
     return (
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
@@ -1219,124 +1362,106 @@ function SupportingDocuments()
         <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
         <Button style={buttonStyle}>HELP</Button> 
       </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "42%" }}>Please select student being investigated: </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "37%" }}> 
-      <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
-            setStudent(e.target.value);
-          }} >
-            <option>choose user id</option>
-          {possible_users.map((val) => {
-          return <option>{val.user_id}</option>
-          })}
-         
-          </select>
-  
-           </div>
-  
-           <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      
-      <div id="table">
-        <Table possible_offences={logged_offences} colNames={colNames} />
-      </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "42%" }}>Please edit outcome of offense: </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <form>
-          <div style={{ display: "flex", marginLeft: "37%" }}>
-          <select select style={{marginTop: "10px", fontSize: 15}} id="ticket_ids" onChange={(e) => {
-            setTicket_id(e.target.value);
-          }} >
-            <option>choose ticket id</option>
-          {possible_tickets.map((val) => {
-          return <option>{val.ticket_id}</option>
-          })}
-         
-          </select>
-                  </div>
-                  </form>
-                
-                  <div style={{ display: "flex", marginBottom: "1%" }}></div>
-                  <div style={{ display: "flex", marginLeft: "37%" }}>
-      
-      
-      
-
-      <Dropdown
-          label="Choice:"
-          options={[
-            { label: 'Not Guilty', value: 'Not Guilty' },{ label: 'Pending', value: 'Pending' },{ label: 'Guilty', value: 'Guilty' }
-          ]}
-          //value={Choice}
-        onChange={handleStatusChange}
-        />          </div>    
-      <div> 
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "37%" }}> <Button onClick={changeUpdate}>Edit</Button> </div>
-      </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
-      <div style={{ display: "flex", marginLeft: "37%" }}> Please upload any Supporting documents pertaining to student: </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
+      <div style={{ display: "flex", marginLeft: "37%" }}> Please upload any supporting documents pertaining to student: </div>
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
       <div style={{ display: "flex", marginLeft: "37%" }}>
   
       <div>
         <input type="file" onChange={fileChange}/>
-        <div> 
-        <div style={{ display: "flex", marginBottom: "2%" }}></div>
-        <lable>Supporting document File Name:</lable>
+        <select select style={{marginTop: "10px", fontSize: 15}} id="ticket_ids" onChange={(e) => {
+            setTicketID(e.target.value);
+          }} >
+            <option>choose user id</option>
+          {logged_offences.map((val) => {
+          return <option>{val.ticket_id}</option>
+          })}
+         
+          </select>
+          <div>
+          <div style={{ display: "flex", marginBottom: "1%" }}></div>
+        <lable>Supporting Document Name:</lable>
         <input type="text" name="name" onChange={(e) => {
             setName(e.target.value);
           }} />
           </div>
           <div style={{ display: "flex", marginBottom: "1%" }}></div>
-        <label>Description of Supporting document File:</label>   
+        <label>Description of Supporting Document File:</label>
         <input type="text" name="description" onChange={(e) => {
             setDesc(e.target.value);
           }} />
-           <div style={{ display: "flex", marginBottom: "1%" }}></div>
-       <div><button onClick={upload}>upload</button> </div>
+          <div>
+          <div style={{ display: "flex", marginBottom: "1%" }}></div>
+        <button onClick={upload}>upload</button></div>
       </div>
           
       </div>
-     
-    </div>
     
+      <div id="table">
+        <Table possible_offences={logged_offences} colNames={colNames} />
+      </div>
+
+    </div>
   
     );
-  
+   
 }// end of supporting docs
 
-function UploadEvidence()
-  {
-    const [logged_offences, setLoggedOffences] = useState([])
+function UploadEvidence(){
     const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
+    //variables
+    const [logged_offences, setLoggedOffences] = useState([])
+    const [file, setFile]=useState({})
+    const [name, setName]=useState("")
+    const [desc, setDesc]=useState("")
+    const [ticketID, setTicketID]=useState("")
+    
+    //set variables
     useEffect(() => {
       Axios.get('http://localhost:3001/SupportingDocuments1').then((response) => {
         setLoggedOffences(response.data)
       })
     }, [])
-
-    const [file, setFile]=useState({})
-    const [name, setName]=useState("")
-    const [desc, setDesc]=useState("")
   
     const fileChange=(event)=>{
       setFile(event.target.files[0]);
     };
-  
+
+    //button function
     const upload=(event)=>{
+      if(!file.size>0||name.length == 0||desc.length == 0||ticketID.length ==0){
+        alert("Please fill in all the detials/upload a file")
+        return;
+      }
       let formData=new FormData();
       formData.append("file", file);
       formData.append("name", name);
       formData.append("desc", desc);
+      formData.append("ticketID", ticketID);
       console.log(formData);
       fetch("http://localhost:3001/UploadEvidence", {
         method: "post",
         body: formData
       })
+
+      Axios.post('http://localhost:3001/sendEvenceMail',{
+        filename:name,
+        ticket_id:ticketID
+      });
+
+      var today = new Date();
+
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+      Axios.post("http://localhost:3001/logevent",{
+        ticket_id: ticketID,
+        desc:"Supporting document " + name + " has been uploaded",
+        date: date,
+      })
+
+      window.location.reload(1);
     };
-  
+
+    //css design
     function Header1(props){
       return <h1> {props.text}</h1>;
     }
@@ -1362,7 +1487,8 @@ function UploadEvidence()
     cursor: pointer;
     border-radius: 4px;
     `;
-  
+
+    //display on screen
     return (
       <div id="head">
       <div style={{ display: "flex", marginLeft: "20%" }}>
@@ -1370,32 +1496,41 @@ function UploadEvidence()
         <Header1 text="COMMITEE INVESTIGATION: THE OFFENSE" />
         <Button style={buttonStyle}>HELP</Button> 
       </div>
+      
       <div style={{ display: "flex", marginLeft: "37%" }}> Please upload any evidence pertaining to student: </div>
-      <div style={{ display: "flex", marginBottom: "1%" }}></div>
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
       <div style={{ display: "flex", marginLeft: "37%" }}>
   
       <div>
-      
         <input type="file" onChange={fileChange}/>
-        <div style={{ display: "flex", marginBottom: "2%" }}></div>
-        
-        <div> 
-        <lable>Evidence File Name:</lable></div>
-        
-
+        <select select style={{marginTop: "10px", fontSize: 15}} id="ticket_ids" onChange={(e) => {
+            setTicketID(e.target.value);
+          }} >
+           
+            <option>choose user id</option>
+          
+          {logged_offences.map((val) => {
+          return <option>{val.ticket_id}</option>
+          })}
+          
+         
+          </select>
+          <div> 
+          <div style={{ display: "flex", marginBottom: "2%" }}></div>
+        <lable>Evidence File Name:</lable>
         <input type="text" name="name" onChange={(e) => {
             setName(e.target.value);
           }} />
-          <div>
+          </div>
+          <div style={{ display: "flex", marginBottom: "2%" }}></div>
         <label>Description of Evidence File:</label>
-        </div>
         <input type="text" name="description" onChange={(e) => {
             setDesc(e.target.value);
           }} />
-          <div style={{ display: "flex", marginBottom: "2%" }}></div>
-          <div>
-
-        <button onClick={upload}>upload</button></div>
+      <div>
+      <div style={{ display: "flex", marginBottom: "2%" }}></div>
+        <button onClick={upload}>upload</button>
+        </div>
       </div>
           
       </div>
@@ -1409,10 +1544,12 @@ function UploadEvidence()
     );
 }// end of upload evidence
 
+//-------------------------------------------------------------------kiaran this function 
+
 function ScheduleMeetings(){
     const colNames = ["Student Number", "Date","Meeting"];
     
-    const [possible_meetings, setPossibleMeetings] = useState([]) //to display list of offences for admin to see while editing
+    const [possible_meetings, setPossibleMeetings] = useState([]) 
     useEffect(() => {
       Axios.get('http://localhost:3001/Schedule').then((response) => {
         setPossibleMeetings(response.data)
@@ -1420,32 +1557,35 @@ function ScheduleMeetings(){
     }, [])
 
     const [studNo,setStudNo]= useState("");
-    const [meetDate,setMeetDate] = useState("");
     const [meetLink,setMeetLink] = useState("");
+    const [stdEmail,setstdEmail] = useState("");
 
-    const [arrList,setarrList] = useState([]);
-    
-    function changeSelect(name){
-      Axios.post("http://localhost:3001/selectOI",{studNo: name}).then((response)=>{
-          setarrList(response.data);
-          console.log(response.data);
-        });
+    function changeEmail(stdNo){
+      Axios.post('http://localhost:3001/Emailret',{
+        stdNo:stdNo,
+      }).then((response) => {
+        setstdEmail(response.data);
+      })
     }
-    //--------------------------------------------------------------------------------------button add function
+    
     function changeAdd(){
       if ( meetLink.length==0 || studNo.length == 0 ){
         alert("Please fill-in/choose all details");
         return;
       }
-      
-      console.log(year +"-"+month + "-"+ day);
-      console.log(studNo);
-      console.log(meetLink);
+      Axios.post("http://localhost:3001/snedMeetEmail",{
+          date: year +"-"+month + "-"+ day,
+          link: meetLink,
+          stdEmail: stdEmail,
+        });
+
       Axios.post("http://localhost:3001/insertOI",{
           studNo: studNo, 
           meetDate: year +"-"+month + "-"+ day,
           meetLink: meetLink,
         }).then(alert("Added"));
+
+        window.location.reload(1);
     }
 
     //--------------------------------------------------------------------------------------button delete function
@@ -1455,21 +1595,18 @@ function ScheduleMeetings(){
         alert("Please fill in details");
         return;
       }
-      console.log(year +"-"+month + "-"+ day);
-      console.log(studNo);
-      console.log(meetLink);
       Axios.post("http://localhost:3001/deleteOI",{
           studNo: studNo,
           meetDate: year +"-"+month + "-"+ day, 
         }).then(alert("deleted"));
+        window.location.reload(1);
     }
 
     // displays
     const [day, setDay] = React.useState('01');
     const [month, setMonth] = React.useState('01');
     const [year, setYear] = React.useState('2022');
-    const [student, setStudent] = React.useState('1');
-    const [link, setLink] = React.useState('');
+    
     const Dropdown = ({ label, value, options, onChange }) => {
       return (
         <label>
@@ -1486,12 +1623,6 @@ function ScheduleMeetings(){
     //grab data from front end
     const handleDayChange = (event) => {
       setDay(event.target.value);
-    };
-    const handleLinkChange = (event) => {
-      setLink(event.target.value);
-    };
-    const handleStudentChange = (event) => {
-      setStudent(event.target.value);
     };
   
     const handleMonthChange = (event) => {
@@ -1596,7 +1727,7 @@ function ScheduleMeetings(){
                   <input type = 'text' onChange=
                   { 
                     (e) => {
-                      handleLinkChange();
+
                       setMeetLink(e.target.value);
                     }
                   } 
@@ -1608,7 +1739,7 @@ function ScheduleMeetings(){
 
       <div style={{ display: "flex", marginLeft: "42%" }}>
       <select select style={{marginTop: "10px", fontSize: 15}} id="user_ids" onChange={(e) => {
-            setStudNo(e.target.value);
+            setStudNo(e.target.value); changeEmail(e.target.value);
           }} >
             <option>choose user id</option>
           {possible_users.map((val) => {
@@ -1633,10 +1764,10 @@ function ScheduleMeetings(){
             <Table possible_offences={possible_meetings} colNames={colNames} />
            </div>
            <div style={{ display: "flex", marginBottom: "1%" }}></div>
-           <div style={{ display: "flex", marginLeft: "42%" }}>
+           <div style={{ display: "flex", marginLeft: "35%" }}>
            <Button onClick={changeAdd}>Add</Button> </div>
            <div style={{ display: "flex", marginBottom: "1%" }}></div>
-           <div style={{ display: "flex", marginLeft: "42%" }}>
+           <div style={{ display: "flex", marginLeft: "35%" }}>
            <Button onClick={changeDelete}>Delete</Button> </div>
            
   
@@ -1665,16 +1796,18 @@ function SRC(){
     cursor: pointer;
     border-radius: 4px;
     `;
+    var studno = 1;
+    var studemail = 'test@gmail.com';
 
     function sendSRC(){
       console.log(2);
-      //Axios.post("http://localhost:3001/sendmail").then(alert("Added"));
+     // Axios.post("http://localhost:3001/snedSrcEmail",{
+      //  stdNo: studno,
+       // stdEmail: studemail
+      //}).then(alert("Added"));
     }
 
-    function btnSend(){
-      console.log(1);
-      sendSRC();
-    }
+   
 
     return (
       <div id="head">
@@ -1687,9 +1820,14 @@ function SRC(){
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
       <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
-      <div style={{ display: "flex", marginLeft: "46%" }}> 
-      <Button onclick={btnSend}>Contact SRC</Button></div>
+      <div style={{ display: "flex", marginLeft: "46%" }}> </div>
+      
+       <div >
+       <div style={{ display: "flex", marginLeft: "51%" }}> 
+        <button onClick={sendSRC}>Send</button></div>
       </div>
+      </div>
+      
     );
     
 }//end of src email 

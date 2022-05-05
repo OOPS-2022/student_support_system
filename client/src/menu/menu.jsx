@@ -24,10 +24,10 @@ const CARD_PROPS = [
     }
    ,,
       {
-        header: "Investigating offense menu",
+        header: "",
         description: "",
-        button_description: "IO MENU",
-        action : () => navigate("/oimenu"),
+        button_description: "",
+        action : () => {},
       }
      ,
      {
