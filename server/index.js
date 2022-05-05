@@ -620,7 +620,7 @@ app.post("/snedMeetEmail",(req,res)=>{
     let mailOptionss ={
         from: '<sdteamoops@gmail.com',
         to: stdEmail, //-------------------put stdEmail 
-        subject: '111 Hearing - schedualed date',
+        subject: 'Hearing - schedualed date',
         text: "This is an auto generated email , please dont reply to this email.\n \n You have a hearing on the " + date 
         + " \n \n Link for meeeting: " + link 
 
