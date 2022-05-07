@@ -83,6 +83,7 @@ function CreateLog() {     // this is the create log page
     setFile(file);
   };
 
+  console.log(file)
 
   let navigate = useNavigate();
   function back(){
@@ -116,18 +117,19 @@ function CreateLog() {     // this is the create log page
     if (!proccessData()) {
       alert("Please fill in all necessary details");
     } else {
-      Axios.post("http://localhost:3001/createlog", {
-        offenderName: offenderName,
-        offenceType: offenceType,
-        offenceDetails: offenceDetails,
-        offenceCode: offenceCode,
-        offenceLink: offenceLink,
-        offenceOther: offenceOther,
-        submittedBy : localStorage.getItem("user_id"),
-        offenceStatus: "Pending"
-      }).then((res) => {
-        alert(res.data);
-      });
+      let formData=new FormData();
+      formData.append('file' , file);
+      formData.append('offenderName', offenderName)
+      formData.append('offenceType', offenceType);
+      formData.append('offenceDetails',offenceDetails);
+      formData.append('offenceCode', offenceCode);
+      formData.append('offenceOther', offenceOther);
+      formData.append('submittedBy', localStorage.getItem("user_id"));
+      formData.append('offenceStatus',"Pending");
+      fetch('http://localhost:3001/createLog', {
+        method: "post",
+        body: formData
+      })
     }
   }
 
