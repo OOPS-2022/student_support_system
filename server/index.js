@@ -578,10 +578,10 @@ app.post("/sendmail", (req, res) => {
 });
 
 app.get('/viewMyOffences', (req, res) => {
-    const stdNo = req.query['student_nr'];
-    const sqlSelect = 'select * from logged_offences where organization_nr=?';
+    const userID = req.query['userID'];
+    const sqlSelect = "select offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code, offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id where offender_name=?";
     db.query(sqlSelect, [stdNo], (err, result)=>{
-        console.log(result)
+        res.send(result)
     })
 
 })
