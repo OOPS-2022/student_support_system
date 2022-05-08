@@ -5,7 +5,7 @@ import './button.css';
 function Button(props) {
     const isDisabled = props?.disabled ?? false;
     return (
-        <button className="custom-button" onClick = {props?.click} style={props?.style} disabled={isDisabled}>{props.buttonText}</button>
+        <button onClick={() => props?.action()} className="custom-button" style={props?.style} disabled={isDisabled}>{props.buttonText}</button>
     )
 }
 
