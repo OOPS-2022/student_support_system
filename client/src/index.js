@@ -1,6 +1,7 @@
-
+import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
@@ -58,13 +59,26 @@ ReactDOM.render(  // bellow will contain the paths to each page
       <Route path = "/doTest" element ={<DoTest />}/>
       <Route path = "/testReport" element ={<TestReport />}/>
       <Route path = "/createClickedPledge" element ={<CreateClickedPledge />}/>
-      <Route path = "/kiaranTest" element ={<KiaranTest />}/>
-      <Route path = "/viewTicket" element ={<ViewTicket />}/>
+
+
+      <Route path="/oimenu" element={<OIMenu/>} />
+      <Route path="/UploadEvidence" element={<UploadEvidence/>} />
+      <Route path="/Schedule" element={<ScheduleMeetings/>} />
+      <Route path="/SupportDocuments" element={<SupportingDocuments/>} />
+      <Route path="/SRC" element={<SRC/>}/>
+      <Route path = "/updateStudent" element ={<UpdateStudentstat/>}/>
+
     </Routes>
   </Router>,
 
+
+ReactDOM.render(
+  
+    <App />,
+  
   document.getElementById('root')
 );
+
 
 function CreateLog() {     // this is the create log page
 
@@ -117,6 +131,7 @@ function CreateLog() {     // this is the create log page
     if (!proccessData()) {
       alert("Please fill in all necessary details");
     } else {
+
       let formData=new FormData();
       formData.append('file' , file);
       formData.append('offenderName', offenderName)
@@ -130,6 +145,21 @@ function CreateLog() {     // this is the create log page
         method: "post",
         body: formData
       })
+
+      Axios.post("http://localhost:3001/createlog", {
+        offenderName: offenderName,
+        offenceType: offenceType,
+        offenceDetails: offenceDetails,
+        offenceCode: offenceCode,
+        offenceLink: offenceLink,
+        offenceOther: offenceOther,
+        submittedBy : localStorage.getItem("user_id"),
+        currDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        offenceStatus: "Pending"
+      }).then((res) => {
+        alert(res.data);
+      });
+
     }
   }
 
@@ -973,14 +1003,7 @@ function CreateClickedPledge(){
   )
 }
 
-function KiaranTest(){
-function consrc()
-{
-  Axios.post("http://localhost:3001/sendhelp", {
-    }).then((res) => {
-      alert("Sent");
-      });
-}
+
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++Sprint 2+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1638,6 +1661,7 @@ function SRC(){
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
       <div style={{ display: "flex", marginLeft: "32%" }}>If applicable please select the option to contact SRC at src.academics@students.wits.ac.za</div>
       <div style={{ display: "flex", marginBottom: "2%" }}></div>
+
       <div style={{ display: "flex", marginLeft: "46%" }}> <Button onClick={consrc}>Contact SRC</Button> </div>
       </div>
      
@@ -1755,4 +1779,62 @@ function ViewTicket(){
   // )
 }
 
+      <div style={{ display: "flex", marginLeft: "46%" }}> </div>
+      <Button onclick={sendSRC}>Contact SRC</Button>
+      </div>
+    );
+    
+}//end of src email 
+
+
+function UpdateStudentstat()
+{
+  function Header1(props){
+    return <h1> {props.text}</h1>;
+  }
+  const buttonStyle = {
+    width: "60px",
+    margin : "25px",
+  }
+  
+  const Button = styled.button`
+  background-color: rgb(14,71,161);
+  min-width: 10rem;
+  height: 2rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  `;
+
+  const [logged_offences, setLoggedOffences] = useState([])
+  const colNames = ["Ticket ID", "Offender Name", "Offence Discription", "Course Code", "Status"];
+
+  useEffect(() => {
+    Axios.get('http://localhost:3001/SupportingDocuments').then((response) => {
+      setLoggedOffences(response.data)
+    })
+  }, [])
+
+
+
+  return (
+    <div id="head">
+    <div style={{ display: "flex", marginLeft: "20%" }}>
+      <img src={logo} height={80} width={80} />
+      <Header1 text="Status" />
+      <Button style={buttonStyle}>HELP</Button> 
+    </div>
+    <div style={{ display: "flex", marginBottom: "1%" }}></div>
+    <div style={{ display: "flex", marginLeft: "42%" }}>Please view status of offenses</div>
+    <div id="table">
+            <Table possible_offences={logged_offences} colNames={colNames} />
+           </div>
+
+    </div>
+  );
+  
+}// end of updatestudent
+
+
 export default App;
+

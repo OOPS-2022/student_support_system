@@ -5,7 +5,14 @@
   "devDependencies": {
     "jest": "^27.5.1"
   },
+
   "dependencies": {
     "node-blob": "^0.0.2"
+
+
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+
   }
 }
