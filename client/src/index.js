@@ -1,6 +1,7 @@
-
+import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
@@ -68,8 +69,14 @@ ReactDOM.render(  // bellow will contain the paths to each page
     </Routes>
   </Router>,
 
+
+ReactDOM.render(
+  
+    <App />,
+  
   document.getElementById('root')
 );
+
 
 function CreateLog() {     // this is the create log page
 
@@ -1691,3 +1698,4 @@ function UpdateStudentstat()
 }// end of updatestudent
 
 export default App;
+
