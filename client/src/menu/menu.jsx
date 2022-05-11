@@ -1,86 +1,48 @@
-import '../index.js' 
-import React from 'react';
-import Button from '../button/button';
-import Card from '../card/card.jsx';
-import './menu.css';
-import { Link } from 'react-router-dom';
-import image from '../wits_logo.png';
+import React, { Component, useState } from "react";
+import "./menu.css";
+import Btn from "./button/button";
+import { Stack } from "@mui/material";
+import { Button } from "@mui/material";
+import LogOffence from "./logOffence/logOffence";
+import App from "../website";
+import ReactDOM from "react-dom";
+import CustomTable from "./table/table";
+import Welcome from "./welcome/welcome";
 import { useNavigate } from "react-router-dom";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 
 
 
-
-
-
-function Menu() { //this is the menu page - notice "/" in route, shows on startup
-    let cards = [];
-    let navigate = useNavigate();
-const CARD_PROPS = [
-    {
-      header: "Lodge Academic Dishonesty ",
-      description: "Brief description",
-      button_description: "SUBMIT COMPLAINT",
-      action: () =>  navigate("/AcademicOffenceMenu"),
-    }
-   ,,
-      {
-        header: "",
-        description: "",
-        button_description: "",
-        action : () => {},
-      }
-     ,
-     {
-        header: "",
-        description: "",
-        button_description: "",
-        action : () => {},
-      }
-      ,
-      {
-        header: "",
-        description: "",
-        button_description: "",
-        action : () => {},
-      }
-    
-  ];
-
-    const buttonStyle = {
-        width: "50px",
-        margin : "25px",
- 
-       
-      }
-
-    CARD_PROPS.forEach((prop, index) => {
-      cards.push(<Card key={index} header={prop.header} description={prop.description} button_description={prop.button_description} action={prop.action}/>)
-    });
-    function Header1(props){
-        return <h1> {props.text}</h1>;
-        
-    }
- 
-    return (
-        <>
-            <div className="App" >
-                <div style={{ display: "flex", marginLeft: "15%" }}>
-                    <img src={image} height={80} width={80} />
-                    <Header1 text="WITS SUPPORT CENTRE" /> 
-                    <Button buttonText="HELP" style={buttonStyle} />  
-                    
-                </div>
-                
-            </div>
-            
-            <div className="column-wrapper">
-                {cards}
-            </div>
-        </>  
-        
+export default function Menu(props) {
+     
+     let navigate = useNavigate();
+     const about = () => navigate("/About");
+     const logBut = () => navigate("/LogOffence");
+     const possBut = () => navigate("/PossibleOffences");
+     const subBut = () => navigate("/SubmittedOffences");
+     const pledgeBut = () => navigate("/Pledge");
+     const testBut = () => navigate("/CreateTest");
+     const doBut = () => navigate("/DoTest");
+     const myBut = () => navigate("/MyOffences");
+   
   
+return (
+        <div className="menuWrapper" >
+            <h1 sx={{fontFamily:"Arial, Helvetica, sans-serif",color: "black",fontSize:"30px"}}>Menu</h1>
+            <Stack direction="column" spacing={2}>
+              <Btn action={about} description="About"/>
+              {(localStorage.getItem("user_role") != "admin"  &&   (localStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
+              {(localStorage.getItem("user_role") == "admin" &&   (localStorage.getItem("logged_id" )))   &&( <Btn action={possBut} description="Manage Offences" />)}
+              {(localStorage.getItem("user_role") == "admin"&&   (localStorage.getItem("logged_id" )))   &&( <Btn action ={subBut} description ="Submitted Offences" />)}
+              {(localStorage.getItem("user_role") == "admin"&&   (localStorage.getItem("logged_id" )))  &&(<Btn action = {pledgeBut} description="Manage Pledges" />)}
+              {(localStorage.getItem("user_role") == "admin" &&(localStorage.getItem("logged_id" )))  &&( <Btn action = {testBut} description="Create Test"/>)}
+              {(localStorage.getItem("user_role") != "admin" &&(localStorage.getItem("logged_id" )))   &&(<Btn action = {doBut} description="Do Test"/>)}
+              {(localStorage.getItem("user_role") != "admin" &&(localStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
+            </Stack>
+        </div>
+
+
     );
-  }
+}
 
-  export default Menu;
-
+ 
