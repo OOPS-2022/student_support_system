@@ -1,0 +1,11 @@
+.pageWrapper{
+    display: flex;
+    max-width: 100%;
+    border-radius: 7px;
+    min-height: 100vh;
+    flex-direction: column;
+    text-align: center;
+    align-self: center;
+    background-color: rgba(6, 71, 150, 0.071);
+    font-family: Arial, Helvetica, sans-serif;
+}
