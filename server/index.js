@@ -651,6 +651,20 @@ app.get('/pledgeType', function (req, res) {
     })
 })
 
+app.get('/myActions', (req,res)=>{
+    const studentNr=req.query['studentNr'];
+    const sqlSelect='select * from actions where student_id=? and seen="false";';
+    db.query(sqlSelect, [studentNr], (err, result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            console.log(result)
+            res.send(result);
+        }
+    })
+})
+
 app.listen(3001, () => {
     console.log("running on port 3001");
 });
