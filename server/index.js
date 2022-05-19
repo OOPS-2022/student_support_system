@@ -9,6 +9,8 @@ const uploadSignedPledge = multer({ dest: "./Uploads/Pledges/SignedPledges" });
 const uploadStudentPledge = multer({ dest: "./Uploads/Pledges/Test" })
 const fs = require('fs');
 const { dirname } = require("path");
+const res = require("express/lib/response");
+const { error } = require("console");
 const uploadEvidenceDoc = multer({ dest: "./Uploads/Evidence" });
 
 const db = mysql.createPool({
@@ -402,12 +404,12 @@ app.post('/createClickedPledge', function (req, res) {
 
 
 app.post("/insertOI", (req, res) => {
-    const studNo = req.body.studNo;
+    //const studNo = req.body.studNo;
     const meetDate = req.body.meetDate;
     const meetLink = req.body.meetLink;
     const ticket_id = req.body.ticket_id;
-    const sqlSelect = "Insert into meetings (studNo, meetDate, meetLink,ticket_id) values(?,?,?,?)";
-    db.query(sqlSelect, [studNo, meetDate, meetLink, ticket_id], (err, result) => {
+    const sqlSelect = "Insert into meetings (ticket_id, meet_date, meet_link) values(?,?,?)";
+    db.query(sqlSelect, [ticket_id, meetDate, meetLink], (err, result) => {
         console.log(err);
         res.send("inserted");
     });
@@ -465,6 +467,11 @@ app.post("/sendMeetEmail", (req, res) => {
     const stdNo = req.body.stdNo;
     const sqlSelect = 'select email from users where organization_nr=?';
     db.query(sqlSelect, [stdNo], (err, result) => {
+        if(result.length==0){
+            res.send("no email");
+            console.log("no email");
+            return;
+        }
         const stdEmail = result[0].email
         let smtpTransport = nodemailer.createTransport({
             service: 'Gmail',
@@ -663,6 +670,14 @@ app.get('/myActions', (req,res)=>{
             res.send(result);
         }
     })
+})
+
+app.get('/getAllMeetings',(req,res)=>{
+    const sqlQuerry = 'Select meet_link, meet_date from meetings;';
+    db.query(sqlQuerry,(error,result)=>{
+        res.send(result);
+        console.log(result);
+    });
 })
 
 app.listen(3001, () => {
