@@ -15,8 +15,10 @@ Try to configure CI,
 
 Sprint 2:
 Manage offences,
-Make pledges
+make pledges
 
 Sprint 3:
 Add sessions,
-Add calendar
+add calendar and link to database
+
+Make table meetings for calendar: look at text file create_meetings_table.txt
