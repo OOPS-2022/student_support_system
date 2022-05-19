@@ -19,6 +19,4 @@ make pledges
 
 Sprint 3:
 Add sessions,
-add calendar and link to database
-
-Make table meetings for calendar: look at text file create_meetings_table.txt
+add hearing calendar and link to database, make alerts

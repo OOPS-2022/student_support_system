@@ -83,7 +83,7 @@ export default function OI() {
   }, []);
 
   for(var i in prevMeetings){
-    events.push(new event(prevMeetings[i].meet_link,prevMeetings[i].meet_date));
+    events.push(new event(prevMeetings[i].meetLink,prevMeetings[i].meetDate));
   }
   
   
@@ -156,6 +156,7 @@ export default function OI() {
     events.push(new event(meeting,formateDate(calDate)));
     console.log(events);
     const response = Axios.post("http://localhost:3001/insertOI", {
+      studNo: localStorage.getItem("studentNumber"),
       meetDate: formateDate(calDate),
       meetLink: meeting,
       ticket_id: localStorage.getItem("ticket_id")
