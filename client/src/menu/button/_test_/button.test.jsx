@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Button from "./../button";
+import Button from "../button";
 import {isTSAnyKeyword} from "@babel/types";
 
 it("renders without crashing", ()=>{
