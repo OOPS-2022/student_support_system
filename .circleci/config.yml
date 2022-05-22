@@ -37,6 +37,5 @@ workflows:
 
   upload-to-codecov:
     jobs:
-      - node/test:
-          post-steps:
-            - codecov/upload
+      - checkout
+      - codecov/upload
