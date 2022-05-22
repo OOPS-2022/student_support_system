@@ -17,7 +17,7 @@ jobs:
           name: Run tests
       # - run: cd ..
       - codecov/upload:
-          file: '../client/coverage/clover.xml'
+          file: build/coverage-report
           token: 67989bd3-0146-4b00-ab2f-687f58fb1700
      
 
