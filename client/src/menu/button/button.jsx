@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 function Btn(props){
     return(
        
-         <Button variant = "text"  onClick={() => props?.action()}>{props.description}</Button>
+         <Button role ="button" variant = "text"  onClick={() => props?.action()}>{props.description}</Button>
      
     );
 }

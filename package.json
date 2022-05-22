@@ -4,7 +4,9 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.17.12",
+    "@testing-library/dom": "^8.13.0",
     "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^14.2.0",
     "babel-cli": "^6.26.0",
     "codecov": "^3.8.3",
     "jest": "^27.5.1",

@@ -49,7 +49,7 @@ export default function CreateTest(){
               return <option value={val.pledge_id}>{val.pledge_name} ({val.pledge_type})</option>
               })}
               </select>
-              <button onClick={createTest}>Submit:</button>
+              <button role="buttonCreateTest" onClick={createTest}>Submit:</button>
           </div>
         </div>
       );
