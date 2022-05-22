@@ -8,7 +8,7 @@ jobs:
       - image: cimg/node:17.2.0
     steps:
       - checkout:
-        path: ~/client
+          path: ~/client
       - node/install-packages:
           pkg-manager: npm
       -run:
