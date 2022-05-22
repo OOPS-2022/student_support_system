@@ -11,7 +11,7 @@ jobs:
           path: ~/client
       - node/install-packages:
           pkg-manager: npm
-      -run:
+      - run:
           command: npm run test
           name: Run tests
      
