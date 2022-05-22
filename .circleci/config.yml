@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   node: circleci/node@4.7.0
-  codecov: codecov/codecov@1.0.2
 
 jobs:
   build_and_test:
@@ -14,11 +13,9 @@ jobs:
       - run:
           command: 
           cd client
-          npm run test
+          npm test
           name: Run tests
-      - codecov/upload:
-          file: './coverage/clover.xml'
-          token: 67989bd3-0146-4b00-ab2f-687f58fb1700     
+     
 
   deploy: # this can be any name you choose
     docker:
