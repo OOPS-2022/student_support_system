@@ -12,6 +12,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: npm install '@emotion/styled'
+      - run: npm install '@babel/preset-react'
       - run:
           command: npm run test
           name: Run tests
