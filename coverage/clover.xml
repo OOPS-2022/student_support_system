@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1653237307777" clover="3.2.0">
-  <project timestamp="1653237307777" name="All files">
-    <metrics statements="4" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1" elements="7" coveredelements="3" complexity="0" loc="4" ncloc="4" packages="2" files="2" classes="2"/>
+<coverage generated="1653243767379" clover="3.2.0">
+  <project timestamp="1653243767379" name="All files">
+    <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2" elements="7" coveredelements="5" complexity="0" loc="4" ncloc="4" packages="2" files="2" classes="2"/>
     <package name="student_support_system">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="sum.js" path="C:\Users\lizlv\OOPS_V2\student_support_system\sum.js">
@@ -11,10 +11,10 @@
       </file>
     </package>
     <package name="student_support_system.client.src.menu.button">
-      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
       <file name="button.jsx" path="C:\Users\lizlv\OOPS_V2\student_support_system\client\src\menu\button\button.jsx">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="6" count="0" type="stmt"/>
+        <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="6" count="1" type="stmt"/>
         <line num="8" count="0" type="stmt"/>
       </file>
     </package>

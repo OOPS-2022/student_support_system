@@ -16,13 +16,13 @@ SF:client\src\menu\button\button.jsx
 FN:5,Btn
 FN:8,(anonymous_1)
 FNF:2
-FNH:0
-FNDA:0,Btn
+FNH:1
+FNDA:1,Btn
 FNDA:0,(anonymous_1)
-DA:6,0
+DA:6,1
 DA:8,0
 LF:2
-LH:0
+LH:1
 BRF:0
 BRH:0
 end_of_record
