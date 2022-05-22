@@ -13,6 +13,7 @@ jobs:
           pkg-manager: npm
       - run: npm install '@emotion/styled'
       - run: npm install '@babel/preset-react'
+      - run: npm install --save-dev jest-environment-jsdom
       - run:
           command: npm run test
           name: Run tests
