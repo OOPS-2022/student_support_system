@@ -153,17 +153,18 @@ export default function Pledge() {
   const getPDF = async () => {
     const response = await Axios.get('http://localhost:3001/viewFile', {
       responseType: 'blob', //Force to receive data in a Blob Format
-      params: { 'id': localStorage.getItem("pledge_Id") }
+      params: { 'id': sessionStorage.getItem("pledge_Id") }
     });
     //Create a Blob from the PDF Stream
     console.log(response);
     const file = new Blob(
       [response.data],
       { type: 'application/pdf' });
-    if (localStorage.getItem("pledge_type") == "Clicked Pledge") {
+    if (sessionStorage.getItem("pledge_type") == "Clicked Pledge") {
       setFileURL(clickedPDF);
     } else {
       setFileURL(URL.createObjectURL(file));
+      console.log(file);
     }
     //Build a URL from the file
     //Open the URL on new Window
@@ -173,7 +174,7 @@ export default function Pledge() {
     setFileUpload(e.target.files[0]);
     setLabel(e.target.files[0].name);
     // console.log(e.target.files[0]);
-    // localStorage.setItem("pdf", e.target.files[0].url) ;
+    // sessionStorage.setItem("pdf", e.target.files[0].url) ;
   };
   const upload = (event) => {
     if (fileUpload != "") {
@@ -266,7 +267,7 @@ export default function Pledge() {
               </TableHead>
               <TableBody>
                 {Object.values(pledges).map((obj, index) => (
-                  <StyledTableRow key={index} onClick={async () => { localStorage.setItem("pledge_Id", (obj["pledge_id"])); localStorage.setItem("pledge_type", obj["pledge_type"]); viewPDF(); }}>
+                  <StyledTableRow key={index} onClick={async () => { sessionStorage.setItem("pledge_Id", (obj["pledge_id"])); sessionStorage.setItem("pledge_type", obj["pledge_type"]); viewPDF(); }}>
                     <StyledTableCell >{obj["pledge_name"]}</StyledTableCell>
                     <StyledTableCell >{obj["pledge_desc"]}</StyledTableCell>
                     <StyledTableCell>{obj["pledge_type"]}</StyledTableCell>

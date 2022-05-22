@@ -61,7 +61,7 @@ export default function MyOffence() {
     const [offences, setOffences] = React.useState([]);
     useEffect(() => {
          Axios.get("http://localhost:3001/viewMyOffences", {
-            params: { 'userID': localStorage.getItem("user_id") }
+            params: { 'userID': sessionStorage.getItem("user_id") }
         }).then((res) => {
         console.log(res.data);
         setOffences(res.data);
@@ -93,7 +93,7 @@ export default function MyOffence() {
                                 </TableHead>
                                 <TableBody>
                                     {offences.map((obj, index) => (
-                                        <StyledTableRow key={index} onClick ={ () =>{ handleClick();localStorage.setItem("ticket_id_student",obj["ticket_id"]);}}  >
+                                        <StyledTableRow key={index} onClick ={ () =>{ handleClick();sessionStorage.setItem("ticket_id_student",obj["ticket_id"]);}}  >
                                             <StyledTableCell >{obj["offence_name"]}</StyledTableCell>
                                             <StyledTableCell >{obj["crs_code"]}</StyledTableCell>
                                             <StyledTableCell>{obj["offence_status"]}</StyledTableCell>

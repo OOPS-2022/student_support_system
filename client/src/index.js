@@ -20,7 +20,8 @@ import CreateTest from "./menu/createTest/createTest";
 import DoTest from "./menu/doTest/doTest";
 import MyOffence from "./menu/myOffences/myOffences";
 import MyTickets from "./menu/myTickets/myTickets";
-
+import Sessions from "./menu/sessions/sessions";
+import MySessions from "./menu/mySessions/mySessions";
 
 
 
@@ -42,6 +43,8 @@ ReactDOM.render(
             <Route path ="/DoTest" element={<App page={<DoTest/>} />}  />
             <Route path ="/MyOffences" element={<App page={<MyOffence/>} />}  />
             <Route path ="/MyTickets" element={<App page={<MyTickets/>} />}  />
+            <Route path ="/MySessions" element={<App page={<MySessions/>} />}  />
+            <Route path ="/Sessions" element={<App page={<Sessions/>} />}  />
         </Routes>
     </Router>
     , document.getElementById("root")

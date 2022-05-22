@@ -52,7 +52,7 @@ export default function MyTickets() {
 
     useEffect(() => {
         Axios.get("http://localhost:3001/selectOffence", {
-           params: { 'ticket_id': localStorage.getItem("ticket_id_student") }
+           params: { 'ticket_id': sessionStorage.getItem("ticket_id_student") }
        }).then((res) => {
         setStatus(res.data["offence_status"]);
         setDesc(res.data["details"]);
@@ -65,7 +65,7 @@ export default function MyTickets() {
 
    useEffect(() => {
     Axios.get("http://localhost:3001/ticketTracker", {
-       params: { 'ticketID': localStorage.getItem("ticket_id_student") }
+       params: { 'ticketID': sessionStorage.getItem("ticket_id_student") }
    }).then((res) => {
    setRecord(res.data);
    }
@@ -76,7 +76,7 @@ export default function MyTickets() {
 
     useEffect(() => {
         Axios.get("http://localhost:3001/myHearing", {
-           params: { 'ticket_id': localStorage.getItem("ticket_id_student") }
+           params: { 'ticket_id': sessionStorage.getItem("ticket_id_student") }
        }).then((res) => {
        console.log(res.data);
        setMeetings(res.data);
@@ -93,7 +93,7 @@ export default function MyTickets() {
     return (
 
         <div className="pageWrapper">
-            <h1>Ticket {localStorage.getItem("ticket_id_student")}</h1>
+            <h1>Ticket {sessionStorage.getItem("ticket_id_student")}</h1>
             <div className="ticketForm">
 
                 <div>

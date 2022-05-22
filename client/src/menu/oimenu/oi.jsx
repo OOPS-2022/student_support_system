@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../page.css"
 import { MenuItem, TextField, Button, Box, Typography, Tabs, Tab } from "@mui/material";
 import Axios from 'axios';
 import PropTypes from 'prop-types';
 import "./oi.css";
 import "../page.css"
+import './calender.css';
+import {CalendarComponent} from '@syncfusion/ej2-react-calendars';
+
+import { Calendar, dateFnsLocalizer, momentLocalizer } from 'react-big-calendar';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"
+
+//these are used to set up the big calendar - MY CALENDAR tab
+const locales ={
+  "en-US": require("date-fns/locale/en-US")
+}
+const localizer =dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales
+});
+
 
 function TabPanel(props) {
 
@@ -40,36 +64,72 @@ function a11yProps(index) {
   };
 }
 export default function OI() {
+  const events=[];//array for the events of the calander (uses object event)
+  class event{ //-------------------the class for object event 
+    constructor(title,sDate){
+      this.title = title;
+      this.allDay = true;
+      this.start = new Date(sDate);
+      this.end = new Date(sDate);
+    }
+  }
+  
+  //gets all the previous meetings scheduled from the database
+  const [prevMeetings,setPrevMeetings] = useState([])
+  useEffect(() => {
+    Axios.get('http://localhost:3001/getAllMeetings').then((response) => {
+      setPrevMeetings(response.data)
+    })
+  }, []);
+
+  for(var i in prevMeetings){
+    events.push(new event(prevMeetings[i].meetLink,prevMeetings[i].meetDate));
+  }
+  
+  
+
   const [meeting, setMeeting] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const [fileUpload, setFileUpload] = React.useState();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const [day, setDay] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [Month, setMonth] = React.useState("");
-
-  const Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
+  //used to populate the drop-downbox for update ticket tab 
   const Status = ["Not Guilty", "Guilty", "Pending"];
+  //set the start date for meetings that can be booked - tab SHEDULE MEETING
+  const startDate = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+  //set the start end date for meetings that can be booked - tab SHEDULE MEETING
+  const endDate = new Date(new Date().getFullYear()+1,new Date().getMonth(),new Date().getDate());
+  //gets the calander date from tab SHEDULE MEETING
+  const [calDate,setcalDate] = React.useState(new Date());
 
-  const [option, setOption] = React.useState("");
-  const handleOption = (e) => {
-    setOption(e.target.value);
-    setMonth(e.target.value);
-  };
+  //------------------------------makes digit to become two digits - tab SHEDULE MEETING
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+  //------------------------------formates date yyyy-mm-dd - tab SHEDULE MEETING
+  function formateDate(date){
+    return[
+      padTo2Digits(date.getFullYear()),
+      padTo2Digits(date.getMonth()+1),
+      padTo2Digits(date.getDate()),
+    ].join('-');
+  }
+
+  
   const [outcome, setOutcome] = React.useState("");
   const handleOutcome = (e) => {
     setOutcome(e.target.value);
   };
+  
 
+  //Upload evidence files - Update Ticket tab
   const upload = (e) => {
     setFileUpload(e.target.files[0]);
     if (fileUpload != "") {
       let formData = new FormData();
       formData.append("file", fileUpload);
-      formData.append("ticket_id", localStorage.getItem("ticket_id"));
+      formData.append("ticket_id", sessionStorage.getItem("ticket_id"));
       console.log(formData);
       fetch("http://localhost:3001/UploadEvidence", {
         method: "post",
@@ -78,29 +138,35 @@ export default function OI() {
     }
   };
 
+  //update status - change to Guilty/Not Guilty and Pending and sends email to notify of change made
   const updateStatus = async () => {
     const response = await Axios.post("http://localhost:3001/updateOI", {
-      ticket_id: localStorage.getItem("ticket_id"),
+      ticket_id: sessionStorage.getItem("ticket_id"),
       offence_status: outcome,
     })
     const responseStatus = await Axios.post("http://localhost:3001/sendUpdateEmail", {
-      ticket_id: localStorage.getItem("ticket_id"),
+      ticket_id: sessionStorage.getItem("ticket_id"),
       status: outcome,
-      stdNo: localStorage.getItem("studentNumber")
+      stdNo: sessionStorage.getItem("studentNumber")
     })
   }
+
+  //used for Sheduling a meeting and sends email to notify of meeting made
   const schedule = async () => {
+    events.push(new event(meeting,formateDate(calDate)));
+    console.log(events);
     const response = Axios.post("http://localhost:3001/insertOI", {
-      studNo: localStorage.getItem("studentNumber"),
-      meetDate: year + "-" + Month + "-" + day,
+      studNo: sessionStorage.getItem("studentNumber"),
+      meetDate: formateDate(calDate),
       meetLink: meeting,
-      ticket_id: localStorage.getItem("ticket_id")
+      ticket_id: sessionStorage.getItem("ticket_id")
     })
     const responseEmail = Axios.post("http://localhost:3001/sendMeetEmail", {
-      stdNo: localStorage.getItem("studentNumber"),
-      meetDate: year + "-" + Month + "-" + day,
+      stdNo: sessionStorage.getItem("studentNumber"),
+      meetDate: formateDate(calDate),
       meetLink: meeting,
     })
+    window.location.reload(1);
   }
 
   return (
@@ -109,42 +175,17 @@ export default function OI() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Schedule Meeting"></Tab>
           <Tab label="Update Ticket"></Tab>
+          <Tab label="My Calendar"></Tab>
 
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
         {
           <div className="oiForm">
-            <h1>Schedule a meeting with student {localStorage.getItem("studentNumber")} for ticket {localStorage.getItem("ticket_id")}:</h1>
-            <TextField label="Day"
-              style={{ minWidth: "250px" }}
-              onChange={(e) => {
-                setDay(e.target.value);
-              }}
-            />
-
-            <TextField style={{ minWidth: "250px" }}
-              id="outlined-name"
-              label="Month"
-              select
-              value={option}
-              onChange={handleOption}
-            >
-              {Months.map((option, index) => (
-
-                <MenuItem value={option}>
-                  {option}
-                </MenuItem>
-
-
-              ))}
-
-            </TextField>
-            <TextField label="Year"
-              style={{ minWidth: "250px" }}
-              onChange={(e) => {
-                setYear(e.target.value);
-              }}
+            <h1>Schedule a meeting with student {sessionStorage.getItem("studentNumber")} for ticket {sessionStorage.getItem("ticket_id")}:</h1>
+            <CalendarComponent onChange={(e) => {
+                setcalDate(e.target.value);
+              }} min={startDate} max={endDate}
             />
             <TextField label="Link to meeting:"
               style={{ minWidth: "300px" }}
@@ -152,6 +193,7 @@ export default function OI() {
                 setMeeting(e.target.value);
               }}
             />
+
             <Button variant="contained" onClick={schedule}>Schedule</Button>
           </div>}
 
@@ -200,6 +242,19 @@ export default function OI() {
             </div>
           </div>
         }
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <div>
+          <h1>All Scheduled Meetings</h1>
+          <Calendar 
+            localizer={localizer} 
+            events={events}
+            startAccessor="start" 
+            endAccessor="end" 
+            style={{height: 500, margin:"50px"}}
+          />
+
+        </div>
       </TabPanel>
 
     </div>

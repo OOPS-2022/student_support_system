@@ -51,28 +51,59 @@ app.post("/LogOffenceNoFile", (req, res) => {
     let ticket_id;
     console.log(req.body);
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = ?";  // get offence_id from table
-    db.query(sqlSelect,[offenceType] ,(err, result) => {
+    db.query(sqlSelect, [offenceType], (err, result) => {
         if (result[0] != null) {
             offenceID = result[0].offence_id;
             const sqlInsert = "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
             db.query(sqlInsert, [offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy], (err, result) => {
-
+                const sqlGetId = "SELECT * FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
+                db.query(sqlGetId, (err, result) => {
+                    ticket_id = result[0].ticket_id;
+                    const sqlInsert = "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
                     if (offenceType === "other") {
-                        const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
-                        db.query(sqlSelect, (err, result) => {
-                            ticket_id = result[0].ticket_id;
-                            const sqlInsert = "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
-                            db.query(sqlInsert, [ticket_id, offenceOther], (err, result) => {
-                                if (err !== null) {
-                                    const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";
-                                    db.query(sqlDelete, (err, result));
-                                    res.send("Failed");
-                                    return;
-                                }
-                            });
+                        db.query(sqlInsert, [ticket_id, offenceOther], (err, result) => {
+                            if (err !== null) {
+                                const sqlDelete = "DELETE FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";
+                                db.query(sqlDelete, (err, result));
+                                //res.send("Failed");
+                                //return;
+                            }
                         });
+
                     }
-            
+                    const dir = './Uploads/Evidence/ticket' + ticket_id;
+                        const saveLink = '/Uploads/Evidence/ticket' + ticket_id;
+                        fs.mkdir(dir, err => {
+                            if (err) {
+                                throw err;
+                            }
+                        })
+                        //now insert this directory into database
+                        const sqlUpdateLink = 'Update logged_offences set ticket_link=? where ticket_id=?';
+                        db.query(sqlUpdateLink, [saveLink, ticket_id], (err, result) => {
+                            if (err != null) {
+                                console.log(err)
+                            }
+                        })
+                    const sqlGetStudent = "select user_id from users where organization_nr=?";
+                    const sqlInsertAction = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)";
+                    db.query(sqlGetStudent, [offenderName], (err, result) => {
+                        let student_id = result[0].user_id;
+                        let table = "logged_offence";
+                        let tableID = ticket_id;
+                        let seen = "false";
+                        let date = new Date().toISOString().slice(0, 10);
+                        let actionDesc = "An offence has been logged against you.";
+                        db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                            if (err != null) {
+                                console.log(err)
+                            }
+                        })
+
+                    })
+                })
+
+
             });
         }
     });
@@ -98,12 +129,12 @@ app.post("/LogOffenceNoFile", (req, res) => {
         subject: "Logged Offence",
         text: "This is an auto generated email.\nA student has reported an offence against you under the category of " + offenceType + ", an investigation into this case will follow."
     }
-    transporter.sendMail(mailOptions, function(err, success){
-        if(err){
+    transporter.sendMail(mailOptions, function (err, success) {
+        if (err) {
             console.log(err);
             res.send("Unable to send email to offender");
-        }else{
-            console.log("Email sent to "+ offenderEmail)
+        } else {
+            console.log("Email sent to " + offenderEmail)
         }
     })
 
@@ -124,7 +155,7 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
     let ticket_id;
     console.log(req.body);
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = ?";  // get offence_id from table
-    db.query(sqlSelect,[offenceType] ,(err, result) => {
+    db.query(sqlSelect, [offenceType], (err, result) => {
         if (result[0] != null) {
             offenceID = result[0].offence_id;
             const sqlInsert = "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
@@ -134,12 +165,11 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
                     return;
                 } else {
                     //create file named for the ticket id
-                    const sqlGetId = "SELECT ticket_id FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";
+                    const sqlGetId = "SELECT ticket_id FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";//get ticket
                     db.query(sqlGetId, (err, result) => {
-                        let id = result[0].ticket_id;
-                        console.log(id)
-                        const dir = './Uploads/Evidence/ticket' + id;
-                        const saveLink = '/Uploads/Evidence/ticket' + id;
+                        ticket_id = result[0].ticket_id;
+                        const dir = './Uploads/Evidence/ticket' + ticket_id;
+                        const saveLink = '/Uploads/Evidence/ticket' + ticket_id;
                         fs.mkdir(dir, err => {
                             if (err) {
                                 throw err;
@@ -147,7 +177,7 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
                         })
                         //now insert this directory into database
                         const sqlUpdateLink = 'Update logged_offences set ticket_link=? where ticket_id=?';
-                        db.query(sqlUpdateLink, [saveLink, id], (err, result) => {
+                        db.query(sqlUpdateLink, [saveLink, ticket_id], (err, result) => {
                             if (err != null) {
                                 console.log(err)
                             }
@@ -155,28 +185,40 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
                         //let fileType=req.file.mimetype.split("/")[1];
                         let newFileName = Date.now() + req.file.originalname;
                         let oldPath = "./Uploads/Evidence/" + req.file.filename;
-                        let newPath = "./Uploads/Evidence/ticket" + id + '/' + newFileName
+                        let newPath = "./Uploads/Evidence/ticket" + ticket_id + '/' + newFileName
                         fs.rename(oldPath, newPath, function (err) {
                             console.log(err);
                         });
-                    })
 
-
+                        const sqlInsert = "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
                     if (offenceType === "other") {
-                        const sqlSelect = "SELECT * FROM other ORDER BY ticket_id DESC LIMIT 1";  // get ticket_id the ticket we just created
-                        db.query(sqlSelect, (err, result) => {
-                            ticket_id = result[0].ticket_id;
-                            const sqlInsert = "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);";   // insert into log table
-                            db.query(sqlInsert, [ticket_id, offenceOther], (err, result) => {
-                                if (err !== null) {
-                                    const sqlDelete = "DELETE FROM offence_list ORDER BY ticket_id DESC LIMIT 1";
-                                    db.query(sqlDelete, (err, result));
-                                    res.send("Failed");
-                                    return;
-                                }
-                            });
+                        db.query(sqlInsert, [ticket_id, offenceOther], (err, result) => {
+                            if (err !== null) {
+                                const sqlDelete = "DELETE FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";
+                                db.query(sqlDelete, (err, result));
+                                //res.send("Failed");
+                                //return;
+                            }
                         });
+
                     }
+                    const sqlGetStudent = "select user_id from users where organization_nr=?";
+                    const sqlInsertAction = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)";
+                    db.query(sqlGetStudent, [offenderName], (err, result) => {
+                        let student_id = result[0].user_id;
+                        let table = "logged_offence";
+                        let tableID = ticket_id;
+                        let seen = "false";
+                        let date = new Date().toISOString().slice(0, 10);
+                        let actionDesc = "An offence has been logged against you.";
+                        db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                            if (err != null) {
+                                console.log(err)
+                            }
+                        })
+
+                    })
+                    })
                 }
             });
         }
@@ -316,10 +358,11 @@ app.get('/viewTicketFiles', function (req, res) {
     const i = req.query['i'];
     let directory_name = 'Uploads/Evidence/ticket' + id;
     let filenames = fs.readdirSync(directory_name,  { withFileTypes: true });
-    let filePath = '/' + directory_name + '/' + filenames[i];
-        
+    let filePath =   directory_name + '/' + filenames[i].name;
     fs.readFile(__dirname +"/"+filePath, function (err, data) {
+        console.log(__dirname +"/"+filePath);
         res.contentType("application/pdf");
+        console.log(err);
         res.send(data);
         //console.log(__dirname);
     });
@@ -327,7 +370,6 @@ app.get('/viewTicketFiles', function (req, res) {
         //console.log(__dirname);
   
         //let blob = new Blob([data], {type: 'application / PDF'});
-        //console.log("File:", file);
   
 
 })
@@ -406,10 +448,40 @@ app.post("/insertOI", (req, res) => {
     const meetDate = req.body.meetDate;
     const meetLink = req.body.meetLink;
     const ticket_id = req.body.ticket_id;
-    const sqlSelect = "Insert into meetings (studNo, meetDate, meetLink,ticket_id) values(?,?,?,?)";
-    db.query(sqlSelect, [studNo, meetDate, meetLink, ticket_id], (err, result) => {
-        console.log(err);
-        res.send("inserted");
+    const sqlInsertMeeting = "Insert into meetings (studNo, meetDate, meetLink,ticket_id) values(?,?,?,?)";
+    const sqlSelect = "Select user_id from users where organization_nr=?";
+    const sqlInsertAction = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)";
+    db.query(sqlInsertMeeting, [studNo, meetDate, meetLink, ticket_id], (err, result) => {
+        if (err != null) {
+            console.log(err)
+        }
+        else {
+            let student_id;
+            db.query(sqlSelect, [studNo], (err, result) => {
+                if (err != null) {
+                    console.log(err)
+                }
+                else {
+                    console.log(result)
+                    student_id = result[0].user_id;
+                    let table = "meeting";
+                    let tableID = ticket_id;
+                    let seen = "false";
+                    let date = new Date().toISOString().slice(0, 10);
+                    let actionDesc = "Hearing has been scheduled";
+                    db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                        if (err != null) {
+                            console.log(err)
+                        }
+                        else {
+                            res.send("successful")
+                        }
+                    })
+                }
+
+
+            })
+        }
     });
 });
 
@@ -418,10 +490,40 @@ app.post("/updateOI", (req, res) => {
     const offence_status = req.body.offence_status;
     const sqlSelect = "UPDATE logged_offences SET offence_status = ? WHERE ticket_id = ?";
     db.query(sqlSelect, [offence_status, ticket_id], (err, result) => {
-        res.send("update");
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            let student_id;
+            const sqlGetStudent="select user_id from users left join logged_offences on offender_name=organization_nr where ticket_id=?;"
+            db.query(sqlGetStudent, [ticket_id], (err, result) => {
+                if (err != null) {
+                    console.log(err)
+                }
+                else {
+                    console.log(result)
+                    student_id = result[0].user_id;
+                    let table = "logged_offences";
+                    let tableID = ticket_id;
+                    let seen = "false";
+                    let date = new Date().toISOString().slice(0, 10);
+                    let actionDesc = "Your offence ticket has been updated";
+                    const sqlInsertAction = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)";
+                    db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                        if (err != null) {
+                            console.log(err)
+                        }
+                        else {
+                            res.send("successful")
+                        }
+                    })
+                }
+
+
+            })
+        }
     });
 });
-
 app.post("/sendhelp", (req, res) => {
     const stdNo = req.body.stdNo;
     const sqlSelect = 'select email from users where organization_nr=?';
@@ -652,7 +754,8 @@ app.get('/pledgeType', function (req, res) {
 })
 
 app.get('/myActions', (req,res)=>{
-    const studentNr=req.query['studentNr'];
+    const studentNr=req.query['studentID'];
+    console.log(studentNr);
     const sqlSelect='select * from actions where student_id=? and seen="false";';
     db.query(sqlSelect, [studentNr], (err, result)=>{
         if (err!=null){
@@ -664,6 +767,122 @@ app.get('/myActions', (req,res)=>{
         }
     })
 })
+
+app.post("/insertses", (req, res) => {
+    const course_id = req.body.course_id;
+    const session_type = req.body.sestype;
+    const date = req.body.date ;
+    const time = req.body.time;
+    console.log(course_id)
+    console.log(session_type)
+    const sqlInsert = "Insert into sessions (course_id,session_type,date,time) values(?,?,?,?)";
+    db.query(sqlInsert, [course_id,session_type,date,time], (err, result) => {
+        if(err!=null){
+            res.send(err)
+            console.log(err);
+        }
+        else{
+            const sqlGetId = "SELECT session_id FROM sessions ORDER BY session_id DESC LIMIT 1";//get last  created session
+            db.query(sqlGetId, (err, result)=>{
+                let session_id=result[0].session_id;
+                const sqlGetStudents="select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
+                db.query(sqlGetStudents, [session_id], (err, result)=>{
+                    console.log(result);
+                    for (let i=0; i<result.length;i++){
+                        let student_id=result[i].user_id;
+                        let table="sessions";
+                        let tableID=session_id;
+                        let seen="false";
+                        let date=new Date().toISOString().slice(0, 10);
+                        let actionDesc = "A new session has been uploaded";
+                        const sqlInsert="Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)";
+                        db.query(sqlInsert, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                            if (err != null) {
+                                console.log(err)
+                            }
+                        })
+                    }
+                })
+            })
+        }
+
+    });
+})
+
+
+app.get("/sessions",(req,res)=>{
+    const sqlSelect='select * from sessions';
+    db.query(sqlSelect, (err, result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            console.log(result)
+            res.send(result);
+        }
+    })
+
+})
+
+app.get("/getSession",(req,res)=>{
+    const session_id=req.query['session_id'];
+    const sqlSelect='select * from sessions where session_id=?';
+    db.query(sqlSelect, [session_id], (err, result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            console.log(result)
+            res.send(result);
+        }
+    })
+
+})
+
+app.post("/updateses", (req, res) => {
+    const session_id = req.body.session_id;
+    const date = req.body.date;
+    const time = req.body.time;
+    console.log(req.body);
+    const sqlSelect = "UPDATE sessions SET date = ?, time =? WHERE session_id = ?";
+    db.query(sqlSelect, [date,time, session_id], (err, result) => {
+        console.log(err);
+        res.send("update");
+    });
+})
+
+app.get('/mySessions', (req,res)=>{
+    const studentID=req.query['studentID'];
+    const sqlSelect='select session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
+    db.query(sqlSelect, [studentID], (err,result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            res.send(result)
+        }
+    })
+})
+
+app.post('/viewAction', (req,res)=>{
+    const actionId=req.body.actionID;
+    console.log(actionId);
+    const sqlUpdate="Update actions set seen='true' where action_id=?";
+    db.query(sqlUpdate, [actionId], (err, result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+    })
+})
+
+app.get('/getAllMeetings',(req,res)=>{
+    const sqlQuerry = 'Select meetLink, meetDate from meetings;';
+    db.query(sqlQuerry,(error,result)=>{
+        res.send(result);
+        console.log(result);
+    });
+})
+
 
 app.listen(3001, () => {
     console.log("running on port 3001");

@@ -99,7 +99,7 @@ export default function Submitted() {
         </TableHead>
         <TableBody>
         {Object.values(rows).map((obj,index) => (
-            <StyledTableRow  key = {index} onClick={() =>{ localStorage.setItem("ticket_id", obj["ticket_id"]); navigate("/Ticket");}}   hover={true}>
+            <StyledTableRow  key = {index} onClick={() =>{ sessionStorage.setItem("ticket_id", obj["ticket_id"]); navigate("/Ticket");}}   hover={true}>
                 <StyledTableCell >{obj["offender_name"]}</StyledTableCell>
                  <StyledTableCell >{obj["offence_name"]}</StyledTableCell> 
                 <StyledTableCell >{obj["crs_code"]}</StyledTableCell>

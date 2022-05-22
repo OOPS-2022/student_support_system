@@ -24,6 +24,8 @@ export default function Menu(props) {
      const testBut = () => navigate("/CreateTest");
      const doBut = () => navigate("/DoTest");
      const myBut = () => navigate("/MyOffences");
+     const mySess = () => navigate("/MySessions");
+     const sess = () => navigate("/Sessions");
    
   
 return (
@@ -31,13 +33,15 @@ return (
             <h1 sx={{fontFamily:"Arial, Helvetica, sans-serif",color: "black",fontSize:"30px"}}>Menu</h1>
             <Stack direction="column" spacing={2}>
               <Btn action={about} description="About"/>
-              {(localStorage.getItem("user_role") != "admin"  &&   (localStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
-              {(localStorage.getItem("user_role") == "admin" &&   (localStorage.getItem("logged_id" )))   &&( <Btn action={possBut} description="Manage Offences" />)}
-              {(localStorage.getItem("user_role") == "admin"&&   (localStorage.getItem("logged_id" )))   &&( <Btn action ={subBut} description ="Submitted Offences" />)}
-              {(localStorage.getItem("user_role") == "admin"&&   (localStorage.getItem("logged_id" )))  &&(<Btn action = {pledgeBut} description="Manage Pledges" />)}
-              {(localStorage.getItem("user_role") == "admin" &&(localStorage.getItem("logged_id" )))  &&( <Btn action = {testBut} description="Create Test"/>)}
-              {(localStorage.getItem("user_role") != "admin" &&(localStorage.getItem("logged_id" )))   &&(<Btn action = {doBut} description="Do Test"/>)}
-              {(localStorage.getItem("user_role") != "admin" &&(localStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
+              {(sessionStorage.getItem("user_role") == "admin"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={sess} description="Sessions"/>)}
+              {(sessionStorage.getItem("user_role") != "admin"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={mySess} description="My Sessions"/>)}
+              {(sessionStorage.getItem("user_role") != "admin"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
+              {(sessionStorage.getItem("user_role") == "admin" &&   (sessionStorage.getItem("logged_id" )))   &&( <Btn action={possBut} description="Manage Offences" />)}
+              {(sessionStorage.getItem("user_role") == "admin"&&   (sessionStorage.getItem("logged_id" )))   &&( <Btn action ={subBut} description ="Submitted Offences" />)}
+              {(sessionStorage.getItem("user_role") == "admin"&&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action = {pledgeBut} description="Manage Pledges" />)}
+              {(sessionStorage.getItem("user_role") == "admin" &&(sessionStorage.getItem("logged_id" )))  &&( <Btn action = {testBut} description="Create Test"/>)}
+              {(sessionStorage.getItem("user_role") != "admin" &&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {doBut} description="Do Test"/>)}
+              {(sessionStorage.getItem("user_role") != "admin" &&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
             </Stack>
         </div>
 

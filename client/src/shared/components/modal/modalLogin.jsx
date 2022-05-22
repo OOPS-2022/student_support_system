@@ -47,9 +47,9 @@ export default function ModalLogin(props){
               console.log("if true");
               lgcUser_id = response.data[0]["user_id"];
               lgRole =response.data[0]["role"];
-              localStorage.setItem("user_id",lgcUser_id );
-              localStorage.setItem("user_role",lgRole );
-              localStorage.setItem("logged_id",true);
+              sessionStorage.setItem("user_id",lgcUser_id );
+              sessionStorage.setItem("user_role",lgRole );
+              sessionStorage.setItem("logged_id",true);
               isTrue = true ;
             }else{
               console.log("if false");
@@ -63,7 +63,7 @@ export default function ModalLogin(props){
   let navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {setOpen(true); navigate("/Login");}
-  const handleClose = () => {setOpen(false); navigate("/");}
+  const handleClose = () => {setOpen(false); navigate("/About"); window.location.reload();}
   const login = async () => {if(lgPassword == ""){
     alert('Please type username and password');}
     else{ 

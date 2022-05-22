@@ -22,11 +22,11 @@ function LogOffence() {
   const [option, setOption] = React.useState("");
   const handleOption = (e) => {
     setOption(e.target.value);;
-    setOffenceType(possible_offences[e.target.value-1].offence_name);
-    console.log(possible_offences[e.target.value-1].offence_name);
+    setOffenceType(possible_offences[e.target.value - 1].offence_name);
+    console.log(possible_offences[e.target.value - 1].offence_name);
   };
 
-  const handleChange =  (e) => { //handle change for uploading file
+  const handleChange = (e) => { //handle change for uploading file
     setFile(e.target.files[0]);
     setLabel(e.target.files[0].name);
 
@@ -34,18 +34,18 @@ function LogOffence() {
     // localStorage.setItem("pdf", e.target.files[0].url) ;
   };
 
-  const viewPDF = (e)=>{
+  const viewPDF = (e) => {
     //Build a URL from the file
     const fileURL = URL.createObjectURL(file);
     console.log(fileURL);
     //Open the URL on new Window
     window.open(fileURL);
-    }
+  }
 
 
 
-  const proccessData =  () => {
-    console.log("name = "+ offenderName);
+  const proccessData = () => {
+    console.log("name = " + offenderName);
     console.log("desc=" + offenceDetails);
 
     if (offenderName === "" || offenceDetails === "") {
@@ -65,34 +65,34 @@ function LogOffence() {
 
 
 
-  const submitLog =  () => {
-    let result =  proccessData();
-    if (result==false) {
+  const submitLog = () => {
+    let result = proccessData();
+    if (result == false) {
       alert("Please fill in all necessary details");
-    } else  if (!file == "") {
-      let formData=new FormData();
-      formData.append('file' , file);
+    } else if (!file == "") {
+      let formData = new FormData();
+      formData.append('file', file);
       formData.append('offenderName', offenderName)
       formData.append('offenceType', offenceType);
-      formData.append('offenceDetails',offenceDetails);
+      formData.append('offenceDetails', offenceDetails);
       formData.append('offenceCode', offenceCode);
       formData.append('offenceOther', offenceOther);
       formData.append('submittedBy', localStorage.getItem("user_id"));
-      formData.append('offenceStatus',"Pending");
+      formData.append('offenceStatus', "Pending");
       fetch('http://localhost:3001/LogOffence', {
         method: "post",
         body: formData
       })
-    
-    }else{      
+
+    } else {
       const result = Axios.post('http://localhost:3001/LogOffenceNoFile', {
-      offenderName: offenderName,
-      offenceType: offenceType,
-      offenceDetails:offenceDetails,
-      offenceCode: offenceCode,
-      offenceOther: offenceOther,
-      submittedBy: localStorage.getItem("user_id"),
-      offenceStatus:"Pending"
+        offenderName: offenderName,
+        offenceType: offenceType,
+        offenceDetails: offenceDetails,
+        offenceCode: offenceCode,
+        offenceOther: offenceOther,
+        submittedBy: sessionStorage.getItem("user_id"),
+        offenceStatus: "Pending"
       })
 
     }
@@ -114,7 +114,7 @@ function LogOffence() {
         <h1>Log Offence</h1>
         <div className="offenceForm">
           <TextField style={{ minWidth: "70%" }}
-           label = "Name of Offender"
+            label="Name of Offender"
             onChange={(e) => {
               setOffenderName(e.target.value);
 
@@ -128,17 +128,17 @@ function LogOffence() {
             onChange={handleOption}
           >
             {possible_offences.map((option) => (
-            
+
               <MenuItem key={option["offence_id"]} value={option["offence_id"]}>
-                 {option["offence_name"]}
+                {option["offence_name"]}
               </MenuItem>
-              
-       
+
+
             ))}
             <MenuItem value="5">other</MenuItem>
           </TextField>
-          <TextField label = "Other(Please specify)"
-             style={{ minWidth: "70%" }}
+          <TextField label="Other(Please specify)"
+            style={{ minWidth: "70%" }}
             onChange={(e) => {
               setOffenceOther(e.target.value);
 
@@ -151,7 +151,7 @@ function LogOffence() {
               setOffenceDetails(e.target.value);
 
             }} />
-          <TextField label = "Course Code"
+          <TextField label="Course Code"
             style={{ minWidth: "70%" }}
             onChange={(e) => {
               setOffenceCode(e.target.value);
@@ -159,20 +159,20 @@ function LogOffence() {
             }} />
 
 
-            <Button
-              variant = "contained"
-              component = "label"
+          <Button
+            variant="contained"
+            component="label"
           >
             Upload Evidence
             <input
-            type = "file"
-            name = "file"
-            hidden
-            onChange = {handleChange}
+              type="file"
+              name="file"
+              hidden
+              onChange={handleChange}
             />
           </Button>
-          <Button variant = "text" onClick = {viewPDF}>{fileLabel}</Button>
-          <Button variant ="text"  onClick ={submitLog} >Submit</Button>
+          <Button variant="text" onClick={viewPDF}>{fileLabel}</Button>
+          <Button variant="text" onClick={submitLog} >Submit</Button>
         </div>
       </div>
 
