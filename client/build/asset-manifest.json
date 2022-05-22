@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c68555bd.css",
+    "main.js": "/static/js/main.aaec1bcf.js",
+    "static/media/0000974889_resized_witsuniversity1022.jpg": "/static/media/0000974889_resized_witsuniversity1022.4811d827431ab6f235c5.jpg",
+    "static/media/wits_logo.png": "/static/media/wits_logo.b718e6876ac2acd6a876.png",
+    "static/media/clickedPledge.pdf": "/static/media/clickedPledge.d6798cd12bc26ee2b7a8.pdf",
+    "static/media/default.pdf": "/static/media/default.89b4aee5fa781317ebc1.pdf",
+    "static/media/sample.pdf": "/static/media/sample.ac0398d4ca249e568588.pdf",
+    "index.html": "/index.html",
+    "main.c68555bd.css.map": "/static/css/main.c68555bd.css.map",
+    "main.aaec1bcf.js.map": "/static/js/main.aaec1bcf.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c68555bd.css",
+    "static/js/main.aaec1bcf.js"
+  ]
+}
