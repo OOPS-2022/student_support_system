@@ -15,15 +15,10 @@ jobs:
       - run:
           command: cd client && npm run test
           name: Run tests
-      - persist_to_workspace:
-          root: .
-          paths:
-            - coverage/coverage-final.json
+      # - run: cd ..
       - codecov/upload:
-          file: coverage/coverage-final.json
-
+          file: './client/coverage/clover.xml'
           token: 67989bd3-0146-4b00-ab2f-687f58fb1700
-
      
 
   deploy: # this can be any name you choose
