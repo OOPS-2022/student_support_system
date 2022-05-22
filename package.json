@@ -7,7 +7,7 @@
     "babel-cli": "^6.26.0",
     "codecov": "^3.8.3",
     "jest": "^27.5.1",
-   "jest-environment-jsdom": "^27.4.4"
+    "jest-environment-jsdom": "^27.4.4"
   },
   "dependencies": {
     "@mui/material": "^5.8.0",
@@ -29,6 +29,10 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
   }
 }
