@@ -22,5 +22,9 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "use-force-update": "^1.0.8"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
