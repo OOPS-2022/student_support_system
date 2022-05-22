@@ -13,7 +13,7 @@ jobs:
           pkg-manager: npm
       - run: npm install '@emotion/styled'
       - run:
-          command: cd client && npm run test
+          command: npm run test
           name: Run tests
       # - run: cd ..
       - codecov/upload:
