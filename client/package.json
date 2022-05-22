@@ -16,12 +16,11 @@
         "react-router-dom": "^6.3.0",
         "react-scripts": "^5.0.1",
         "react-test-renderer": "^18.1.0"
-        
     },
     "devDependencies": {
         "@testing-library/react": "^13.2.0",
+        "codecov": "^3.8.3",
         "typescript": "3.3.3"
-        
     },
     "scripts": {
         "start": "react-scripts start",
@@ -35,5 +34,4 @@
         "not ie <= 11",
         "not op_mini all"
     ]
-    
 }

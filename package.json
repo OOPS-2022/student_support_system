@@ -4,6 +4,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.17.12",
+    "codecov": "^3.8.3",
     "jest": "^27.5.1"
   },
   "dependencies": {
