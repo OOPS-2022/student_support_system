@@ -14,7 +14,7 @@ jobs:
       - run: npm install '@emotion/styled'
       - run: npm install '@babel/preset-react'
       - run: npm install --save-dev jest-environment-jsdom
-      - run: npm install react-dom
+      - run: npm i --save-dev identity-obj-proxy
       - run:
           command: npm run test
           name: Run tests
