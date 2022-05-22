@@ -8,12 +8,9 @@ jobs:
       - image: cimg/node:17.2.0
     steps:
       - checkout
+        path: ~/client
       - node/install-packages:
           pkg-manager: npm
-      - run:
-          command: 
-          cd client
-          name: switch folders
       -run:
           command: 
           npm test
