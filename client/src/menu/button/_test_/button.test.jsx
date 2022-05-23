@@ -10,13 +10,15 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { screen, configure } from '@testing-library/react'
 
-
+//unit test to test if the button function is rendered properly
 test('use jsdom in this test file', () => {
     const element = document.createElement('div');
     let root = ReactDOM.createRoot(element);
     root.render(<Btn></Btn>);
 });
 
+
+//unit test to test if the button function is executed on click
 test('click', () => {
     render(<Btn />);
 
@@ -24,5 +26,11 @@ test('click', () => {
     userEvent.click(button);
 
 })
+
+test('test with props', () => {
+    const element = document.createElement('div');
+    let root = ReactDOM.createRoot(element);
+    root.render(<Btn description = "button"></Btn>);
+});
 
 
