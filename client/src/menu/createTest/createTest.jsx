@@ -33,7 +33,7 @@ export default function CreateTest(){
         <div className='pageWrapper'>
           <div>
             <label>Test name:</label>
-            <input type='text' onChange={(e)=>{setTestName(e.target.value)}}/>
+            <input role = "input1"type='text' onChange={(e)=>{setTestName(e.target.value)}}/>
             <br></br>
             <label>Course code:</label>
             <input type='text' onChange={(e)=>{setCourseCode(e.target.value)}}/>

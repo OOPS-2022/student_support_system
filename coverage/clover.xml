@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1653268446767" clover="3.2.0">
-  <project timestamp="1653268446767" name="All files">
+<coverage generated="1653269120883" clover="3.2.0">
+  <project timestamp="1653269120883" name="All files">
     <metrics statements="21" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="13" coveredmethods="4" elements="34" coveredelements="16" complexity="0" loc="21" ncloc="21" packages="3" files="3" classes="3"/>
     <package name="student_support_system">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
@@ -14,7 +14,7 @@
       <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
       <file name="button.jsx" path="C:\Users\lizlv\OOPS_V2\student_support_system\client\src\menu\button\button.jsx">
         <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-        <line num="6" count="1" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
         <line num="8" count="0" type="stmt"/>
       </file>
     </package>
@@ -22,18 +22,18 @@
       <metrics statements="17" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="2"/>
       <file name="createTest.jsx" path="C:\Users\lizlv\OOPS_V2\student_support_system\client\src\menu\createTest\createTest.jsx">
         <metrics statements="17" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="2"/>
-        <line num="7" count="2" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="9" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
-        <line num="15" count="1" type="stmt"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
+        <line num="20" count="2" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
         <line num="28" count="0" type="stmt"/>
-        <line num="32" count="1" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
         <line num="36" count="0" type="stmt"/>
         <line num="39" count="0" type="stmt"/>
         <line num="42" count="0" type="stmt"/>

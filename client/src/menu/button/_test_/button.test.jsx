@@ -12,9 +12,7 @@ import { screen, configure } from '@testing-library/react'
 
 //unit test to test if the button function is rendered properly
 test('use jsdom in this test file', () => {
-    const element = document.createElement('div');
-    let root = ReactDOM.createRoot(element);
-    root.render(<Btn></Btn>);
+    render(<Btn></Btn>);
 });
 
 
@@ -28,9 +26,10 @@ test('click', () => {
 })
 
 test('test with props', () => {
-    const element = document.createElement('div');
-    let root = ReactDOM.createRoot(element);
-    root.render(<Btn description = "button"></Btn>);
+    render(<Btn description = "button"></Btn>);
+    const button = screen.getByRole('button', {name: 'button'})
+    userEvent.click(button);
+
 });
 
 
