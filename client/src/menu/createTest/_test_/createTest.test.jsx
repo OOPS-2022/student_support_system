@@ -8,37 +8,36 @@ import { isTSAnyKeyword } from "@babel/types";
 import CreateTest, { getData } from '../createTest';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { screen, configure } from '@testing-library/react';
+import {screen} from '@testing-library/dom'
 import axios from 'axios';
 import { createTest } from '../createTest.jsx';
 import  { itTSAnyKeyword } from "@babel/types";
 import 'regenerator-runtime/runtime';
 import {useEffect} from "react";
 
-jest.mock("../createTest");
+
 //unit test to test if the CreateTest function gets rendered
 test('use jsdom in this test file', () => {
   render(<CreateTest></CreateTest>);
 
 });
 
-//unit test to test if the button on the createTest form gets clicked on click
-// test('click', () => {
-//   render(<CreateTest />);
 
-//   const button = screen.getByRole('buttonCreateTest');
-//   userEvent.click(button);
+test('click', () => {
+  render(<CreateTest />);
+  const button = screen.queryByTestId('buttonCreateTest');
+  userEvent.click(button);
 
-// })
+});
 
 // test('input',()=>{
 
 //   render(<CreateTest />);
-//   userEvent.type(screen.getByRole('input1'), 'Hello World')
+//   userEvent.type(  screen.getByRole('input1'), 'Hello World')
 
 
 // })
-
+jest.mock("../createTest");
 
 test("mockName", () => {
   const mockFn = jest.fn().mockName("getData");

@@ -38,7 +38,7 @@ export default function CreateTest() {
     <div className='pageWrapper'>
       <div>
         <label>Test name:</label>
-        <input role="input1" type='text' onChange={(e) => { setTestName(e.target.value) }} />
+        <input data-testid="input1" type='text' onChange={(e) => { setTestName(e.target.value) }} />
         <br></br>
         <label>Course code:</label>
         <input type='text' onChange={(e) => { setCourseCode(e.target.value) }} />
@@ -54,7 +54,7 @@ export default function CreateTest() {
             return <option value={val.pledge_id}>{val.pledge_name} ({val.pledge_type})</option>
           })}
         </select>
-        <button role="buttonCreateTest" onClick={() => { createTest(testName, pledgeID, courseCode, testDate); }}>Submit:</button>
+        <button  data-testid="buttonCreateTest" onClick={() => { createTest(testName, pledgeID, courseCode, testDate); }}>Submit:</button>
       </div>
     </div>
   );
