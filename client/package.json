@@ -4,8 +4,8 @@
     "description": "",
     "keywords": [],
     "main": "src/index.js",
-
     "devDependencies": {
+        "@types/regenerator-runtime": "^0.13.1",
         "codecov": "^3.8.3",
         "typescript": "3.3.3"
     },

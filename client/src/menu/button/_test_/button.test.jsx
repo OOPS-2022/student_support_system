@@ -12,7 +12,7 @@ import { screen, configure } from '@testing-library/react'
 
 //unit test to test if the button function is rendered properly
 test('use jsdom in this test file', () => {
-    render(<Btn></Btn>);
+    render(<Btn/>);
 });
 
 

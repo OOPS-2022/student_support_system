@@ -8,6 +8,7 @@
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.2.0",
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "codecov": "^3.8.3",
     "jest": "^27.5.1",
     "jest-environment-jsdom": "^27.4.4"
@@ -20,8 +21,10 @@
     "@syncfusion/ej2-buttons": "^20.1.55",
     "@syncfusion/ej2-notifications": "^20.1.55",
     "@syncfusion/ej2-react-calendars": "^20.1.56",
+    "@types/regenerator-runtime": "^0.13.1",
     "axios": "^0.27.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
     "date-fns": "^2.28.0",
     "jest-dom": "^4.0.0",
     "mysql2": "^2.3.3",
@@ -35,6 +38,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^18.1.0",
+    "regenerator-runtime": "^0.13.9",
     "use-force-update": "^1.0.8"
   },
   "jest": {
