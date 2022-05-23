@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5.55% </span>
+                <span class="strong">55.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/18</span>
+                <span class='fraction'>10/18</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">27.27% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>3/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5.88% </span>
+                <span class="strong">58.82% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/17</span>
+                <span class='fraction'>10/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -132,7 +132,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -146,22 +146,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,8 +193,8 @@ import { MenuItem, TextField, Button } from "@mui/material";
 import Axios from 'axios';
 import 'regenerator-runtime/runtime';
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >getData </span>(){
-<span class="cstat-no" title="statement not covered" >  return await Axios.get('http://localhost:3001/viewPledges');</span>
+export async function getData (){
+  return await Axios.get('http://localhost:3001/viewPledges');
   
 }
 export const createTest = <span class="fstat-no" title="function not covered" >as</span>ync (testName, pledgeID, courseCode, testDate) =&gt; {
@@ -207,23 +207,23 @@ export const createTest = <span class="fstat-no" title="function not covered" >a
   });
 }
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >CreateTest(</span>) {
-  const [pledges, setPledges] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
-  const [testName, setTestName] = <span class="cstat-no" title="statement not covered" >useState("");</span>
-  const [pledgeID, setPledgeID] = <span class="cstat-no" title="statement not covered" >useState("3");</span>
-  const [courseCode, setCourseCode] = <span class="cstat-no" title="statement not covered" >useState("");</span>
-  const [testDate, setTestDate] = <span class="cstat-no" title="statement not covered" >useState("");</span>
+export default function CreateTest() {
+  const [pledges, setPledges] = useState([]);
+  const [testName, setTestName] = useState("");
+  const [pledgeID, setPledgeID] = useState("3");
+  const [courseCode, setCourseCode] = useState("");
+  const [testDate, setTestDate] = useState("");
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect( <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+  useEffect( () =&gt; {
     
-<span class="cstat-no" title="statement not covered" >     getData().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; <span class="cstat-no" title="statement not covered" >setPledges(res.data))</span>;</span>
+     getData().then(<span class="fstat-no" title="function not covered" >re</span>s =&gt; <span class="cstat-no" title="statement not covered" >setPledges(res.data))</span>;
       
   }, [])
 &nbsp;
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className='pageWrapper'&gt;
       &lt;div&gt;
         &lt;label&gt;Test name:&lt;/label&gt;
@@ -256,7 +256,7 @@ export default function <span class="fstat-no" title="function not covered" >Cre
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon May 23 2022 09:04:54 GMT+0200 (South Africa Standard Time)
+                at Mon May 23 2022 09:08:00 GMT+0200 (South Africa Standard Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

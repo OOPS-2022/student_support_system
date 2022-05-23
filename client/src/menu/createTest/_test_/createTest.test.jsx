@@ -23,50 +23,50 @@ test('use jsdom in this test file', () => {
 });
 
 
-test('click', () => {
-  render(<CreateTest />);
-  const button = screen.queryByTestId('buttonCreateTest');
-  userEvent.click(button);
+// test('click', () => {
+//   render(<CreateTest />);
+//   const button = screen.queryByTestId('buttonCreateTest');
+//   userEvent.click(button);
 
-});
+// });
 
 // test('input',()=>{
 
 //   render(<CreateTest />);
-//   userEvent.type(  screen.getByRole('input1'), 'Hello World')
+//   userEvent.type(  screen.queryByTestId('input1'), 'Hello World')
 
 
 // })
-jest.mock("../createTest");
+// jest.mock("../createTest");
 
-test("mockName", () => {
-  const mockFn = jest.fn().mockName("getData");
-  mockFn(); // comment me
-  expect(mockFn).toHaveBeenCalled();
-});
-
-
-jest.mock('axios');
+// test("mockName", () => {
+//   const mockFn = jest.fn().mockName("getData");
+//   mockFn(); // comment me
+//   expect(mockFn).toHaveBeenCalled();
+// });
 
 
-// ...
+// jest.mock('axios');
 
-test("good response", () => {
-  axios.post.mockImplementation(() => Promise.resolve({ data: {testName : "Test70",
-            pledgeID: 4,
-            courseCode: "MATH2525",
-            testDate:"01-01-2022",
-            creatorID: 4} }));
-});
 
-test("bad response", () => {
-  axios.post.mockImplementation(() => Promise.reject({ testName : "Test70",
-            pledgeID: 4,
-            courseCode: "MATH2525",
-            testDate:"01-01-2022",
-            creatorID: 4}));
+// // ...
 
-});
+// test("good response", () => {
+//   axios.post.mockImplementation(() => Promise.resolve({ data: {testName : "Test70",
+//             pledgeID: 4,
+//             courseCode: "MATH2525",
+//             testDate:"01-01-2022",
+//             creatorID: 4} }));
+// });
+
+// test("bad response", () => {
+//   axios.post.mockImplementation(() => Promise.reject({ testName : "Test70",
+//             pledgeID: 4,
+//             courseCode: "MATH2525",
+//             testDate:"01-01-2022",
+//             creatorID: 4}));
+
+// });
 
 
 
