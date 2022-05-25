@@ -773,10 +773,10 @@ app.post("/insertses", (req, res) => {
     const session_type = req.body.sestype;
     const date = req.body.date ;
     const time = req.body.time;
-    console.log(course_id)
-    console.log(session_type)
-    const sqlInsert = "Insert into sessions (course_id,session_type,date,time) values(?,?,?,?)";
-    db.query(sqlInsert, [course_id,session_type,date,time], (err, result) => {
+    const session_name=req.body.session_name;
+    const creator_id=req.body.creator_id;
+    const sqlInsert = "Insert into sessions (course_id,session_type,date,time,session_name, creator_id) values(?,?,?,?,?,?)";
+    db.query(sqlInsert, [course_id,session_type,date,time,session_name, creator_id], (err, result) => {
         if(err!=null){
             res.send(err)
             console.log(err);
@@ -808,7 +808,6 @@ app.post("/insertses", (req, res) => {
 
     });
 })
-
 
 app.get("/sessions",(req,res)=>{
     const sqlSelect='select * from sessions';
@@ -843,9 +842,10 @@ app.post("/updateses", (req, res) => {
     const session_id = req.body.session_id;
     const date = req.body.date;
     const time = req.body.time;
-    console.log(req.body);
-    const sqlSelect = "UPDATE sessions SET date = ?, time =? WHERE session_id = ?";
-    db.query(sqlSelect, [date,time, session_id], (err, result) => {
+    const session_name=req.body.session_name;
+    //console.log(req.body);
+    const sqlSelect = "UPDATE sessions SET date = ?, time =?, session_name=? WHERE session_id = ?";
+    db.query(sqlSelect, [date,time, session_name,session_id], (err, result) => {
         console.log(err);
         res.send("update");
     });
