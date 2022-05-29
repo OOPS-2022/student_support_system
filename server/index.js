@@ -274,7 +274,7 @@ app.get("/PossibleOffences", (req, res) => {
 });
 
 //fetch the data from the database to send to frontend to show admin all the offences that have been logged
-app.get("/SubmittedOffences", (req, res) => { 
+app.get("/SubmittedOffences", (req, res) => {
     const sqlSelect = "select logged_offences.ticket_id, offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code , offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
     db.query(sqlSelect, (error, result) => {
         res.send(result);
@@ -436,23 +436,44 @@ app.get('/viewMyOffences', (req, res) => {
 })
 
 //creating a signed pledge, must have pdf that will be downloaded and signed later
-app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req, res) => { 
+app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req, res) => {
     //let fileType=req.file.mimetype.split("/")[1];
     let newFileName = Date.now() + req.file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
     let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
-    let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName 
+    let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName
     let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName //link to be saved in database to find pledge pdf with
     fs.rename(oldPath, newPath, function (err) {
         console.log(err);
-        res.send("200");
+        //res.send("200");
     });
     const name = req.body.name;
     const desc = req.body.desc;
+    const sessions=req.body.sessions;
     const type = "Signed Pledge"
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into pledges table
     db.query(sqlInsert, [name, desc, type, saveLink], (err, res) => {
         if (err != null) {
             console.log(err)
+        }
+        else{
+            const sqlSelectPledge='SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
+            db.query(sqlSelectPledge, (err,result)=>{
+                
+                if (err!=null){
+                    console.log(err);
+                }
+                else{
+                    let pledge_id=result[0].pledge_id;
+                    const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
+                    for (let j = 0; j < sessions.length; j++) {
+                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err,result)=>{
+                            if(err!=null){
+                                console.log(err);
+                            }
+                        })
+                    }
+                }
+            })
         }
     });
 });
@@ -465,7 +486,28 @@ app.post('/createClickedPledge', function (req, res) {
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type) VALUES (?,?,?);";
     db.query(sqlInsert, [name, desc, pledge_type], (error, result) => {
         if (error != null) {
+            
             console.log(error)
+        }
+        else{
+            const sqlSelectPledge='SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
+            db.query(sqlSelectPledge, (err,result)=>{
+                
+                if (err!=null){
+                    console.log(err);
+                }
+                else{
+                    let pledge_id=result[0].pledge_id;
+                    const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
+                    for (let j = 0; j < sessions.length; j++) {
+                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err,result)=>{
+                            if(err!=null){
+                                console.log(err);
+                            }
+                        })
+                    }
+                }
+            })
         }
     })
 })
@@ -615,7 +657,7 @@ app.post("/sendMeetEmail", (req, res) => {
         //send email to alert student that a hearing has been scheduled
         let mailOptionss = {
             from: '<sdteamoops@gmail.com',
-            to: stdEmail, 
+            to: stdEmail,
             subject: 'Hearing - scheduled date',
             text: "This is an auto generated email , please dont reply to this email.\n \n You have a hearing on the " + date
                 + " \n \n Link for meeeting: " + link
@@ -670,7 +712,7 @@ app.post("/sendUpdateEmail", (req, res) => {
         //send email to alert student that their ticket has been updated
         let mailOptionss = {
             from: '<sdteamoops@gmail.com',
-            to: stdEmail, 
+            to: stdEmail,
             subject: 'Offence Status Update',
             text: "This is an auto generated email , please dont reply to this email.\n \n Ticket " + ticketId
                 + " has been updated to: " + status
@@ -820,6 +862,8 @@ app.post("/insertses", (req, res) => {
     const time = req.body.time;
     const session_name = req.body.session_name;
     const creator_id = req.body.creator_id;
+    const pledges = req.body.pledges;
+    //console.log(pledges);
     const sqlInsert = "Insert into sessions (course_id,session_type,date,time,session_name, creator_id) values(?,?,?,?,?,?)";
     db.query(sqlInsert, [course_id, session_type, date, time, session_name, creator_id], (err, result) => {
         if (err != null) {
@@ -833,7 +877,7 @@ app.post("/insertses", (req, res) => {
                 //get all the students that the session will be applicable to
                 const sqlGetStudents = "select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
                 db.query(sqlGetStudents, [session_id], (err, result) => {
-                    console.log(result);
+                    //console.log(result);
                     for (let i = 0; i < result.length; i++) {
                         let student_id = result[i].user_id;
                         let table = "sessions";
@@ -848,6 +892,16 @@ app.post("/insertses", (req, res) => {
                             }
                         })
                     }
+                    //linking all the pledes associated with a session to the session ID
+                    const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
+                    for (let j = 0; j < pledges.length; j++) {
+                        db.query(sqlInsertSesLink, [session_id, pledges[j]], (err,result)=>{
+                            if(err!=null){
+                                console.log(err);
+                            }
+                        })
+                    }
+                    
                 })
             })
         }
@@ -863,7 +917,7 @@ app.get("/sessions", (req, res) => {
             console.log(err)
         }
         else {
-            console.log(result)
+            //console.log(result)
             res.send(result);
         }
     })
@@ -930,7 +984,7 @@ app.get('/getAllMeetings', (req, res) => {
     const sqlQuerry = 'Select meetLink, meetDate from meetings;';
     db.query(sqlQuerry, (error, result) => {
         res.send(result);
-        console.log(result);
+        //console.log(result);
     });
 });
 

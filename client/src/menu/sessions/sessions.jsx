@@ -122,7 +122,8 @@ export default function Sessions() {
             date: date,
             time: time,
             session_name:sessionName,
-            creator_id: sessionStorage.getItem("user_id")
+            creator_id: sessionStorage.getItem("user_id"),
+            pledges: [3,4]
 
         });
 
