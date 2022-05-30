@@ -20,5 +20,19 @@
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ]
+    ],
+    "dependencies": {
+        "@emotion/styled": "^11.8.1",
+        "@mui/material": "^5.8.1",
+        "@mui/styled-engine": "^5.8.0",
+        "@syncfusion/ej2-react-calendars": "^20.1.57",
+        "axios": "^0.27.2",
+        "date-fns": "^2.28.0",
+        "react-big-calendar": "^0.40.1",
+        "react-datepicker": "^4.8.0",
+        "react-pdf": "^5.7.2",
+        "react-router-dom": "^6.3.0",
+        "react-scripts": "^5.0.1",
+        "use-force-update": "^1.0.8"
+    }
 }
