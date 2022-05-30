@@ -73,7 +73,8 @@ export default function Sessions() {
     const [time, setTime] = React.useState();
     const [hide, setHide] = React.useState(false);
     const [label, setLabel] = React.useState("");
-
+    const [sessionName, setSessionName]=React.useState("");
+    
     const [option, setOption] = React.useState("");
     const [value, setValue] = React.useState();
 
@@ -95,7 +96,7 @@ export default function Sessions() {
       }, []);
 
 
-    const colNamesPossible = ["Session Type","Course", "Date", "Time"];
+    const colNamesPossible = ["Session Name","Session Type","Course", "Date", "Time"];
     let colNames = [];
     let rows = [];
 
@@ -109,7 +110,8 @@ export default function Sessions() {
         Axios.post("http://localhost:3001/updateses", {
             session_id: sessionStorage.getItem("session_id"),
             date: date,
-            time: time
+            time: time,
+            session_name: sessionName
         });
     }
 
@@ -118,7 +120,10 @@ export default function Sessions() {
             course_id: course,
             sestype: sessionType,
             date: date,
-            time: time
+            time: time,
+            session_name:sessionName,
+            creator_id: sessionStorage.getItem("user_id"),
+            pledges: [3,4]
 
         });
 
@@ -184,7 +189,8 @@ export default function Sessions() {
                         </TableHead>
                         <TableBody>
                             {Object.values(rows).map((obj, index) => (
-                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]), setSessionType(obj["session_type"]), setDate(obj["date"]), setTime(obj["time"]) }} hover={true}>
+                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]), setSessionType(obj["session_type"]), setDate(obj["date"]), setTime(obj["time"]), setSessionName(obj["session_name"]) }} hover={true}>
+                                    <StyledTableCell >{obj["session_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     {/* <StyledTableCell >{obj["pledge_type"]}</StyledTableCell> */}
                                     <StyledTableCell >{obj["course_id"]}</StyledTableCell>
@@ -207,6 +213,19 @@ export default function Sessions() {
                     <Box sx={style}>
                         <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
                             <h1>{label}:</h1>
+
+                            {!hide && ( <TextField
+                                id="outlined-required"
+                                label="Session Name"
+                                defaultValue={sessionName}
+                                sx={{ padding: "5px", width: "90%" }}
+                                onChange={(e) => {
+                                    setSessionName(e.target.value);
+
+                                }
+                                }
+                            />)}
+
                             {!hide && ( <TextField
                                 id="outlined-required"
                                 label="Course"
@@ -237,6 +256,19 @@ export default function Sessions() {
     
 
                             </TextField>)}
+
+                            <TextField
+                                id="outlined-required"
+                                label="Session Name"
+                                defaultValue={sessionName}
+                                sx={{ padding: "5px", width: "90%" }}
+                                onChange={(e) => {
+                                    setSessionName(e.target.value);
+
+                                }
+                                }
+                            />
+
                             <TextField
                                 id="outlined-required"
                                 label="Date"
