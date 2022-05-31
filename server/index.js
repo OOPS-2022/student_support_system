@@ -903,6 +903,7 @@ app.post("/insertses", (req, res) => {
                     }
                     
                 })
+                res.send(result);
             })
         }
 
@@ -975,6 +976,7 @@ app.post('/viewAction', (req, res) => {
     db.query(sqlUpdate, [actionId], (err, result) => {
         if (err != null) {
             console.log(err)
+            res.send(result);
         }
     })
 });

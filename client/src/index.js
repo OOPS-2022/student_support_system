@@ -22,6 +22,7 @@ import MyOffence from "./menu/myOffences/myOffences";
 import MyTickets from "./menu/myTickets/myTickets";
 import Sessions from "./menu/sessions/sessions";
 import MySessions from "./menu/mySessions/mySessions";
+import CheckTable from "./menu/checkTable/checkTable";
 
 
 
@@ -45,6 +46,7 @@ ReactDOM.render(
             <Route path ="/MyTickets" element={<App page={<MyTickets/>} />}  />
             <Route path ="/MySessions" element={<App page={<MySessions/>} />}  />
             <Route path ="/Sessions" element={<App page={<Sessions/>} />}  />
+            <Route path ="/CheckedSessions" element={<App page={<CheckTable/>} />}  />
         </Routes>
     </Router>
     , document.getElementById("root")

@@ -26,6 +26,7 @@ export default function Menu(props) {
      const myBut = () => navigate("/MyOffences");
      const mySess = () => navigate("/MySessions");
      const sess = () => navigate("/Sessions");
+     const checkedBut = () => navigate("/CheckedSessions");
    
   
 return (
@@ -42,6 +43,7 @@ return (
               {(sessionStorage.getItem("user_role") == "admin" &&(sessionStorage.getItem("logged_id" )))  &&( <Btn action = {testBut} description="Create Test"/>)}
               {(sessionStorage.getItem("user_role") != "admin" &&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {doBut} description="Do Test"/>)}
               {(sessionStorage.getItem("user_role") != "admin" &&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
+              {(sessionStorage.getItem("user_role") == "admin" &&   (sessionStorage.getItem("logged_id" )))   &&( <Btn action={checkedBut} description="Session Report" />)}
             </Stack>
         </div>
 

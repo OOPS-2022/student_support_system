@@ -63,7 +63,7 @@ export default function ModalLogin(props){
   let navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {setOpen(true); navigate("/Login");}
-  const handleClose = () => {setOpen(false); navigate("/About"); window.location.reload();}
+  const handleClose = () => {setOpen(false); navigate("/About"); }
   const login = async () => {if(lgPassword == ""){
     alert('Please type username and password');}
     else{ 
