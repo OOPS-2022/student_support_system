@@ -903,7 +903,6 @@ app.post("/insertses", (req, res) => {
                     }
                     
                 })
-                res.send(result);
             })
         }
 
@@ -976,7 +975,6 @@ app.post('/viewAction', (req, res) => {
     db.query(sqlUpdate, [actionId], (err, result) => {
         if (err != null) {
             console.log(err)
-            res.send(result);
         }
     })
 });
@@ -989,6 +987,20 @@ app.get('/getAllMeetings', (req, res) => {
         //console.log(result);
     });
 });
+
+//get all the pledges associated with a session
+app.get('/sessionPledges' ,(req, res)=>{
+    const session_id=req.query['select_id'];
+    const sqlSelect='select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
+    db.query(sqlSelect, [session_id], (err,result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            res.send(result)
+        }
+    })
+})
 
 app.listen(3001, () => {
     console.log("running on port 3001");
