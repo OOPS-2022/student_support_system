@@ -18,8 +18,31 @@ import { shouldForwardProp } from '@mui/styled-engine';
 import { useEffect } from 'react';
 import { MenuItem } from '@mui/material';
 import useForceUpdate from 'use-force-update';
+import { useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,7 +74,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 500,
-    height: 600,
+    height: 650,
     bgcolor: 'background.paper',
     borderRadius: '7px',
     boxShadow: 24,
@@ -61,105 +84,137 @@ const style = {
 
 };
 
+async function getSessions() {
+    return await Axios.get('http://localhost:3001/sessions');
+}
+
+
+
+async function editSessions(date, time) {
+    return Axios.post("http://localhost:3001/updateses", {
+        session_id: sessionStorage.getItem("session_id"),
+        date: date,
+        time: time
+    });
+}
+
+async function addSessions(course, sessionType, date, time, sessionName, pledgeList) {
+    return Axios.post("http://localhost:3001/insertses", {
+        course_id: course,
+        sestype: sessionType,
+        date: date,
+        time: time,
+        session_name: sessionName,
+        creator_id: sessionStorage.getItem("user_id"),
+        pledges: pledgeList
+
+    });
+}
+
 
 
 export default function Sessions() {
+
     const [open, setOpen] = React.useState(false);
     const [sessions, setSessions] = React.useState([]);
-    const [sessionID, setSessionID] = React.useState("");
+    const [sessionName, setSessionName] = React.useState("");
     const [sessionType, setSessionType] = React.useState("");
     const [course, setCourse] = React.useState("");
     const [date, setDate] = React.useState();
     const [time, setTime] = React.useState();
     const [hide, setHide] = React.useState(false);
     const [label, setLabel] = React.useState("");
-    const [sessionName, setSessionName]=React.useState("");
-    
+    const [sessionPledges, setSessionPledges] = React.useState([]);
+
+
     const [option, setOption] = React.useState("");
     const [value, setValue] = React.useState();
+
+
+    const [pledgeList, setPledgeList] = React.useState([]);
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setPledgeList(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
 
     const handleOption = (e) => {
         setOption(e.target.value);;
         setSessionType(e.target.value);
     };
 
-    const [pledge, setPledge] = React.useState("");
-    const handlePledge = (e) => {
-        setPledge(e.target.value["pledge_name"]);;
-    };
 
-    const [pledges, setPledges]=React.useState([]);
+
+
+    const [pledges, setPledges] = React.useState([]);
     useEffect(() => {
+
         Axios.get('http://localhost:3001/viewPledges').then((response) => {
-          setPledges(response.data)
+            setPledges(response.data)
         })
-      }, []);
+
+    }, []);
 
 
-    const colNamesPossible = ["Session Name","Session Type","Course", "Date", "Time"];
+
+
+
+    const colNamesPossible = ["Session Name", "Session Type", "Pledges", "Course", "Date", "Time"];
     let colNames = [];
     let rows = [];
-
-    const refresh = ()=>{
-        // re-renders the component
-        setValue({});
-    }
+    let sessPledges = [];
 
     const sessionTypes = ["Test", "Tutorial", "Exam"];
-    const editSessions =  () => {
-        Axios.post("http://localhost:3001/updateses", {
-            session_id: sessionStorage.getItem("session_id"),
-            date: date,
-            time: time,
-            session_name: sessionName
-        });
-    }
-
-    const addSessions = () => {
-        Axios.post("http://localhost:3001/insertses", {
-            course_id: course,
-            sestype: sessionType,
-            date: date,
-            time: time,
-            session_name:sessionName,
-            creator_id: sessionStorage.getItem("user_id"),
-            pledges: [3,4]
-
-        });
-
-        
-    
-    }
-
-
-
-    const getSessions = async () => {
-        const response = await Axios.get('http://localhost:3001/sessions');
-        setSessions(response.data);
-    }
-
+    const [sess, setSess] = React.useState([]);
+   
     useEffect(() => {
-        Axios.get('http://localhost:3001/sessions').then((response) => {
-            setSessions(response.data);
 
+        const getSess = async () => {
+            const response = await Axios.get('http://localhost:3001/sessions');
+            setSessions(response.data);
+            
+            for (let i = 0; i < response.data.length; i++) {
+                let id = response.data[i].session_id ;
+                const response2 = await Axios.get('http://localhost:3001/sessionPledges', {
+                    params: {"session_id": id}});
+                const temp1 =[ response.data[i].session_id, response2.data ];
+                setSessionPledges(OldArray => [...OldArray, temp1]);
+                 
+                
+
+            }
+            
 
 
         }
-        )
+        getSess();
+    }, []);
 
-    }, []
-    );
-
-    
 
     
+    console.log(sessions);
+    console.log(sessionPledges);
+    const getPledgesBySession =(session) =>{
+        let pledgeNames = "";
+        for(let i =0; i<sessionPledges.length; i++){
+            if (session==sessionPledges[i][0]){
+                for(let j = 0; j<sessionPledges[i][1].length; j++)
+                pledgeNames += sessionPledges[i][1][j].pledge_name + " ";
 
+            }
+        }
+        return pledgeNames;
+        
+    }
 
     colNames = colNamesPossible;
     rows = sessions;
 
-    
-   
+
 
 
 
@@ -169,10 +224,15 @@ export default function Sessions() {
         setHide(true);
     }
 
-    const handleClose = () => {setOpen(false); window.location.reload();}
-    const editHandle = (e) => { editSessions(); handleClose(); }
+
+
+    const handleClose = () => { setOpen(false); }
+    const editHandle = async (e) => {
+        const response = await editSessions(date, time); const response2 = await getSessions(); setSessions(response2.data);
+        handleClose();
+    }
     const addHandle = (e) => { setLabel("Add"); setOpen(true); setHide(false); setDate(""); setTime(""); setCourse(""); setSessionType("") }
-    const add = (e) => { addSessions(); handleClose();   }
+    const add = async (e) => { console.log(pledgeList); const response = await addSessions(course, sessionType, date, time, sessionName, pledgeList); const response2 = await getSessions(); setSessions(response2.data); handleClose(); }
     return (
 
         <>
@@ -189,14 +249,16 @@ export default function Sessions() {
                         </TableHead>
                         <TableBody>
                             {Object.values(rows).map((obj, index) => (
-                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]), setSessionType(obj["session_type"]), setDate(obj["date"]), setTime(obj["time"]), setSessionName(obj["session_name"]) }} hover={true}>
+                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]); setSessionType(obj["session_type"]); setDate(obj["date"]); setTime(obj["time"]); console.log(index); }} hover={true}>
+                                    
                                     <StyledTableCell >{obj["session_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
-                                    {/* <StyledTableCell >{obj["pledge_type"]}</StyledTableCell> */}
+                                    <StyledTableCell>{getPledgesBySession(obj["session_id"])}</StyledTableCell>
                                     <StyledTableCell >{obj["course_id"]}</StyledTableCell>
                                     <StyledTableCell >{obj["date"]}</StyledTableCell>
                                     <StyledTableCell >{obj["time"]}</StyledTableCell>
                                 </StyledTableRow>
+
                             ))}
                             <Button variant="outlined" onClick={addHandle} sx={{ marginRight: "650px", marginTop: "20px" }}>add</Button>
                         </TableBody>
@@ -213,8 +275,7 @@ export default function Sessions() {
                     <Box sx={style}>
                         <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
                             <h1>{label}:</h1>
-
-                            {!hide && ( <TextField
+                            {!hide && (<TextField
                                 id="outlined-required"
                                 label="Session Name"
                                 defaultValue={sessionName}
@@ -225,8 +286,7 @@ export default function Sessions() {
                                 }
                                 }
                             />)}
-
-                            {!hide && ( <TextField
+                            {!hide && (<TextField
                                 id="outlined-required"
                                 label="Course"
                                 defaultValue={course}
@@ -245,30 +305,17 @@ export default function Sessions() {
                                 value={option}
                                 onChange={handleOption}
                             >
-                                {sessionTypes.map((option,index) => (
+                                {sessionTypes.map((option, index) => (
 
-                                    <MenuItem key ={index} value={option} >
+                                    <MenuItem key={index} value={option} >
                                         {option}
                                     </MenuItem>
 
 
                                 ))}
-    
+
 
                             </TextField>)}
-
-                            <TextField
-                                id="outlined-required"
-                                label="Session Name"
-                                defaultValue={sessionName}
-                                sx={{ padding: "5px", width: "90%" }}
-                                onChange={(e) => {
-                                    setSessionName(e.target.value);
-
-                                }
-                                }
-                            />
-
                             <TextField
                                 id="outlined-required"
                                 label="Date"
@@ -292,35 +339,38 @@ export default function Sessions() {
                                 }
 
                             />'
-                            <TextField style={{ minWidth: "90%" }}
-                                id="outlined-name"
-                                label="Pledge"
-                                select
-                                value={pledge["pledge_name"]}
-                                onChange={handlePledge}
+                            {!hide && (<InputLabel id="demo-multiple-name-label">Select Pledges</InputLabel>)}
+                            {!hide && ( <Select
+                                sx={{ paddingTop: "5px", width: "90%" }}
+                                labelId="demo-multiple-name-label"
+                                id="demo-multiple-name"
+                                multiple
+                                value={pledgeList}
+                                onChange={handleChange}
+                                input={<OutlinedInput label="Select Pledges" />}
+                                MenuProps={MenuProps}
                             >
                                 {pledges.map((pledge) => (
+                                    <MenuItem
+                                        key={pledge.id}
+                                        value={pledge["pledge_id"]}
 
-                                    <MenuItem key ={pledge} value={pledge} >
-                                        {pledge["pledge_name"]}
+                                    >
+                                        {pledge.pledge_name} ({pledge.pledge_type})
                                     </MenuItem>
-
-
                                 ))}
-    
-
-                            </TextField>
+                            </Select>)}
 
 
 
 
-
-                            <div>
+                            <div style={{ display: "inline-flex" }}>
                                 {hide && (<Button variant="contained" sx={{ marginRight: "10px" }} onClick={editHandle} >Update</Button>)}
-                                {!hide && (<Button variant="contained" onClick={add}  >Add</Button>)}
+                                {!hide && (<Button variant="contained" sx={{ marginRight: "10px" }} onClick={add}  >Add</Button>)}
+                                <Button style={{ bottom: "-5%" }} onClick={handleClose}>Cancel</Button>
                             </div>
                         </Stack>
-                        <Button style={{ bottom: "-5%" }} onClick={handleClose}>Cancel</Button>
+
                     </Box>
                 </Modal>
 
