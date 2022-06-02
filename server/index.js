@@ -904,7 +904,7 @@ app.post("/insertses", (req, res) => {
                     }
 
                     const dir = './Uploads/SubmittedSessions/Session' + session_id;
-                    const saveLink = '/Uploads/SubmittedSessions/Session' + session_id;
+                    const saveLink = './Uploads/SubmittedSessions/Session' + session_id;
                     fs.mkdir(dir, err => {
                         if (err) {
                             throw err;
