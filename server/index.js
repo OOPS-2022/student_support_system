@@ -1005,8 +1005,6 @@ app.get('/getAllMeetings', (req, res) => {
     });
 });
 
-
-
 app.get('/getAllSessions', (req, res) => {
     const sqlQuerry = 'Select session_type, date,session_id  from sessions;';
     db.query(sqlQuerry, (error, result) => {
@@ -1052,11 +1050,9 @@ app.post("/addCheckListQuestion", (req, res) => {
 app.post("/allCheckListQuestions", (req, res) => {
     const session_id = req.body.session_id;
     const checklist_id = req.body.checklist_id;
-    console.log(session_id, checklist_id)
     const sqlGetId = "SELECT * FROM checklist WHERE session_id = ? AND check_id = ?";
     db.query(sqlGetId, [session_id, checklist_id], (err, result) => {
         res.send(result);
-        console.log(result)
     });
 });
 
@@ -1090,7 +1086,7 @@ app.post("/updateCheckListQuestion", (req, res) => {
             console.log(err)
         }
     })
-})
+});
 
 app.post("/deleteCheckListQuestion", (req, res) => {
     const question_num = req.body.question_num;

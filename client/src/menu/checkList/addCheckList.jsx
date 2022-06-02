@@ -159,7 +159,7 @@ export default function checkList() {
   }
 
   const check = async ()=>{
-    const response = await Axios.post('http://localhost:3001/allCheckListQuestions', {session_id: 4, checklist_id: 2}) ;//{session_id: sessionStorage.getItem("session_id"), checklist_id: check_id}) ;
+    const response = await Axios.post('http://localhost:3001/allCheckListQuestions', {session_id: sessionStorage.getItem('session_id'), checklist_id: check_id}) ;//{session_id: sessionStorage.getItem("session_id"), checklist_id: check_id}) ;
     setCheckList(response.data);
   }
 
