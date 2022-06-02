@@ -16,6 +16,7 @@ import Axios from 'axios';
 import Multiline from '../multiline';
 import { shouldForwardProp } from '@mui/styled-engine';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -62,7 +63,7 @@ const style = {
 
 export default function MySessions() {
     
-
+    let navigate = useNavigate();
     const [sessions, setSessions] = React.useState([]);
 
 
@@ -115,7 +116,7 @@ export default function MySessions() {
                         </TableHead>
                         <TableBody>
                             {Object.values(rows).map((obj, index) => (
-                                <StyledTableRow key={index} hover={true}>
+                                <StyledTableRow key={index} hover={true} onClick={() => {sessionStorage.setItem("mysession_id",obj["session_id"]); navigate("/SessionPledges") }}>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     <StyledTableCell >{obj["course_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["course_code"]}</StyledTableCell>

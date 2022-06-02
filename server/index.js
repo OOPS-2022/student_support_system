@@ -15,7 +15,7 @@ const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'sddatabase'
+    database: 'sddatabase_v2'
 });
 
 
@@ -974,7 +974,7 @@ app.post("/updateses", (req, res) => {
 //see all sessions associated with that student
 app.get('/mySessions', (req, res) => {
     const studentID = req.query['studentID'];
-    const sqlSelect = 'select session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
+    const sqlSelect = 'select sessions.session_id,session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
     db.query(sqlSelect, [studentID], (err, result) => {
         if (err != null) {
             console.log(err)
@@ -993,6 +993,7 @@ app.post('/viewAction', (req, res) => {
         if (err != null) {
             console.log(err)
         }
+        res.send(result);
     })
 });
 
@@ -1063,6 +1064,7 @@ app.get("/CheckLists", (req, res) => {
     });
 });
 
+<<<<<<< Updated upstream
 app.post("/viewCheck_id", (req, res) => {
     const session_id = req.body.session_id;
     // const checklist_id = req.body.checklist_id;
@@ -1116,6 +1118,88 @@ app.get('/sessionPledges', (req, res) => {
 
 });
 
+=======
+//get all the pledges associated with a session
+app.get('/sessionPledges' ,(req, res)=>{
+    const session_id=req.query['session_id'];
+    console.log(session_id);
+    const sqlSelect='select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
+    db.query(sqlSelect, [session_id], (err,result)=>{
+        if (err!=null){
+            console.log(err);
+        }
+        else{
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+//get pledge associated with session
+app.get('/sessionPledgeLink', function (req, res) {
+    //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
+    const id = req.query['pledge_id']; //gets id from frontend
+    //var filePath1;
+    const sqlSelect = "SELECT pledge_link from pledges where pledge_id= ?";//get link where pledge is stored
+    db.query(sqlSelect, [id], (error, result) => {
+        //res.send(result);
+        //console.log(result[0].pledge_link)
+        const filePath = result[0].pledge_link;
+        if (error != null) {
+            console.log(error)
+        }
+
+        fs.readFile(__dirname + filePath, function (err, data) {
+            res.contentType("application/pdf");
+            res.send(data);
+            //console.log(__dirname);
+        });
+    });
+
+
+});
+///student ability to complete sessions
+app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { //uploading the pledge that student signed before test
+    //get student nr from database and then do upload!!!!
+    const studentID = req.body.studentID;
+    const paragraph = req.body.paragraph;
+    const sessionID = req.body.sessionID;
+    const pledgeID=req.body.pledgeID
+
+    const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
+    db.query(sqlSelect, [studentID], (error, result) => {
+        console.log(studentID);
+        const studentNr = result[0].organization_nr;
+
+        const sqlSelectURL = "select session_folder from sessions where session_id=?"; //extend to sessions
+        db.query(sqlSelectURL, [sessionID], (error, result) => {
+            const sessionLink = result[0].session_folder;
+            let newFileName = studentNr + ".pdf";
+            let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
+            console.log(sessionLink);
+            let newPath = sessionLink + "/" + newFileName;
+            let saveLink = newPath.slice(1);
+            fs.rename(oldPath, newPath, function (err) {
+                console.log(err);
+                res.send("200");
+            });
+
+            const sqlInsert = "INSERT INTO completed_sessions (student_id, session_id,pledge_id, pledge_link, paragraph) VALUES (?,?,?,?,?);";   // insert into submisisons table
+            db.query(sqlInsert, [studentID, sessionID, pledgeID, saveLink, paragraph], (err, res) => {
+                if (err != null) {
+                    console.log(err)
+                }
+            });
+
+        });
+
+
+    });
+
+
+
+});
+>>>>>>> Stashed changes
 app.listen(3001, () => {
     console.log("running on port 3001");
 });
