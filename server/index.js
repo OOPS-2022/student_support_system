@@ -1033,12 +1033,12 @@ app.post("/addCheckListQuestion", (req, res) => {
         console.log(result)
         let question_num;
         if (result.length == 0) {
-            question_num = 0;
+            question_num = 1;
         } else {
             question_num = result[0].question_number + 1;
         }
 
-        const sqlInsert = "Insert into checklist (check_id, question_number, question_details, session_id) values (?, ?, ?, ?)"; //send notification to every student
+        const sqlInsert = "Insert into checklist (check_id, question_number, question_details, session_id) values (?, ?, ?, ?)"; 
         db.query(sqlInsert, [checklist_id, question_num, question_details, session_id], (err, result) => {
             if (err != null) {
                 console.log(err)
