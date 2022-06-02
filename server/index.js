@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 const nodemailer = require("nodemailer");
 const multer = require("multer");
 const uploadSignedPledge = multer({ dest: "./Uploads/Pledges/SignedPledges" });
-const uploadStudentPledge = multer({ dest: "./Uploads/Pledges/Test" })
+const uploadStudentPledge = multer({ dest: "./Uploads/SubmittedSessions" })
 const fs = require('fs');
 const { dirname } = require("path");
 const uploadEvidenceDoc = multer({ dest: "./Uploads/Evidence" });
@@ -448,26 +448,26 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req, res) =>
     });
     const name = req.body.name;
     const desc = req.body.desc;
-    const sessions=req.body.sessions;
+    const sessions = req.body.sessions;
     const type = "Signed Pledge"
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type, pledge_link) VALUES (?,?,?,?);";   // insert into pledges table
     db.query(sqlInsert, [name, desc, type, saveLink], (err, res) => {
         if (err != null) {
             console.log(err)
         }
-        else{
-            const sqlSelectPledge='SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
-            db.query(sqlSelectPledge, (err,result)=>{
-                
-                if (err!=null){
+        else {
+            const sqlSelectPledge = 'SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
+            db.query(sqlSelectPledge, (err, result) => {
+
+                if (err != null) {
                     console.log(err);
                 }
-                else{
-                    let pledge_id=result[0].pledge_id;
+                else {
+                    let pledge_id = result[0].pledge_id;
                     const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
                     for (let j = 0; j < sessions.length; j++) {
-                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err,result)=>{
-                            if(err!=null){
+                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err, result) => {
+                            if (err != null) {
                                 console.log(err);
                             }
                         })
@@ -486,22 +486,22 @@ app.post('/createClickedPledge', function (req, res) {
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type) VALUES (?,?,?);";
     db.query(sqlInsert, [name, desc, pledge_type], (error, result) => {
         if (error != null) {
-            
+
             console.log(error)
         }
-        else{
-            const sqlSelectPledge='SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
-            db.query(sqlSelectPledge, (err,result)=>{
-                
-                if (err!=null){
+        else {
+            const sqlSelectPledge = 'SELECT pledge_id FROM pledges ORDER BY pledge_id DESC LIMIT 1';
+            db.query(sqlSelectPledge, (err, result) => {
+
+                if (err != null) {
                     console.log(err);
                 }
-                else{
-                    let pledge_id=result[0].pledge_id;
+                else {
+                    let pledge_id = result[0].pledge_id;
                     const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
                     for (let j = 0; j < sessions.length; j++) {
-                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err,result)=>{
-                            if(err!=null){
+                        db.query(sqlInsertSesLink, [sessions[j], pledge_id], (err, result) => {
+                            if (err != null) {
                                 console.log(err);
                             }
                         })
@@ -779,33 +779,34 @@ app.get('/sessionPledgeLink', function (req, res) {
 
 });
 
-///student ability to complete test and upload pledge....extend to sessions
-app.post("/doTest", uploadStudentPledge.single("file"), (req, res) => { //uploading the pledge that student signed before test
+///student ability to complete sessions
+app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { //uploading the pledge that student signed before test
     //get student nr from database and then do upload!!!!
     const studentID = req.body.studentID;
     const paragraph = req.body.paragraph;
-    const testID = req.body.testID;
+    const sessionID = req.body.sessionID;
+    const pledgeID=req.body.pledgeID
 
     const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
     db.query(sqlSelect, [studentID], (error, result) => {
         console.log(error);
         const studentNr = result[0].organization_nr;
 
-        const sqlSelectURL = "select test_link from tests where test_id=?"; //extend to sessions
-        db.query(sqlSelectURL, [testID], (error, result) => {
-            const testLink = result[0].test_link;
+        const sqlSelectURL = "select session_folder from sessions where session_id=?"; //extend to sessions
+        db.query(sqlSelectURL, [sessionID], (error, result) => {
+            const sessionLink = result[0].session_folder;
 
             let newFileName = studentNr + ".pdf";
-            let oldPath = "./Uploads/Pledges/Test/" + req.file.filename;
-            let newPath = testLink + "/" + newFileName;
+            let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
+            let newPath = sessionLink + "/" + newFileName;
             let saveLink = newPath.slice(1);
             fs.rename(oldPath, newPath, function (err) {
                 console.log(err);
                 res.send("200");
             });
 
-            const sqlInsert = "INSERT INTO pledge_submissions (student_id, test_id, pledge_link, paragraph) VALUES (?,?,?,?);";   // insert into submisisons table
-            db.query(sqlInsert, [studentID, testID, saveLink, paragraph], (err, res) => {
+            const sqlInsert = "INSERT INTO completed_sessions (student_id, session_id,pledge_id, pledge_link, paragraph) VALUES (?,?,?,?,?);";   // insert into submisisons table
+            db.query(sqlInsert, [studentID, sessionID, pledgeID, saveLink, paragraph], (err, res) => {
                 if (err != null) {
                     console.log(err)
                 }
@@ -895,13 +896,29 @@ app.post("/insertses", (req, res) => {
                     //linking all the pledes associated with a session to the session ID
                     const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
                     for (let j = 0; j < pledges.length; j++) {
-                        db.query(sqlInsertSesLink, [session_id, pledges[j]], (err,result)=>{
-                            if(err!=null){
+                        db.query(sqlInsertSesLink, [session_id, pledges[j]], (err, result) => {
+                            if (err != null) {
                                 console.log(err);
                             }
                         })
                     }
+
+                    const dir = './Uploads/SubmittedSessions/Session' + session_id;
+                    const saveLink = '/Uploads/SubmittedSessions/Session' + session_id;
+                    fs.mkdir(dir, err => {
+                        if (err) {
+                            throw err;
+                        }
+                    })
+                    //now insert this directory into database
+                    const sqlUpdateLink = 'Update sessions set session_folder=? where session_id=?';
+                    db.query(sqlUpdateLink, [saveLink, session_id], (err, result) => {
+                        if (err != null) {
+                            console.log(err)
+                        }
+                    })
                     
+
                 })
             })
         }
@@ -1014,13 +1031,13 @@ app.post("/addCheckListQuestion", (req, res) => {
     const question_details = req.body.question_details;
 
     const sqlGetId = "SELECT question_number FROM checklist WHERE check_id = ? AND session_id = ? ORDER BY question_number DESC LIMIT 1";//get last  created checklist id
-    db.query(sqlGetId, [checklist_id , session_id],(err, result) => {
+    db.query(sqlGetId, [checklist_id, session_id], (err, result) => {
         console.log(result)
         let question_num;
-        if(result.length == 0){
+        if (result.length == 0) {
             question_num = 0;
-        }else{
-            question_num = result[0].question_number +1;
+        } else {
+            question_num = result[0].question_number + 1;
         }
 
         const sqlInsert = "Insert into checklist (check_id, question_number, question_details, session_id) values (?, ?, ?, ?)"; //send notification to every student
@@ -1037,9 +1054,9 @@ app.post("/allCheckListQuestions", (req, res) => {
     const checklist_id = req.body.checklist_id;
     console.log(session_id, checklist_id)
     const sqlGetId = "SELECT * FROM checklist WHERE session_id = ? AND check_id = ?";
-    db.query(sqlGetId, [session_id,checklist_id],(err, result) => {
+    db.query(sqlGetId, [session_id, checklist_id], (err, result) => {
         res.send(result);
-        // console.log(result[0])
+        console.log(result)
     });
 });
 
@@ -1055,7 +1072,7 @@ app.post("/viewCheck_id", (req, res) => {
     // const checklist_id = req.body.checklist_id;
     // console.log(session_id)
     const sqlSelect = "select distinct check_id from checklist WHERE session_id = ?";
-    db.query(sqlSelect,[session_id] ,(error, result) => {
+    db.query(sqlSelect, [session_id], (error, result) => {
 
         res.send(result);
     });
@@ -1068,7 +1085,7 @@ app.post("/updateCheckListQuestion", (req, res) => {
     const question_details = req.body.question_details;
     console.log(question_details)
     const sqlUpdate = "Update checklist set question_details = ? where check_id = ? AND question_number= ? AND session_id = ?";
-    db.query(sqlUpdate, [question_details, checklist_id,question_num,session_id ], (err, result) => {
+    db.query(sqlUpdate, [question_details, checklist_id, question_num, session_id], (err, result) => {
         if (err != null) {
             console.log(err)
         }
@@ -1080,27 +1097,28 @@ app.post("/deleteCheckListQuestion", (req, res) => {
     const session_id = req.body.session_id;
     const checklist_id = req.body.checklist_id;
     const sqlSelect = "Delete from checklist where check_id = ? AND question_number= ? AND session_id = ?";
-    db.query(sqlSelect, [checklist_id ,question_num, session_id], (err, result) => {
+    db.query(sqlSelect, [checklist_id, question_num, session_id], (err, result) => {
         if (err == null) {
             console.log("deleted")
             res.send("deleted");
         }
-    });
+    })
+});
 
 //get all the pledges associated with a session
-app.get('/sessionPledges' ,(req, res)=>{
-    const session_id=req.query['select_id'];
-    const sqlSelect='select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
-    db.query(sqlSelect, [session_id], (err,result)=>{
-        if (err!=null){
+app.get('/sessionPledges', (req, res) => {
+    const session_id = req.query['select_id'];
+    const sqlSelect = 'select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
+    db.query(sqlSelect, [session_id], (err, result) => {
+        if (err != null) {
             console.log(err)
         }
-        else{
+        else {
             res.send(result)
         }
     })
 
-})
+});
 
 app.listen(3001, () => {
     console.log("running on port 3001");
