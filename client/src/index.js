@@ -24,6 +24,8 @@ import Sessions from "./menu/sessions/sessions";
 import MySessions from "./menu/mySessions/mySessions";
 import CheckList from "./menu/checkList/checkList";
 import AddCheckList from "./menu/checkList/addCheckList";
+import CheckTable from "./menu/checkTable/checkTable";
+
 
 
 
@@ -48,7 +50,7 @@ ReactDOM.render(
             <Route path ="/Sessions" element={<App page={<Sessions/>} />}  />
             <Route path ="/CheckList" element={<App page={<CheckList/>} />}  />
             <Route path ="/AddCheckList" element={<App page={<AddCheckList/>} />}  />
-
+            <Route path ="/CheckedSessions" element={<App page={<CheckTable/>} />}  />
         </Routes>
     </Router>
     , document.getElementById("root")

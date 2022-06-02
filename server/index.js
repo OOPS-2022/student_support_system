@@ -755,12 +755,12 @@ app.post('/createTest', (req, res) => {
     });
 });
 
-//get pledge associated with test..extend to sessions...sessions can have multiple pledges
-app.get('/testPledge', function (req, res) {
+//get pledge associated with session
+app.get('/sessionPledgeLink', function (req, res) {
     //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
-    const id = req.query['testID']; //gets id from frontend
+    const id = req.query['pledge_id']; //gets id from frontend
     //var filePath1;
-    const sqlSelect = "SELECT pledge_link FROM tests left join pledges on tests.pledge_id=pledges.pledge_id where test_id= ?";//get link where pledge is stored
+    const sqlSelect = "SELECT pledge_link from pledges where pledge_id= ?";//get link where pledge is stored
     db.query(sqlSelect, [id], (error, result) => {
         //res.send(result);
         //console.log(result[0].pledge_link)
@@ -989,6 +989,7 @@ app.get('/getAllMeetings', (req, res) => {
 });
 
 
+
 app.get('/getAllSessions', (req, res) => {
     const sqlQuerry = 'Select session_type, date,session_id  from sessions;';
     db.query(sqlQuerry, (error, result) => {
@@ -1085,6 +1086,20 @@ app.post("/deleteCheckListQuestion", (req, res) => {
             res.send("deleted");
         }
     });
+
+//get all the pledges associated with a session
+app.get('/sessionPledges' ,(req, res)=>{
+    const session_id=req.query['select_id'];
+    const sqlSelect='select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
+    db.query(sqlSelect, [session_id], (err,result)=>{
+        if (err!=null){
+            console.log(err)
+        }
+        else{
+            res.send(result)
+        }
+    })
+
 })
 
 app.listen(3001, () => {

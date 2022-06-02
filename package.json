@@ -16,6 +16,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.0",
     "@mui/material": "5.8.0",
     "@syncfusion/ej2-base": "^20.1.56",
     "@syncfusion/ej2-buttons": "^20.1.55",
