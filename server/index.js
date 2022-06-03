@@ -940,73 +940,73 @@ app.get("/myActions", (req, res) => {
 //adding a session
 app.post("/insertses", (req, res) => {
 
-    const course_id = req.body.course_id;
-    const session_type = req.body.sestype;
-    const date = req.body.date;
-    const time = req.body.time;
-    const session_name = req.body.session_name;
-    const creator_id = req.body.creator_id;
-    const pledges = req.body.pledges;
-    //console.log(pledges);
-    const sqlInsert = "Insert into sessions (course_id,session_type,date,time,session_name, creator_id) values(?,?,?,?,?,?)";
-    db.query(sqlInsert, [course_id, session_type, date, time, session_name, creator_id], (err, result) => {
-        if (err != null) {
-            res.send(err)
-            console.log(err);
-        }
-        else {
-            const sqlGetId = "SELECT session_id FROM sessions ORDER BY session_id DESC LIMIT 1";//get last  created session
-            db.query(sqlGetId, (err, result) => {
-                let session_id = result[0].session_id;
-                //get all the students that the session will be applicable to
-                const sqlGetStudents = "select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
-                db.query(sqlGetStudents, [session_id], (err, result) => {
-                    //console.log(result);
-                    for (let i = 0; i < result.length; i++) {
-                        let student_id = result[i].user_id;
-                        let table = "sessions";
-                        let tableID = session_id;
-                        let seen = "false";
-                        let date = new Date().toISOString().slice(0, 10);
-                        let actionDesc = "A new session has been uploaded";
-                        const sqlInsert = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)"; //send notification to every student
-                        db.query(sqlInsert, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
-                            if (err != null) {
-                                console.log(err)
-                            }
-                        })
-                    }
-                    //linking all the pledes associated with a session to the session ID
-                    const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
-                    for (let j = 0; j < pledges.length; j++) {
-                        db.query(sqlInsertSesLink, [session_id, pledges[j]], (err, result) => {
-                            if (err != null) {
-                                console.log(err);
-                            }
-                        })
-                    }
-
-                    const dir = './Uploads/SubmittedSessions/Session' + session_id;
-                    const saveLink = './Uploads/SubmittedSessions/Session' + session_id;
-                    fs.mkdir(dir, err => {
-                        if (err) {
-                            throw err;
-                        }
-                    })
-                    //now insert this directory into database
-                    const sqlUpdateLink = 'Update sessions set session_folder=? where session_id=?';
-                    db.query(sqlUpdateLink, [saveLink, session_id], (err, result) => {
-                        if (err != null) {
-                            console.log(err)
-                        }
-                    })
-                    
-
-                })
+  const course_id = req.body.course_id;
+  const session_type = req.body.sestype;
+  const date = req.body.date;
+  const time = req.body.time;
+  const session_name = req.body.session_name;
+  const creator_id = req.body.creator_id;
+  const pledges = req.body.pledges;
+  //console.log(pledges);
+  const sqlInsert = "Insert into sessions (course_id,session_type,date,time,session_name, creator_id) values(?,?,?,?,?,?)";
+  db.query(sqlInsert, [course_id, session_type, date, time, session_name, creator_id], (err, result) => {
+    if (err != null) {
+      res.send(err)
+      console.log(err);
+    }
+    else {
+      const sqlGetId = "SELECT session_id FROM sessions ORDER BY session_id DESC LIMIT 1";//get last  created session
+      db.query(sqlGetId, (err, result) => {
+        let session_id = result[0].session_id;
+        //get all the students that the session will be applicable to
+        const sqlGetStudents = "select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
+        db.query(sqlGetStudents, [session_id], (err, result) => {
+          //console.log(result);
+          for (let i = 0; i < result.length; i++) {
+            let student_id = result[i].user_id;
+            let table = "sessions";
+            let tableID = session_id;
+            let seen = "false";
+            let date = new Date().toISOString().slice(0, 10);
+            let actionDesc = "A new session has been uploaded";
+            const sqlInsert = "Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)"; //send notification to every student
+            db.query(sqlInsert, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+              if (err != null) {
+                console.log(err)
+              }
             })
           }
-          });
-        });
+          //linking all the pledes associated with a session to the session ID
+          const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
+          for (let j = 0; j < pledges.length; j++) {
+            db.query(sqlInsertSesLink, [session_id, pledges[j]], (err, result) => {
+              if (err != null) {
+                console.log(err);
+              }
+            })
+          }
+
+          const dir = './Uploads/SubmittedSessions/Session' + session_id;
+          const saveLink = './Uploads/SubmittedSessions/Session' + session_id;
+          fs.mkdir(dir, err => {
+            if (err) {
+              throw err;
+            }
+          })
+          //now insert this directory into database
+          const sqlUpdateLink = 'Update sessions set session_folder=? where session_id=?';
+          db.query(sqlUpdateLink, [saveLink, session_id], (err, result) => {
+            if (err != null) {
+              console.log(err)
+            }
+          })
+
+
+        })
+      })
+    }
+  });
+});
 
 
 //view all the sessions...if admin..show only created by certain admin? why would they change others' stuff?
@@ -1053,28 +1053,28 @@ app.post("/updateses", (req, res) => {
 
 //see all sessions associated with that student
 app.get('/mySessions', (req, res) => {
-    const studentID = req.query['studentID'];
-    const sqlSelect = 'select sessions.session_id,session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
-    db.query(sqlSelect, [studentID], (err, result) => {
-        if (err != null) {
-            console.log(err)
-        }
-        else {
-            res.send(result)
-        }
-    })
+  const studentID = req.query['studentID'];
+  const sqlSelect = 'select sessions.session_id,session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
+  db.query(sqlSelect, [studentID], (err, result) => {
+    if (err != null) {
+      console.log(err)
+    }
+    else {
+      res.send(result)
+    }
+  })
 });
 
 //set notification to seen so that it doesn't appear in notification centre anymore
 app.post('/viewAction', (req, res) => {
-    const actionId = req.body.actionID;
-    const sqlUpdate = "Update actions set seen='true' where action_id=?";
-    db.query(sqlUpdate, [actionId], (err, result) => {
-        if (err != null) {
-            console.log(err)
-        }
-        res.send(result);
-    })
+  const actionId = req.body.actionID;
+  const sqlUpdate = "Update actions set seen='true' where action_id=?";
+  db.query(sqlUpdate, [actionId], (err, result) => {
+    if (err != null) {
+      console.log(err)
+    }
+    res.send(result);
+  })
 });
 
 //get all the meetings to display them in calendar
@@ -1227,64 +1227,64 @@ app.get("/getChecklistAns", (req, res) => {
 
 //get pledge associated with session
 app.get('/sessionPledgeLink', function (req, res) {
-    //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
-    const id = req.query['pledge_id']; //gets id from frontend
-    //var filePath1;
-    const sqlSelect = "SELECT pledge_link from pledges where pledge_id= ?";//get link where pledge is stored
-    db.query(sqlSelect, [id], (error, result) => {
-        //res.send(result);
-        //console.log(result[0].pledge_link)
-        const filePath = result[0].pledge_link;
-        if (error != null) {
-            console.log(error)
-        }
+  //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
+  const id = req.query['pledge_id']; //gets id from frontend
+  //var filePath1;
+  const sqlSelect = "SELECT pledge_link from pledges where pledge_id= ?";//get link where pledge is stored
+  db.query(sqlSelect, [id], (error, result) => {
+    //res.send(result);
+    //console.log(result[0].pledge_link)
+    const filePath = result[0].pledge_link;
+    if (error != null) {
+      console.log(error)
+    }
 
-        fs.readFile(__dirname + filePath, function (err, data) {
-            res.contentType("application/pdf");
-            res.send(data);
-            //console.log(__dirname);
-        });
+    fs.readFile(__dirname + filePath, function (err, data) {
+      res.contentType("application/pdf");
+      res.send(data);
+      //console.log(__dirname);
     });
+  });
 
 
 });
 ///student ability to complete sessions
 app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { //uploading the pledge that student signed before test
-    //get student nr from database and then do upload!!!!
-    const studentID = req.body.studentID;
-    const paragraph = req.body.paragraph;
-    const sessionID = req.body.sessionID;
-    const pledgeID=req.body.pledgeID
+  //get student nr from database and then do upload!!!!
+  const studentID = req.body.studentID;
+  const paragraph = req.body.paragraph;
+  const sessionID = req.body.sessionID;
+  const pledgeID = req.body.pledgeID
 
-    const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
-    db.query(sqlSelect, [studentID], (error, result) => {
-        console.log(studentID);
-        const studentNr = result[0].organization_nr;
+  const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
+  db.query(sqlSelect, [studentID], (error, result) => {
+    console.log(studentID);
+    const studentNr = result[0].organization_nr;
 
-        const sqlSelectURL = "select session_folder from sessions where session_id=?"; //extend to sessions
-        db.query(sqlSelectURL, [sessionID], (error, result) => {
-            const sessionLink = result[0].session_folder;
-            let newFileName = studentNr + ".pdf";
-            let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
-            console.log(sessionLink);
-            let newPath = sessionLink + "/" + newFileName;
-            let saveLink = newPath.slice(1);
-            fs.rename(oldPath, newPath, function (err) {
-                console.log(err);
-                res.send("200");
-            });
+    const sqlSelectURL = "select session_folder from sessions where session_id=?"; //extend to sessions
+    db.query(sqlSelectURL, [sessionID], (error, result) => {
+      const sessionLink = result[0].session_folder;
+      let newFileName = studentNr + ".pdf";
+      let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
+      console.log(sessionLink);
+      let newPath = sessionLink + "/" + newFileName;
+      let saveLink = newPath.slice(1);
+      fs.rename(oldPath, newPath, function (err) {
+        console.log(err);
+        res.send("200");
+      });
 
-            const sqlInsert = "INSERT INTO completed_sessions (student_id, session_id,pledge_id, pledge_link, paragraph) VALUES (?,?,?,?,?);";   // insert into submisisons table
-            db.query(sqlInsert, [studentID, sessionID, pledgeID, saveLink, paragraph], (err, res) => {
-                if (err != null) {
-                    console.log(err)
-                }
-            });
-
-        });
-
+      const sqlInsert = "INSERT INTO completed_sessions (student_id, session_id,pledge_id, pledge_link, paragraph) VALUES (?,?,?,?,?);";   // insert into submisisons table
+      db.query(sqlInsert, [studentID, sessionID, pledgeID, saveLink, paragraph], (err, res) => {
+        if (err != null) {
+          console.log(err)
+        }
+      });
 
     });
+
+
+  });
 
 
 

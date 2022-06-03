@@ -90,11 +90,12 @@ async function getSessions() {
 
 
 
-async function editSessions(date, time) {
+async function editSessions(session_name, date, time) {
     return Axios.post("http://localhost:3001/updateses", {
         session_id: sessionStorage.getItem("session_id"),
         date: date,
-        time: time
+        time: time,
+        session_name: session_name
     });
 }
 
@@ -170,24 +171,25 @@ export default function Sessions() {
 
     const sessionTypes = ["Test", "Tutorial", "Exam"];
     const [sess, setSess] = React.useState([]);
-   
+
     useEffect(() => {
 
         const getSess = async () => {
             const response = await Axios.get('http://localhost:3001/sessions');
             setSessions(response.data);
-            
+
             for (let i = 0; i < response.data.length; i++) {
-                let id = response.data[i].session_id ;
+                let id = response.data[i].session_id;
                 const response2 = await Axios.get('http://localhost:3001/sessionPledges', {
-                    params: {"session_id": id}});
-                const temp1 =[ response.data[i].session_id, response2.data ];
+                    params: { "session_id": id }
+                });
+                const temp1 = [response.data[i].session_id, response2.data];
                 setSessionPledges(OldArray => [...OldArray, temp1]);
-                 
-                
+
+
 
             }
-            
+
 
 
         }
@@ -195,20 +197,20 @@ export default function Sessions() {
     }, []);
 
 
-    
+
     console.log(sessions);
     console.log(sessionPledges);
-    const getPledgesBySession =(session) =>{
+    const getPledgesBySession = (session) => {
         let pledgeNames = "";
-        for(let i =0; i<sessionPledges.length; i++){
-            if (session==sessionPledges[i][0]){
-                for(let j = 0; j<sessionPledges[i][1].length; j++)
-                pledgeNames += sessionPledges[i][1][j].pledge_name + " ";
+        for (let i = 0; i < sessionPledges.length; i++) {
+            if (session == sessionPledges[i][0]) {
+                for (let j = 0; j < sessionPledges[i][1].length; j++)
+                    pledgeNames += sessionPledges[i][1][j].pledge_name + " ";
 
             }
         }
         return pledgeNames;
-        
+
     }
 
     colNames = colNamesPossible;
@@ -228,7 +230,7 @@ export default function Sessions() {
 
     const handleClose = () => { setOpen(false); }
     const editHandle = async (e) => {
-        const response = await editSessions(date, time); const response2 = await getSessions(); setSessions(response2.data);
+        const response = await editSessions(sessionName, date, time); const response2 = await getSessions(); setSessions(response2.data);
         handleClose();
     }
     const addHandle = (e) => { setLabel("Add"); setOpen(true); setHide(false); setDate(""); setTime(""); setCourse(""); setSessionType("") }
@@ -249,8 +251,8 @@ export default function Sessions() {
                         </TableHead>
                         <TableBody>
                             {Object.values(rows).map((obj, index) => (
-                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]); setSessionType(obj["session_type"]); setDate(obj["date"]); setTime(obj["time"]); console.log(index); }} hover={true}>
-                                    
+                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]); setSessionType(obj["session_type"]); setDate(obj["date"]); setTime(obj["time"]); console.log(index); setSessionName(obj["session_name"])}} hover={true}>
+
                                     <StyledTableCell >{obj["session_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     <StyledTableCell>{getPledgesBySession(obj["session_id"])}</StyledTableCell>
@@ -318,6 +320,18 @@ export default function Sessions() {
                             </TextField>)}
                             <TextField
                                 id="outlined-required"
+                                label="Session Name"
+                                defaultValue={sessionName}
+                                sx={{ padding: "5px", width: "90%" }}
+                                onChange={(e) => {
+                                    setSessionName(e.target.value);
+
+                                }
+                                }
+                            />
+
+                            <TextField
+                                id="outlined-required"
                                 label="Date"
                                 defaultValue={date}
                                 sx={{ padding: "5px", width: "90%" }}
@@ -340,7 +354,7 @@ export default function Sessions() {
 
                             />'
                             {!hide && (<InputLabel id="demo-multiple-name-label">Select Pledges</InputLabel>)}
-                            {!hide && ( <Select
+                            {!hide && (<Select
                                 sx={{ paddingTop: "5px", width: "90%" }}
                                 labelId="demo-multiple-name-label"
                                 id="demo-multiple-name"
