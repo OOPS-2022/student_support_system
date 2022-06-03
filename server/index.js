@@ -1217,7 +1217,7 @@ app.get("/sessionPledges", (req, res) => {
 
 app.get("/getChecklistAns", (req, res) => {
   const sqlQuerry =
-    "select filledchecklist.checklist_id, filledchecklist.stu_id, filledchecklist.question_number, filledchecklist.checked, checklist.session_id from filledchecklist, checklist where filledchecklist.checklist_id = checklist.check_id and checklist.question_number = filledchecklist.question_number order by session_id, stu_id;";
+    "select checklist_id, question_number, checked, name, surname, organization_nr from filledchecklist left join users on user_id=stu_id;";
 
   db.query(sqlQuerry, (error, result) => {
     res.send(result);
