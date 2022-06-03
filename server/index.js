@@ -1307,6 +1307,20 @@ app.post('/studentChecklistAnswers', (req, res)=>{
   }
 });
 
+app.get('/ckecklistForSession' ,(req,res)=>{
+  const sessionId=req.query['session_id'];
+  const sqlSelect='SELECT * from checklist where session_id=?';
+
+  db.query(sqlSelect, [sessionId], (err,result)=>{
+    if (err!=null){
+      console.log(err)
+    }
+    else{
+      res.send(result)
+    }
+  })
+});
+
 app.listen(3001, () => {
   console.log("running on port 3001");
 });
