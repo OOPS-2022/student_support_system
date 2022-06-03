@@ -1004,23 +1004,7 @@ app.post("/insertses", (req, res) => {
 
                 })
             })
-        }
-
-            const dir = "./Uploads/SubmittedSessions/Session" + session_id;
-            const saveLink = "/Uploads/SubmittedSessions/Session" + session_id;
-            fs.mkdir(dir, (err) => {
-              if (err) {
-                throw err;
-              }
-            });
-            //now insert this directory into database
-            const sqlUpdateLink =
-              "Update sessions set session_folder=? where session_id=?";
-            db.query(sqlUpdateLink, [saveLink, session_id], (err, result) => {
-              if (err != null) {
-                console.log(err);
-              }
-            });
+          }
           });
         });
 
