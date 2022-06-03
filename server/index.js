@@ -996,6 +996,9 @@ app.post("/insertses", (req, res) => {
             if (err != null) {
               console.log(err)
             }
+            else{
+              res.send('successful')
+            }
           })
 
 
@@ -1150,7 +1153,6 @@ app.get("/CheckLists", (req, res) => {
   });
 });
 
-
 app.post("/viewCheck_id", (req, res) => {
   const session_id = req.body.session_id;
   // const checklist_id = req.body.checklist_id;
@@ -1286,6 +1288,25 @@ app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { /
 
 
 });
+
+app.post('/studentChecklistAnswers', (req, res)=>{
+  const studentID=req.body.studentID;
+  const checkID=req.body.checkID;
+  const questions=req.body.questions;
+  const answers=req.body. questions;
+
+  const sqlInsert="Insert into filledchecklist (checklist_id, stu_id, question_number, checked) values (?,?,?,?)";
+
+  for (let i=0; i<questions.length;i++){
+    db.query(sqlInsert, [checkID, studentID,questions[i], answers[i]], (err,result)=>{
+      if (err!=null){
+        console.log(err)
+      }
+    })
+    res.send('successful')
+  }
+});
+
 app.listen(3001, () => {
   console.log("running on port 3001");
 });
