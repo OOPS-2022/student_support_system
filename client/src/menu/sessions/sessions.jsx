@@ -318,7 +318,7 @@ export default function Sessions() {
 
 
                             </TextField>)}
-                            <TextField
+                           {hide &&( <TextField
                                 id="outlined-required"
                                 label="Session Name"
                                 defaultValue={sessionName}
@@ -328,7 +328,7 @@ export default function Sessions() {
 
                                 }
                                 }
-                            />
+                            />)}
 
                             <TextField
                                 id="outlined-required"

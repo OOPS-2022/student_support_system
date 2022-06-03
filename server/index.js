@@ -495,10 +495,7 @@ app.get("/viewMyOffences", (req, res) => {
 });
 
 //creating a signed pledge, must have pdf that will be downloaded and signed later
-app.post(
-  "/createSignedPledge",
-  uploadSignedPledge.single("file"),
-  (req, res) => {
+app.post("/createSignedPledge",uploadSignedPledge.single("file"),(req, res) => {
     //let fileType=req.file.mimetype.split("/")[1];
     let newFileName = Date.now() + req.file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
     let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
