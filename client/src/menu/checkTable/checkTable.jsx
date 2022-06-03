@@ -18,6 +18,7 @@ import { shouldForwardProp } from '@mui/styled-engine';
 import { useEffect } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
+import { MenuItem } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -48,11 +49,99 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function CheckTable() {
+    class user{ //-------------------the class for user object  
+        constructor(user_id){
+            this.user_id = user_id;
+            this.checklist = [];
+            
+        }
 
+        addChecklist(data) {
+            if(data = 1){
+                this.checklist.push(<CheckIcon/>);
+            }else if(data = 0 ){
+                this.checklist.push(<Close/>);
+            }   
+        }
 
+        
+    }
 
+    class session{ //-------------------the class for session object  
+        constructor(session_id){
+            this.session_id = session_id;
+            this.userlist = [];
+            this.questions = [];
+        }
 
-    //let sessionData = [{ "Session": "1", "Questions":[{"Question":{"QuestionName": "Q1", "QuestionData":[{ "Leandra": "checked", "Lizl": "unchecked" }]}}]}]
+    }
+
+    const [Sessiondata, setSessiondata] = React.useState([]);
+    var sessionInfo =[]; // array of aallsession objects
+
+    /* sessionInfo[
+        0 : session{
+                session_id: number
+                questions: [Q1,Q2,Q3]
+                userlist: {
+                        0: {
+                                user_id: number
+                                checklist: [tick , cross, tick]
+                            }
+                        1: {
+                                user_id: number
+                                checklist: [tick , cross, cross]
+                            }
+                        ...
+                }
+            }
+        ]
+        ...
+    */
+
+    //---------------------------------retrives sessions and checklist data from database
+    const getSessiondata = async () => {
+        const response = await Axios.get('http://localhost:3001/getChecklistAns')
+        setSessiondata(response.data);
+        
+    }
+    getSessiondata();
+
+    
+    
+    //---------------sets all the data from database into objects for sessionInfo
+    const setSessioninfo = async () => {
+        let sess_id = Sessiondata[0].session_id;
+        let sessionO = new session(sess_id);
+        let user_id = Sessiondata[0].stu_id;
+        let userO = new user(user_id);
+        let arrQuestions =[];
+        for(let i = 0;i< Sessiondata.length;i++){
+            if(user_id!= Sessiondata[i].stu_id){
+                user_id = Sessiondata[i].stu_id;
+                sessionO.userlist.push(userO);
+                arrQuestions = [];
+                userO = new user(user_id);
+            }
+
+            if (sess_id != Sessiondata[i].session_id ){
+                sess_id = Sessiondata[i].session_id;
+                sessionO.questions = arrQuestions;
+                sessionInfo.push(sessionO);
+                sessionO = new session(sess_id);
+            }
+            
+            userO.addChecklist(Sessiondata[i].checked);
+            arrQuestions.push("Q " + Sessiondata[i].question_number);
+        }
+        sessionO.userlist.push(userO);
+        sessionO.questions = arrQuestions;
+        sessionInfo.push(sessionO);
+        //console.log(sessionInfo);
+    } 
+    setSessioninfo();
+
+    let sessionData = [{ "Session": "1", "Questions":[{"Question":{"QuestionName": "Q1", "QuestionData":[{ "Leandra": "checked", "Lizl": "unchecked" }]}}]}]
     let checked = ["yes", "yes", "no", "yes","yes"];
     let icons = [];
     for(let i = 0; i<checked.length;i++){
@@ -70,9 +159,17 @@ export default function CheckTable() {
     let colNamesQuestions = ["Q1", "Q2", "Q3", "Q4","Q5"];
 
     return (
-
         <>
-            <div>
+        <TextField style={{ minWidth: "20%" }}
+                id="Session_name"
+                label="Session"
+                select
+            >
+                <MenuItem>hi</MenuItem> 
+            </TextField>
+            <div>  
+            
+
                 {colNamesSessions.map((headerItem, index) => (
                     <div key={index} style={{ display: "inline-flex", padding: "20px" }}>
                         <TableContainer component={Paper} className="pageWrapper" id="cT">
@@ -94,9 +191,6 @@ export default function CheckTable() {
                                             ))}
 
                                         </TableRow >
-                                   
-                                    
-
                                 </TableHead>
                                 <TableBody>
                                     {rowNames.map((row, i) => (
@@ -112,14 +206,13 @@ export default function CheckTable() {
                                         </StyledTableRow>
                                     ))}
                                 </TableBody>
-
-
-
                             </Table>
                         </TableContainer>
                     </div>
                 ))}
             </div>
         </>
+
+       
     );
 }
