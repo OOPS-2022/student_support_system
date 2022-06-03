@@ -60,7 +60,7 @@ export default function ActivityCenter() {
         setActivities(response);
         console.log(activities);
 
-        if (row["tables"] == "meeting" || row["tables"] == "logged_offences") {
+        if (row["tables"] == "meeting" || row["tables"] == "logged_offence") {
             sessionStorage.setItem("ticket_id_student", row["table_id"]);
 
             navigate("/MyTickets");
