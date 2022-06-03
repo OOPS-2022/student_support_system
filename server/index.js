@@ -1023,10 +1023,7 @@ app.post("/insertses", (req, res) => {
             });
           });
         });
-      }
-    }
-  );
-});
+
 
 //view all the sessions...if admin..show only created by certain admin? why would they change others' stuff?
 app.get("/sessions", (req, res) => {
