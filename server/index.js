@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mysql = require("mysql2");
 const nodemailer = require("nodemailer");
 const multer = require("multer");
 const uploadSignedPledge = multer({ dest: "./Uploads/Pledges/SignedPledges" });
@@ -10,14 +9,8 @@ const uploadStudentPledge = multer({ dest: "./Uploads/SubmittedSessions" });
 const fs = require("fs");
 const { dirname } = require("path");
 const uploadEvidenceDoc = multer({ dest: "./Uploads/Evidence" });
+const db = require("./database");
 
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "sddatabase",
-
-});
 
 app.use(cors());
 app.use(express.json());
