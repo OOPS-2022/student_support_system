@@ -39,11 +39,11 @@ export default function ModalLogin(props){
       console.log("called");  
       var lgcUser_id ="";
       var lgRole ="";
-      console.log(lgEmail);
-      console.log(lgPassword);
+      // console.log(lgEmail);
+      // console.log(lgPassword);
       const response = await Axios.post("http://localhost:3001/Login",{setlgEmail: lgEmail, setlgPassword: lgPassword });
             console.log(response.data);
-            if(response.data != "incorrect"){
+            if(response.data ){
               console.log("if true");
               lgcUser_id = response.data[0]["user_id"];
               lgRole =response.data[0]["role"];
