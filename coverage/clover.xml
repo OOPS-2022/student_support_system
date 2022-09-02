@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1662132317535" clover="3.2.0">
-  <project timestamp="1662132317536" name="All files">
+<coverage generated="1662135002640" clover="3.2.0">
+  <project timestamp="1662135002640" name="All files">
     <metrics statements="435" coveredstatements="151" conditionals="44" coveredconditionals="4" methods="130" coveredmethods="19" elements="609" coveredelements="174" complexity="0" loc="435" ncloc="435" packages="1" files="9" classes="9"/>
     <file name="Actions.js" path="C:\Users\User\Desktop\student_support_system\server\Actions.js">
       <metrics statements="12" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="1"/>
