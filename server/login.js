@@ -11,11 +11,10 @@ function Login(database){
       const setlgPassword = req.body.setlgPassword;
       // // console.log(setlgEmail)
       database.Login(setlgEmail, setlgPassword, function(err, result){
-      //   // console.log(result);
-      //   // if(err != null){
-          res.send(result);
-      //   // }
+        res.send(result);
       });
+
+
     }
   });
 

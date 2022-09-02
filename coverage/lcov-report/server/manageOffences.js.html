@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.14% </span>
+                <span class="strong">62.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/35</span>
+                <span class='fraction'>23/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.33% </span>
+                <span class="strong">46.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/15</span>
+                <span class='fraction'>7/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.14% </span>
+                <span class="strong">62.16% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/35</span>
+                <span class='fraction'>23/37</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -132,7 +132,11 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -142,22 +146,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -165,9 +161,21 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,16 +218,15 @@
 &nbsp;
   // get request to get list of possible offences, used to display clickable editable table
   router.get("/PossibleOffences", (req, res) =&gt; {
-      database.PossibleOffences(<span class="fstat-no" title="function not covered" >fu</span>nction(err, result){
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
+      database.PossibleOffences(function(err, result){
+        res.send(result);
       })
-      res.sendStatus(200);
   });
     
   //fetch the data from the database to send to frontend to show admin all the offences that have been logged
-  router.get("/SubmittedOffences", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    database.SubmittedOffences(<span class="fstat-no" title="function not covered" >fu</span>nction(err , result) {</span>
-<span class="cstat-no" title="statement not covered" >      res.send(result);</span>
+  router.get("/SubmittedOffences", (req, res) =&gt; {
+    database.SubmittedOffences(function(err , result) {
+      res.send(result);
     });
   });
     
@@ -231,13 +238,18 @@
   });
     
   //post request to insert a new offence to the database
-  router.post("/insert", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-      const offenceName = <span class="cstat-no" title="statement not covered" >req.body.offenceName;</span>
-      const severity = <span class="cstat-no" title="statement not covered" >req.body.severity;</span>
-      const desc = <span class="cstat-no" title="statement not covered" >req.body.desc;</span>
-<span class="cstat-no" title="statement not covered" >      database.insert(offenceName, severity, desc, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
-      })
+  router.post("/insert", (req, res) =&gt; {
+    console.log("HI")
+      if(Object.keys(req.body).length &lt; 3){
+        res.send(null);
+      }else{
+        const offenceName = req.body.offenceName;
+        const severity = req.body.severity;
+        const desc = req.body.desc;
+        database.insert(offenceName, severity, desc, function(err, result){
+          res.send(result);
+        })
+      }
   });
     
   //do we still use this??
@@ -277,7 +289,7 @@ module.exports=manageOffences;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Aug 31 2022 16:31:56 GMT+0200 (South Africa Standard Time)
+                at Fri Sep 02 2022 17:14:49 GMT+0200 (South Africa Standard Time)
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -10,7 +10,6 @@ function manageOffences(database){
       database.PossibleOffences(function(err, result){
         res.send(result);
       })
-      res.sendStatus(200);
   });
     
   //fetch the data from the database to send to frontend to show admin all the offences that have been logged
@@ -29,12 +28,17 @@ function manageOffences(database){
     
   //post request to insert a new offence to the database
   router.post("/insert", (req, res) => {
-      const offenceName = req.body.offenceName;
-      const severity = req.body.severity;
-      const desc = req.body.desc;
-      database.insert(offenceName, severity, desc, function(err, result){
-        res.send(result);
-      })
+    console.log("HI")
+      if(Object.keys(req.body).length < 3){
+        res.send(null);
+      }else{
+        const offenceName = req.body.offenceName;
+        const severity = req.body.severity;
+        const desc = req.body.desc;
+        database.insert(offenceName, severity, desc, function(err, result){
+          res.send(result);
+        })
+      }
   });
     
   //do we still use this??
