@@ -14,11 +14,8 @@ function Pledges(database){
     
   //query to view pledge file if the pledge is a signed pledge
   router.get("/viewFile", function (req, res) {
-      //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
       const id = req.query["id"]; //gets id from frontend
-      //var filePath1;
-      database.viewFile(function(err, result){
-        //res.send(result);
+      database.viewFile(id, function(err, result){
         const filePath = result[0].pledge_link;
     
         if (error != null) {
@@ -28,23 +25,18 @@ function Pledges(database){
         fs.readFile(__dirname + filePath, function (err, data) {
           res.contentType("application/pdf");
           res.send(data);
-          //console.log(__dirname);
         });
       })
-
-      
   });
 
   //creating a signed pledge, must have pdf that will be downloaded and signed later
   router.post("/createSignedPledge",uploadSignedPledge.single("file"),(req, res) => {
-      //let fileType=req.file.mimetype.split("/")[1];
       let newFileName = Date.now() + req.file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
       let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
       let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName;
       let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName; //link to be saved in database to find pledge pdf with
       fs.rename(oldPath, newPath, function (err) {
         console.log(err);
-        //res.send("200");
       });
       const name = req.body.name;
       const desc = req.body.desc;

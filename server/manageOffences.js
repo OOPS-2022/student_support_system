@@ -28,7 +28,6 @@ function manageOffences(database){
     
   //post request to insert a new offence to the database
   router.post("/insert", (req, res) => {
-    console.log("HI")
       if(Object.keys(req.body).length < 3){
         res.send(null);
       }else{

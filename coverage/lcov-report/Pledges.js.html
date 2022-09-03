@@ -134,15 +134,7 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -158,11 +150,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -172,23 +161,18 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -237,11 +221,8 @@
     
   //query to view pledge file if the pledge is a signed pledge
   router.get("/viewFile", <span class="fstat-no" title="function not covered" >fu</span>nction (req, res) {
-      //var filePath = "/Uploads/Pledges/SignedPledges/1650355918774Plagiarism Pledge.pdf"; //this will be what gets saved in database
       const id = <span class="cstat-no" title="statement not covered" >req.query["id"];</span> //gets id from frontend
-      //var filePath1;
-<span class="cstat-no" title="statement not covered" >      database.viewFile(<span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-        //res.send(result);
+<span class="cstat-no" title="statement not covered" >      database.viewFile(id, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
         const filePath = <span class="cstat-no" title="statement not covered" >result[0].pledge_link;</span>
     
 <span class="cstat-no" title="statement not covered" >        if (error != null) {</span>
@@ -251,23 +232,18 @@
 <span class="cstat-no" title="statement not covered" >        fs.readFile(__dirname + filePath, <span class="fstat-no" title="function not covered" >fu</span>nction (err, data) {</span>
 <span class="cstat-no" title="statement not covered" >          res.contentType("application/pdf");</span>
 <span class="cstat-no" title="statement not covered" >          res.send(data);</span>
-          //console.log(__dirname);
         });
       })
-&nbsp;
-      
   });
 &nbsp;
   //creating a signed pledge, must have pdf that will be downloaded and signed later
   router.post("/createSignedPledge",uploadSignedPledge.single("file"),<span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-      //let fileType=req.file.mimetype.split("/")[1];
       let newFileName = <span class="cstat-no" title="statement not covered" >Date.now() + req.file.originalname;</span> //new name with date to ensure uniqueness and prevernt overwrite
       let oldPath = <span class="cstat-no" title="statement not covered" >"./Uploads/Pledges/SignedPledges/" + req.file.filename;</span> //where file has just been uploaded
       let newPath = <span class="cstat-no" title="statement not covered" >"./Uploads/Pledges/SignedPledges/" + newFileName;</span>
       let saveLink = <span class="cstat-no" title="statement not covered" >"/Uploads/Pledges/SignedPledges/" + newFileName;</span> //link to be saved in database to find pledge pdf with
 <span class="cstat-no" title="statement not covered" >      fs.rename(oldPath, newPath, <span class="fstat-no" title="function not covered" >fu</span>nction (err) {</span>
 <span class="cstat-no" title="statement not covered" >        console.log(err);</span>
-        //res.send("200");
       });
       const name = <span class="cstat-no" title="statement not covered" >req.body.name;</span>
       const desc = <span class="cstat-no" title="statement not covered" >req.body.desc;</span>
@@ -307,7 +283,7 @@ module.exports=Pledges;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Sep 02 2022 18:10:02 GMT+0200 (South Africa Standard Time)
+                at Sat Sep 03 2022 15:21:49 GMT+0200 (South Africa Standard Time)
             </div>
         <script src="prettify.js"></script>
         <script>
