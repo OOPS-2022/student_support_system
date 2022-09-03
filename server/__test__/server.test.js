@@ -635,4 +635,4 @@ const getEmail = jest.fn(function (stdNo,c){
 const getAllMeetings= jest.fn(function ( c){
     c(null, {result:200})
 });
-const app = makeApp({addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, SubmittedOffences, insert,ticketTracker});
+const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, SubmittedOffences, insert,ticketTracker});

@@ -48,7 +48,7 @@ function Session(database){
             res.contentType("application/pdf");
             res.send(data);
           }else{
-          res.send(null);
+            res.send(null);
           }
         });
       })
@@ -129,7 +129,7 @@ function Session(database){
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               fs.mkdir(dir, err => {
                 if (err == null) {
-                  database.insertsesUpdateLink(dir, session_id, function(err, result){
+                    database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
                   })
                 }else{
