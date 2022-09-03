@@ -22,6 +22,14 @@ import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+
+
+
+
 
 
 const ITEM_HEIGHT = 48;
@@ -35,18 +43,15 @@ const MenuProps = {
     },
 };
 
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    root: {
+        maxWidth: "100px"
+    },
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "rgba(6, 71, 150, 0.6)",
+
+        backgroundColor: "rgb(252,179,5,0.4)",
+
 
     },
     [`&.${tableCellClasses.body}`]: {
@@ -56,7 +61,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: "rgb(231,206,140,0.4)",
+        backgroundColor: "rgb(147,183,214,0.4)",
 
     },
     // hide last border
@@ -88,13 +93,34 @@ async function getSessions() {
     return await Axios.get('http://localhost:3001/sessions');
 }
 
+async function getSessionPledges() {
+    const response = await Axios.get('http://localhost:3001/sessions');
+    let pledges = [];
+    for (let i = 0; i < response.data.length; i++) {
+        let id = response.data[i].session_id;
+        const response2 = await Axios.get('http://localhost:3001/sessionPledges', {
+            params: { "session_id": id }
+        });
+        const temp1 = [response.data[i].session_id, response2.data];
+        pledges.push(temp1);
 
 
-async function editSessions(date, time) {
+
+    }
+    console.log(pledges);
+    return pledges;
+
+
+
+}
+
+
+async function editSessions(date, time, sessionName) {
     return Axios.post("http://localhost:3001/updateses", {
         session_id: sessionStorage.getItem("session_id"),
         date: date,
-        time: time
+        time: time,
+        session_name: sessionName
     });
 }
 
@@ -127,8 +153,26 @@ export default function Sessions() {
     const [sessionPledges, setSessionPledges] = React.useState([]);
 
 
+
+    const [filter, setFilter] = React.useState("");
+    const handleFilter = (event) => {
+        setFilter(event.target.value);
+    };
+
+    const [copyList, setCopyList] = React.useState(sessions);
+    const requestSearch = (searched) => {
+        console.log(filter);
+  
+        setCopyList(Object.values(sessions).filter((item) =>
+            item[filter].toLowerCase().includes(searched.toLowerCase())))
+            ;
+    }
+
+
+
+
+
     const [option, setOption] = React.useState("");
-    const [value, setValue] = React.useState();
 
 
     const [pledgeList, setPledgeList] = React.useState([]);
@@ -163,31 +207,32 @@ export default function Sessions() {
 
 
 
-    const colNamesPossible = ["Session Name", "Session Type", "Pledges", "Course", "Date", "Time"];
+    const colNamesPossible = ["Session", "Session Type", "Pledges", "Course", "Date", "Time"];
     let colNames = [];
     let rows = [];
     let sessPledges = [];
 
     const sessionTypes = ["Test", "Tutorial", "Exam"];
     const [sess, setSess] = React.useState([]);
-   
+
     useEffect(() => {
 
         const getSess = async () => {
             const response = await Axios.get('http://localhost:3001/sessions');
             setSessions(response.data);
-            
+
             for (let i = 0; i < response.data.length; i++) {
-                let id = response.data[i].session_id ;
+                let id = response.data[i].session_id;
                 const response2 = await Axios.get('http://localhost:3001/sessionPledges', {
-                    params: {"session_id": id}});
-                const temp1 =[ response.data[i].session_id, response2.data ];
+                    params: { "session_id": id }
+                });
+                const temp1 = [response.data[i].session_id, response2.data];
                 setSessionPledges(OldArray => [...OldArray, temp1]);
-                 
-                
+
+
 
             }
-            
+
 
 
         }
@@ -195,20 +240,19 @@ export default function Sessions() {
     }, []);
 
 
-    
-    console.log(sessions);
-    console.log(sessionPledges);
-    const getPledgesBySession =(session) =>{
+
+
+    const getPledgesBySession = (session) => {
         let pledgeNames = "";
-        for(let i =0; i<sessionPledges.length; i++){
-            if (session==sessionPledges[i][0]){
-                for(let j = 0; j<sessionPledges[i][1].length; j++)
-                pledgeNames += sessionPledges[i][1][j].pledge_name + " ";
+        for (let i = 0; i < sessionPledges.length; i++) {
+            if (session == sessionPledges[i][0]) {
+                for (let j = 0; j < sessionPledges[i][1].length; j++)
+                    pledgeNames += sessionPledges[i][1][j].pledge_name + " ";
 
             }
         }
         return pledgeNames;
-        
+
     }
 
     colNames = colNamesPossible;
@@ -228,17 +272,54 @@ export default function Sessions() {
 
     const handleClose = () => { setOpen(false); }
     const editHandle = async (e) => {
-        const response = await editSessions(date, time); const response2 = await getSessions(); setSessions(response2.data);
+        const response = await editSessions(date, time, sessionName); const response2 = await getSessions(); setSessions(response2.data); const response3 = await getSessionPledges(); setSessionPledges(response3);
         handleClose();
     }
     const addHandle = (e) => { setLabel("Add"); setOpen(true); setHide(false); setDate(""); setTime(""); setCourse(""); setSessionType("") }
-    const add = async (e) => { console.log(pledgeList); const response = await addSessions(course, sessionType, date, time, sessionName, pledgeList); const response2 = await getSessions(); setSessions(response2.data); handleClose(); }
+    const add = async (e) => {
+        console.log(pledgeList); const response = await addSessions(course, sessionType, date, time, sessionName, pledgeList); const response2 = await getSessions(); setSessions(response2.data); const response3 = await getSessionPledges(); setSessionPledges(response3);
+        handleClose();
+    }
     return (
 
         <>
-            <div>
-                <TableContainer component={Paper} className="pageWrapper" id="cT">
-                    <Table sx={{ minWidth: 700 }} aria-label="customized table"  >
+            <div className="pageWrapper">
+                <div style={{ display: "inline-flex" }}>
+                <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
+                    <TextField style={{ minWidth: "20%" , paddingRight: "15px"}}
+                        id="outlined-name"
+                        select
+                        defaultValue={"session_name"}
+                        value={filter}
+                        onChange={handleFilter}
+                        label = "Select"
+                    >
+                        <MenuItem  value={"session_name"}>
+                              Sessions
+                            </MenuItem>
+                            <MenuItem  value={"session_type"}>
+                                Session Type
+                            </MenuItem>
+
+
+                      
+
+                    </TextField>
+                <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
+                    <TextField 
+                    style={{ minWidth: "50%" }}
+
+                        variant='outlined'
+                        placeholder='Search...'
+                        type='search'
+                        onInput={(e) => requestSearch(e.target.value)}
+                    />
+                    
+                    
+                </div>
+
+                <TableContainer component={Paper} id="cT">
+                    <Table aria-label="customized table"  >
                         <TableHead>
                             <TableRow >
                                 {colNames.map((headerItem, index) => (
@@ -248,10 +329,10 @@ export default function Sessions() {
 
                         </TableHead>
                         <TableBody>
-                            {Object.values(rows).map((obj, index) => (
-                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]); setSessionType(obj["session_type"]); setDate(obj["date"]); setTime(obj["time"]); console.log(index); }} hover={true}>
-                                    
-                                    <StyledTableCell >{obj["session_name"]}</StyledTableCell>
+                            {Object.values((copyList.length > 0 ? copyList : sessions)).map((obj, index) => (
+                                <StyledTableRow key={index} onClick={() => { handleOpen(); sessionStorage.setItem("session_id", [obj["session_id"]]); setCourse(obj["course_id"]); setSessionType(obj["session_type"]); setDate(obj["date"]); setTime(obj["time"]); console.log(index); setSessionName(obj["session_name"]) }} hover={true}>
+
+                                    <StyledTableCell  >{obj["session_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     <StyledTableCell>{getPledgesBySession(obj["session_id"])}</StyledTableCell>
                                     <StyledTableCell >{obj["course_id"]}</StyledTableCell>
@@ -275,7 +356,7 @@ export default function Sessions() {
                     <Box sx={style}>
                         <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
                             <h1>{label}:</h1>
-                            {!hide && (<TextField
+                            <TextField
                                 id="outlined-required"
                                 label="Session Name"
                                 defaultValue={sessionName}
@@ -285,7 +366,8 @@ export default function Sessions() {
 
                                 }
                                 }
-                            />)}
+                            />
+
                             {!hide && (<TextField
                                 id="outlined-required"
                                 label="Course"
@@ -316,31 +398,29 @@ export default function Sessions() {
 
 
                             </TextField>)}
-                            <TextField
-                                id="outlined-required"
-                                label="Date"
-                                defaultValue={date}
-                                sx={{ padding: "5px", width: "90%" }}
-                                onChange={(e) => {
-                                    setDate(e.target.value);
-
-                                }
-                                }
-                            />
-                            <TextField
-                                id="outlined-required"
-                                label="Time"
-                                defaultValue={time}
-                                sx={{ paddingTop: "5px", width: "90%" }}
-                                onChange={(e) => {
-                                    setTime(e.target.value);
-
-                                }
-                                }
-
-                            />'
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    sx={{ width: "90%" }}
+                                    label="Select Date"
+                                    value={date}
+                                    onChange={(newValue) => {
+                                        setDate(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField sx={{ width: "90%" }} {...params} />}
+                                />
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <TimePicker
+                                    label="Select Time"
+                                    value={time}
+                                    onChange={(newValue) => {
+                                        setTime(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField sx={{ width: "90%" }}  {...params} />}
+                                />
+                            </LocalizationProvider>
                             {!hide && (<InputLabel id="demo-multiple-name-label">Select Pledges</InputLabel>)}
-                            {!hide && ( <Select
+                            {!hide && (<Select
                                 sx={{ paddingTop: "5px", width: "90%" }}
                                 labelId="demo-multiple-name-label"
                                 id="demo-multiple-name"

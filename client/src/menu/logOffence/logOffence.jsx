@@ -158,9 +158,9 @@ function LogOffence() {
 
             }} />
 
-
+          <div style = {{display : "inline-flex"}}>
           <Button
-            variant="contained"
+            variant="outlined"
             component="label"
           >
             Upload Evidence
@@ -172,7 +172,8 @@ function LogOffence() {
             />
           </Button>
           <Button variant="text" onClick={viewPDF}>{fileLabel}</Button>
-          <Button variant="text" onClick={submitLog} >Submit</Button>
+          </div>
+          <Button variant="contained" onClick={submitLog} >Submit</Button>
         </div>
       </div>
 

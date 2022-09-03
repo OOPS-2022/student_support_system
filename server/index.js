@@ -168,8 +168,8 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
             const sqlInsert = "INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);";   // insert into log table
             db.query(sqlInsert, [offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy], (err, result) => {
                 if (err != null) {
-                    res.send("Failed");
-                    return;
+                   console.log(err)
+                   
                 } else {
                     //create directory named for the ticket id
                     const sqlGetId = "SELECT ticket_id FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";//get ticket
@@ -205,7 +205,7 @@ app.post("/LogOffence", uploadEvidenceDoc.single('file'), (req, res) => {
                                 if (err !== null) { //if failed to insert into other, delete from logged offence
                                     const sqlDelete = "DELETE FROM logged_offences ORDER BY ticket_id DESC LIMIT 1";
                                     db.query(sqlDelete, (err, result));
-                                    res.send("Failed");
+                                    console.log(err);
                                     //return;
                                 }
                             });
@@ -482,7 +482,8 @@ app.post("/createSignedPledge", uploadSignedPledge.single("file"), (req, res) =>
 app.post('/createClickedPledge', function (req, res) {
     const name = req.body.name;
     const desc = req.body.desc;
-    const pledge_type = "Clicked Pledge"
+    const sessions = req.body.sessions;
+    const pledge_type = "Clicked Pledge";
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type) VALUES (?,?,?);";
     db.query(sqlInsert, [name, desc, pledge_type], (error, result) => {
         if (error != null) {
@@ -697,7 +698,7 @@ app.post("/sendUpdateEmail", (req, res) => {
     const ticketId = req.body.ticket_id;
     const status = req.body.status;
     const stdNo = req.body.stdNo;
-    const sqlSelect = 'select email from users where organization_nr=?'; //get email from database
+    const sqlSelect = 'select email from users where user_id=?'; //get email from database
     db.query(sqlSelect, [stdNo], (err, result) => {
         const stdEmail = result[0].email
         let smtpTransport = nodemailer.createTransport({
@@ -785,7 +786,7 @@ app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { /
     const studentID = req.body.studentID;
     const paragraph = req.body.paragraph;
     const sessionID = req.body.sessionID;
-    const pledgeID=req.body.pledgeID
+    const pledgeID = req.body.pledgeID
 
     const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
     db.query(sqlSelect, [studentID], (error, result) => {
@@ -916,13 +917,15 @@ app.post("/insertses", (req, res) => {
                         if (err != null) {
                             console.log(err)
                         }
+                        
                     })
-                    
+
 
                 })
             })
+            
         }
-
+        res.send("inserted");
     });
 });
 
@@ -1039,7 +1042,7 @@ app.post("/addCheckListQuestion", (req, res) => {
             question_num = result[0].question_number + 1;
         }
 
-        const sqlInsert = "Insert into checklist (check_id, question_number, question_details, session_id) values (?, ?, ?, ?)"; 
+        const sqlInsert = "Insert into checklist (check_id, question_number, question_details, session_id) values (?, ?, ?, ?)";
         db.query(sqlInsert, [checklist_id, question_num, question_details, session_id], (err, result) => {
             if (err != null) {
                 console.log(err)
@@ -1064,7 +1067,6 @@ app.get("/CheckLists", (req, res) => {
     });
 });
 
-<<<<<<< Updated upstream
 app.post("/viewCheck_id", (req, res) => {
     const session_id = req.body.session_id;
     // const checklist_id = req.body.checklist_id;
@@ -1103,32 +1105,19 @@ app.post("/deleteCheckListQuestion", (req, res) => {
     })
 });
 
+
+
+
 //get all the pledges associated with a session
 app.get('/sessionPledges', (req, res) => {
-    const session_id = req.query['select_id'];
+    const session_id = req.query['session_id'];
+    console.log(session_id);
     const sqlSelect = 'select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
     db.query(sqlSelect, [session_id], (err, result) => {
         if (err != null) {
-            console.log(err)
-        }
-        else {
-            res.send(result)
-        }
-    })
-
-});
-
-=======
-//get all the pledges associated with a session
-app.get('/sessionPledges' ,(req, res)=>{
-    const session_id=req.query['session_id'];
-    console.log(session_id);
-    const sqlSelect='select * from session_link left join pledges on session_link.pledge_id=pledges.pledge_id left join sessions on session_link.session_id =sessions.session_id where sessions.session_id=?';
-    db.query(sqlSelect, [session_id], (err,result)=>{
-        if (err!=null){
             console.log(err);
         }
-        else{
+        else {
             console.log(result);
             res.send(result);
         }
@@ -1164,7 +1153,7 @@ app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { /
     const studentID = req.body.studentID;
     const paragraph = req.body.paragraph;
     const sessionID = req.body.sessionID;
-    const pledgeID=req.body.pledgeID
+    const pledgeID = req.body.pledgeID
 
     const sqlSelect = "select organization_nr from users where user_id =?"; //student nr
     db.query(sqlSelect, [studentID], (error, result) => {
@@ -1199,7 +1188,51 @@ app.post("/submitSession", uploadStudentPledge.single("file"), (req, res) => { /
 
 
 });
->>>>>>> Stashed changes
+app.get("/getChecklistAns", (req, res) => {
+    const sqlQuerry =
+        "select users.name, users.surname, users.organization_nr, filledchecklist.checklist_id, filledchecklist.stu_id, filledchecklist.question_number, filledchecklist.checked, checklist.session_id from filledchecklist, checklist, users where filledchecklist.checklist_id = checklist.check_id and checklist.question_number = filledchecklist.question_number and users.user_id=filledchecklist.stu_id order by session_id, stu_id;";
+
+    db.query(sqlQuerry, (error, result) => {
+        res.send(result);
+
+    });
+});
+
+app.get('/ckecklistForSession' ,(req,res)=>{
+    const sessionId=req.query['session_id'];
+    const sqlSelect='SELECT * from checklist where session_id=?';
+  
+    db.query(sqlSelect, [sessionId], (err,result)=>{
+      if (err!=null){
+        console.log(err)
+      }
+      else{
+        res.send(result)
+      }
+    })
+  });
+
+  app.post('/studentChecklistAnswers', (req, res)=>{
+    const studentID=req.body.studentID;
+    const checkID=req.body.checkID;
+    const questions=req.body.questions;
+    const answers=req.body.answers;
+    console.log(questions);
+    console.log(answers);
+  
+    const sqlInsert="Insert into filledchecklist (checklist_id, stu_id, question_number, checked) values (?,?,?,?)";
+  
+    for (let i=0; i<questions.length;i++){
+      db.query(sqlInsert, [checkID, studentID,questions[i], answers[i]], (err,result)=>{
+        if (err!=null){
+          console.log(err)
+        }
+      })
+      
+    }
+    res.send('successful')
+  });
+
 app.listen(3001, () => {
     console.log("running on port 3001");
 });

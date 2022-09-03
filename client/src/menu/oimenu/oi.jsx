@@ -14,8 +14,7 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css"
+
 
 //these are used to set up the big calendar - MY CALENDAR tab
 const locales ={
@@ -87,10 +86,16 @@ export default function OI() {
   }
   
   
+  const handleChangeFile = (e) => { //handle change for uploading file
+    setFile(e.target.files[0]);
+    setLabel(e.target.files[0].name);
 
+    // console.log(e.target.files[0]);
+    // localStorage.setItem("pdf", e.target.files[0].url) ;
+  };
   const [meeting, setMeeting] = React.useState(null);
   const [value, setValue] = React.useState(0);
-  const [fileUpload, setFileUpload] = React.useState();
+  const [fileUpload, setFileUpload] = React.useState("");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -121,14 +126,21 @@ export default function OI() {
   const handleOutcome = (e) => {
     setOutcome(e.target.value);
   };
-  
-
+  const [file, setFile] = React.useState("");
+  const [fileLabel, setLabel] = React.useState("");
+  const viewPDF = (e) => {
+    //Build a URL from the file
+    const fileURL = URL.createObjectURL(file);
+    console.log(fileURL);
+    //Open the URL on new Window
+    window.open(fileURL);
+  }
   //Upload evidence files - Update Ticket tab
   const upload = (e) => {
-    setFileUpload(e.target.files[0]);
-    if (fileUpload != "") {
+    setFileUpload(file);
+    if (file != "") {
       let formData = new FormData();
-      formData.append("file", fileUpload);
+      formData.append("file", file);
       formData.append("ticket_id", sessionStorage.getItem("ticket_id"));
       console.log(formData);
       fetch("http://localhost:3001/UploadEvidence", {
@@ -147,7 +159,7 @@ export default function OI() {
     const responseStatus = await Axios.post("http://localhost:3001/sendUpdateEmail", {
       ticket_id: sessionStorage.getItem("ticket_id"),
       status: outcome,
-      stdNo: sessionStorage.getItem("studentNumber")
+      stdNo: sessionStorage.getItem("user_id")
     })
   }
 
@@ -227,18 +239,20 @@ export default function OI() {
               <h1>Upload Supporting Documents:</h1>
             </div>
             <div>
-              <Button
-                variant="contained"
-                component="label"
-              >
-                Upload Documents
-                <input
-                  type="file"
-                  name="file"
-                  hidden
-                  onChange={upload}
-                />
-              </Button>
+            <Button
+            variant="contained"
+            component="label"
+          >
+            Upload Documents
+            <input
+              type="file"
+              name="file"
+              hidden
+              onChange={handleChangeFile}
+            />
+          </Button>
+          <Button variant="text" onClick={viewPDF}>{fileLabel}</Button>
+          <Button variant="text" onClick={upload} >Submit</Button>
             </div>
           </div>
         }
