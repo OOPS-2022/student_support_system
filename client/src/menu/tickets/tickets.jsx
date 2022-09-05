@@ -31,7 +31,7 @@ export default function Ticket() {
         const response = await Axios.get('http://localhost:3001/selectOffence', {
             params: { 'ticket_id': sessionStorage.getItem("ticket_id") }
         });
-
+        console.log(response.data["offence_status"]);
         setStatus(response.data["offence_status"]);
         setDesc(response.data["details"]);
         setCrsCode(response.data["crs_code"]);

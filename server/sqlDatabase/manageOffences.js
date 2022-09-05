@@ -38,12 +38,10 @@ function selectOffence(ticket_id , callback , db){
   const sqlSelect = "select * from logged_offences where ticket_id = ?";
 
   db.query(sqlSelect, [ticket_id], (err, result) => {
-  console.log(result)
-
     if (err != null) {
       callback(err , null)
     }else{
-      callback(null, result);
+      callback(null, result[0]);
     }
   });
 }
