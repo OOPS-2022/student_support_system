@@ -17,6 +17,10 @@ import Badge from '@mui/material/Badge';
 import { setTemplateEngine } from "@syncfusion/ej2-base";
 import { act } from "react-dom/test-utils";
 
+
+
+
+
 async function getActions(userID) {
     const result = await Axios({
         method: "get",
@@ -60,7 +64,7 @@ export default function ActivityCenter() {
         setActivities(response);
         console.log(activities);
 
-        if (row["tables"] == "meeting" || row["tables"] == "logged_offence") {
+        if (row["tables"] == "meeting" || row["tables"] == "logged_offences" || row["tables"] == "logged_offence") {
             sessionStorage.setItem("ticket_id_student", row["table_id"]);
 
             navigate("/MyTickets");
@@ -89,7 +93,7 @@ export default function ActivityCenter() {
 
     const list = (anchor) => (
         <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400, alignSelf: "center", justifyContent: "center", alignItems: "center" }}
+            sx={{ width: anchor === 'top' || anchor === 'bottom'? 'auto' : window.innerWidth*0.2, alignSelf: "center", justifyContent: "center", alignItems: "center" }}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
@@ -97,7 +101,7 @@ export default function ActivityCenter() {
 
             <h1 style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>Notifications</h1>
             {activities.map((activity, idx) => (
-                <Card id={idx} raised sx={{ width: "350px", height: "175px", marginTop: "15px", textAlign: "center", marginLeft: "7.25%" }}>
+                <Card id={idx} raised sx={{ width: "80%", height: "175px", marginTop: "15px", textAlign: "center", marginLeft: "7.25%" }}>
                     <CardContent>
                         <p style={{ textAlign: "left", fontFamily: "Arial, Helvetica, sans-serif" }}>{activity["date"]}</p>
                         <p style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>{activity["action_desc"]}</p>

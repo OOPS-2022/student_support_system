@@ -39,11 +39,11 @@ export default function ModalLogin(props){
       console.log("called");  
       var lgcUser_id ="";
       var lgRole ="";
-      // console.log(lgEmail);
-      // console.log(lgPassword);
+      console.log(lgEmail);
+      console.log(lgPassword);
       const response = await Axios.post("http://localhost:3001/Login",{setlgEmail: lgEmail, setlgPassword: lgPassword });
             console.log(response.data);
-            if(response.data ){
+            if(response.data != "incorrect"){
               console.log("if true");
               lgcUser_id = response.data[0]["user_id"];
               lgRole =response.data[0]["role"];
@@ -61,9 +61,9 @@ export default function ModalLogin(props){
      }
 
   let navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleOpen = () => {setOpen(true); navigate("/Login");}
-  const handleClose = () => {setOpen(false); navigate("/About"); }
+  const handleClose = () => {setOpen(false); navigate("/"); }
   const login = async () => {if(lgPassword == ""){
     alert('Please type username and password');}
     else{ 
@@ -74,7 +74,7 @@ export default function ModalLogin(props){
    
     return(
     <div>
-    <Button onClick={handleOpen} sx={{marginTop: "35%"}}>Log in</Button>
+    <Button style ={{padding: "25px", color:"white"}} onClick={handleOpen}>Log in</Button>
     <Modal id ="modal"
     open ={open}
     onClose ={handleClose}
@@ -102,7 +102,7 @@ export default function ModalLogin(props){
       <Button variant ="contained" onClick={login}>Log In</Button>
 
     </Stack>
-    <Button style={{bottom: "-5%"}}onClick={handleClose}>Cancel</Button>
+    
     </Box>
   </Modal>
   </div>

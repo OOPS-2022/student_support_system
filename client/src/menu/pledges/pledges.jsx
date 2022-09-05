@@ -1,6 +1,6 @@
 import React from "react";
 import "../page.css";
-import { MenuItem, TextField, Button, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, TableContainer, Table, TableHead, TableRow, tableCellClasses, TableCell, TableBody, Modal, Stack, Tabs, Tab } from "@mui/material";
+import {InputLabel,Select, MenuItem, TextField, Button, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, TableContainer, Table, TableHead, TableRow, tableCellClasses, TableCell, TableBody, Modal, Stack, Tabs, Tab } from "@mui/material";
 import Axios from 'axios';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -13,11 +13,21 @@ import clickedPDF from "./clickedPledge.pdf";
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import CreateClickedPledge from "./clicked";
+import OutlinedInput from '@mui/material/OutlinedInput';
 
-
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "rgba(6, 71, 150, 0.6)",
+    backgroundColor: "rgb(252,179,5,0.4)",
 
   },
   [`&.${tableCellClasses.body}`]: {
@@ -27,7 +37,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: "rgb(231,206,140,0.4)",
+    backgroundColor: "rgb(147,183,214,0.4)",
 
   },
   // hide last border
@@ -98,6 +108,35 @@ export default function Pledge() {
   const [fileLabel, setLabel] = React.useState();
   const [message, setMessage] = React.useState("");
   const [clickedName, setClickName] = React.useState("");
+  const [sessions, setSessions] = React.useState([]);
+
+ 
+  React.useEffect(() => {
+    Axios.get("http://localhost:3001/sessions").then((res) => {
+   setSessions(res.data);
+   })
+},[]
+);
+
+const [sessionList, setSessionList] = React.useState([]);
+let sessionIDs = [];
+const handleChangeSession = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setSessionList(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+        console.log(sessionList);
+        for(let i=0;i<sessionList.length;i++){
+          sessionIDs.push(sessionList[i].session_id);
+        }
+        console.log(sessionIDs);
+      }
+
+
+
 
   const rawHTML = `
     <div>
@@ -112,7 +151,8 @@ export default function Pledge() {
   const uploadClicked = async (event) => {
     const response = await Axios.post("http://localhost:3001/createClickedPledge", {
       name: clickedName,
-      desc: message
+      desc: message,
+      sessions: sessionList
     })
     handleClose();
   }
@@ -126,14 +166,37 @@ export default function Pledge() {
         sx={{ padding: "5px", width: "90%" }}
         onChange={(e) => {
           setMessage(e.target.value);
-        }}/>
+        }} />
       <TextField
         id="outlined-required"
         label="Name of clicked pledge."
         sx={{ padding: "5px", width: "90%" }}
         onChange={(e) => {
           setClickName(e.target.value);
-        }}/>
+        }} />
+         <InputLabel id="demo-multiple-name-label">Select Sessions</InputLabel>
+      <Select
+        sx={{ paddingTop: "5px", width: "90%" }}
+        labelId="demo-multiple-name-label"
+        id="demo-multiple-name"
+        multiple
+        value={sessionList}
+        onChange={handleChangeSession}
+        input={<OutlinedInput label="Select Pledges" />}
+        MenuProps={MenuProps}
+      >
+        {sessions.map((session) => (
+          <MenuItem
+            key={session.session_id}
+            value={session["session_name"]}
+
+          >
+            {session.session_name} 
+          </MenuItem>
+        ))}
+      </Select>
+
+
       <h2> Preview of your clicked pledge:</h2>
       <div dangerouslySetInnerHTML={{ __html: rawHTML }}></div>
       <Button onClick={uploadClicked}>Upload</Button>
@@ -182,6 +245,7 @@ export default function Pledge() {
       formData.append("file", fileUpload);
       formData.append("name", name);
       formData.append("desc", desc);
+      formData.append("sessions", sessionList);
       console.log(formData);
       fetch("http://localhost:3001/createSignedPledge", {
         method: "post",
@@ -213,6 +277,30 @@ export default function Pledge() {
         }}
 
       />
+
+      <InputLabel id="demo-multiple-name-label">Select Sessions</InputLabel>
+      <Select
+        sx={{ paddingTop: "5px", width: "90%" }}
+        labelId="demo-multiple-name-label"
+        id="demo-multiple-name"
+        multiple
+        value={sessionList}
+        onChange={handleChangeSession}
+        input={<OutlinedInput label="Select Pledges" />}
+        MenuProps={MenuProps}
+      >
+        {sessions.map((session) => (
+          <MenuItem
+            key={session.session_id}
+            value={session["session_id"]}
+
+          >
+            {session.session_name} 
+          </MenuItem>
+        ))}
+      </Select>
+
+
       <Button
         variant="text"
         component="label"

@@ -77,10 +77,9 @@ function insertses(course_id, session_type, date, time, session_name, creator_id
   const sqlInsert = "Insert into sessions (course_id,session_type,date,time,session_name, creator_id) values(?,?,?,?,?,?)";
   db.query(sqlInsert, [course_id, session_type, date, time, session_name, creator_id], (err, result) => {
     if (err != null) {
-      if (err != null) {
         callback(err , null)
+        console.log(err)
         return;
-      }
     }
     else {
       const sqlGetId = "SELECT session_id FROM sessions ORDER BY session_id DESC LIMIT 1";//get last  created session
@@ -96,7 +95,7 @@ function insertses(course_id, session_type, date, time, session_name, creator_id
   });
 }
 
-function insertsesCont(session_id, callback , db){
+function insertsesCont(session_id,pledges, callback , db){
   const sqlGetStudents = "select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
   db.query(sqlGetStudents, [session_id], (err, result) => {
     //console.log(result);

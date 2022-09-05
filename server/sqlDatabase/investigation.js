@@ -5,7 +5,6 @@ function ticketTracker(ticketID, callback , db){
             console.log(err);
             callback(err, null);
         }else{
-            // console.log(result)
             callback(null, result);
         }
     });

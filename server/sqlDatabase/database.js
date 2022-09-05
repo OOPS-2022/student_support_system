@@ -199,8 +199,8 @@ function insertsesUpdateLink(saveLink, session_id, callback ){
   return sessions.insertsesUpdateLink(saveLink, session_id, callback , db)
 }
 
-function insertsesCont(session_id, callback ){
-  return sessions.insertsesCont(session_id, callback , db)
+function insertsesCont(session_id,pledges, callback ){
+  return sessions.insertsesCont(session_id,pledges, callback , db)
 }
 
 function insertses(course_id, session_type, date, time, session_name, creator_id,pledges , callback ){

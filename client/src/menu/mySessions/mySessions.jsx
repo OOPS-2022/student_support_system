@@ -17,11 +17,12 @@ import Multiline from '../multiline';
 import { shouldForwardProp } from '@mui/styled-engine';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MenuItem } from '@mui/material';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "rgba(6, 71, 150, 0.6)",
+        backgroundColor: "rgb(252,179,5,0.4)",
 
     },
     [`&.${tableCellClasses.body}`]: {
@@ -31,7 +32,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: "rgb(231,206,140,0.4)",
+        backgroundColor: "rgb(147,183,214,0.4)",
 
     },
     // hide last border
@@ -94,7 +95,19 @@ export default function MySessions() {
     colNames = colNamesPossible;
     rows = sessions;
 
+    const [filter, setFilter] = React.useState("");
+    const handleFilter = (event) => {
+        setFilter(event.target.value);
+    };
 
+    const [copyList, setCopyList] = React.useState(rows);
+    const requestSearch = (searched) => {
+        console.log(filter);
+  
+        setCopyList(Object.values(rows).filter((item) =>
+            item[filter].toLowerCase().includes(searched.toLowerCase())))
+            ;
+    }
 
 
 
@@ -102,9 +115,42 @@ export default function MySessions() {
 
     return (
 
-        <>
+        <>      
             <div>
                 <TableContainer component={Paper} className="pageWrapper" id="cT">
+                <div style={{ display: "inline-flex" }}>
+        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
+            <TextField style={{ minWidth: "20%" , paddingRight: "15px"}}
+                id="outlined-name"
+                select
+                defaultValue={"session_type"}
+                value={filter}
+                onChange={handleFilter}
+                label = "Select"
+            >
+                <MenuItem  value={"session_type"}>
+                      Session Type
+                    </MenuItem>
+                    <MenuItem  value={"course_name"}>
+                    Course
+                    </MenuItem>
+
+
+              
+
+            </TextField>
+        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
+            <TextField 
+            style={{ minWidth: "50%" }}
+
+                variant='outlined'
+                placeholder='Search...'
+                type='search'
+                onInput={(e) => requestSearch(e.target.value)}
+            />
+            
+            
+        </div>
                     <Table sx={{ minWidth: 700 }} aria-label="customized table"  >
                         <TableHead>
                             <TableRow >
@@ -115,7 +161,7 @@ export default function MySessions() {
 
                         </TableHead>
                         <TableBody>
-                            {Object.values(rows).map((obj, index) => (
+                            {Object.values(copyList.length > 0 ? copyList : rows).map((obj, index) => (
                                 <StyledTableRow key={index} hover={true} onClick={() => {sessionStorage.setItem("mysession_id",obj["session_id"]); navigate("/SessionPledges") }}>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     <StyledTableCell >{obj["course_name"]}</StyledTableCell>

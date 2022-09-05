@@ -136,7 +136,7 @@ CREATE TABLE `filledchecklist` (
   `stu_id` int NOT NULL,
   `question_number` int NOT NULL,
   `checked` tinyint NOT NULL,
-  PRIMARY KEY (`checklist_id`,`stu_id`,`question_number`),
+  PRIMARY KEY (`checklist_id`,`stu_id`),
   KEY `student_id_idx` (`stu_id`),
   CONSTRAINT `checklist_id` FOREIGN KEY (`checklist_id`) REFERENCES `checklist` (`check_id`),
   CONSTRAINT `stu_id` FOREIGN KEY (`stu_id`) REFERENCES `users` (`user_id`)

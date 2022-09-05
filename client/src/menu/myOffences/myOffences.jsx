@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "rgba(6, 71, 150, 0.6)",
+        backgroundColor: "rgb(252,179,5,0.4)",
 
     },
     [`&.${tableCellClasses.body}`]: {
@@ -27,7 +27,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: "rgb(231,206,140,0.4)",
+        backgroundColor:"rgb(147,183,214,0.4)",
 
     },
     // hide last border
@@ -79,8 +79,7 @@ export default function MyOffence() {
     return (
         <>
             <div className="pageWrapper">
-                <h1>My Offences</h1>
-          
+
                         <TableContainer component={Paper} className="pageWrapper" id="cT">
                             <Table sx={{ minWidth: 500 }} aria-label="customized table"  >
                                 <TableHead>

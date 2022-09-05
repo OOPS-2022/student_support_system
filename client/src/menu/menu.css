@@ -2,18 +2,20 @@
 
     min-height: 100vh;
     overflow: inherit;
-    background-color:rgba(151, 152, 157, 0.322);
     text-align: center;
     align-self: center;
     padding: 5px;
     border-radius: 7px;
-
+    font-family: "BULGARE";
     
 
     
 
 }
+@font-face {
+    font-family: "BULGARE";
+    src: local("BULGARE"),
+     url("./BULGARE.otf") format("opentype");
+    }
 
-.font-face-gm {
-        font-family: Arial, Helvetica, sans-serif;
-       }
+

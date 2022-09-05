@@ -14,8 +14,6 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css"
 import { useNavigate } from 'react-router-dom';
 
 
@@ -120,7 +118,7 @@ let navigate = useNavigate();
     <div className="pageWrapper">
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="My Calendar"></Tab>
+          <Tab label="Sessions Calendar"></Tab>
 
         </Tabs>
       </Box>
