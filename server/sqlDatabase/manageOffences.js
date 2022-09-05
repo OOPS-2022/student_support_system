@@ -15,8 +15,11 @@ function SubmittedOffences(callback, db){
   db.query(sqlSelect, (error, result) => {
     if (error != null) {
       callback(error , null)
+
     }else{
       callback(null, result);
+    console.log(result)
+
     }
   });
 }
