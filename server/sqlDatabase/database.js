@@ -131,7 +131,7 @@ function SubmittedOffences(callback){
 }
 
 function insert(offenceName, severity, desc , callback ){
-  return manageOffences,insert(offenceName, severity, desc , callback , db)
+  return manageOffences.insert(offenceName, severity, desc , callback , db)
 }
 
 function selectOffence(ticket_id , callback ){
