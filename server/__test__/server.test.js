@@ -577,7 +577,7 @@ const updateses= jest.fn(function (date, time, session_name, session_id , c){
 const insertses= jest.fn(function (course_id, session_type, date, time, session_name, creator_id,pledges , c){
     c(null, 200)
 });
-const insertsesCont= jest.fn(function (session_id, c){
+const insertsesCont= jest.fn(function (session_id,pledges, c){
     c(null, 200)
 });
 const insertsesUpdateLink= jest.fn(function (dir, session_id, c){

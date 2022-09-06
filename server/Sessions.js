@@ -123,8 +123,12 @@ function Session(database){
       database.insertses(course_id, session_type, date, time, session_name, creator_id,pledges ,function(err, result){
         if(err == null){
           var session_id = result
+          console.log("ffffffffffffffffffff");
+
           database.insertsesCont(session_id,pledges,function(err, result){
             if(err == null){
+              console.log("dfdddddddddd");
+
               var session_id = result
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               fs.mkdir(dir, err => {
@@ -137,12 +141,13 @@ function Session(database){
                 }
               })
             }else{
-              res.send(null)
+          console.log("FEDFEDFEF");
+          res.send(null)
             }
           })
         }else{
-      console.log("errr")
-      res.send(null)
+      // console.log("errr")
+          res.send(null)
         }
       })
     }
