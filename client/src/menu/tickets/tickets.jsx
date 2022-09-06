@@ -26,12 +26,11 @@ export default function Ticket() {
     const [files, setFiles] = useState([]);
     let navigate = useNavigate();
 
-
     const getTicket = async () => {
         const response = await Axios.get('http://localhost:3001/selectOffence', {
             params: { 'ticket_id': sessionStorage.getItem("ticket_id") }
         });
-
+        console.log(response.data["offence_status"]);
         setStatus(response.data["offence_status"]);
         setDesc(response.data["details"]);
         setCrsCode(response.data["crs_code"]);
@@ -40,15 +39,8 @@ export default function Ticket() {
         sessionStorage.setItem("studentNumber", response.data["offender_name"]);
     }
 
-
-   
-
-
-    
     getTicket();
     
-
-
     useEffect(() => {
     const getFiles = async () => {
         const response = await Axios('http://localhost:3001/fileNumber', {
@@ -73,8 +65,6 @@ export default function Ticket() {
     getFiles();
 }, []);
      
-
-
 
     console.log("files:" + files[0]);
     const oiMenu = () => navigate("/OIMenu");
@@ -103,22 +93,22 @@ export default function Ticket() {
                     <label>Course code: </label>
                     <label>{crsCode}</label>
                 </div>
-                <label>Evidence:</label>
-                {files.map((file) => ( 
-                <Card >
-                    <CardActionArea >
-                        <Document file={file}>
-                            <Page height={500} pageNumber={1} />
-                        </Document>
-                    </CardActionArea>
-                    {/* <CardActions>
-                        <Button size="small" color="primary">
-                            OPEN
-                        </Button>
-                    </CardActions> */}
-                </Card>
-                 ))}
-                           </div>
+                    <label>Evidence:</label>
+                    {files.map((file) => ( 
+                        <Card >
+                            <CardActionArea >
+                                <Document file={file}>
+                                    <Page height={500} pageNumber={1} />
+                                </Document>
+                            </CardActionArea>
+                            {/* <CardActions>
+                                <Button size="small" color="primary">
+                                    OPEN
+                                </Button>
+                            </CardActions> */}
+                        </Card>
+                    ))}
+                </div>
 
         </div>
 

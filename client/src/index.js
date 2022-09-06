@@ -34,7 +34,9 @@ import SessionPledges from "./menu/mySessions/sessionPledges";
 ReactDOM.render(
     <Router>
         <Routes>
-            <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route>
+            <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route> 
+            
+            <Route path="/" element={<App page={<Welcome />}/>} />
             <Route path="/LogOffence" element={<App page={<LogOffence />} />} />
             <Route path="/PossibleOffences" element={<App page={<ClickTable page = "possible" />} />} />
             <Route path="/SubmittedOffences" element={<App page={<Submitted page = "submitted" />} />} />

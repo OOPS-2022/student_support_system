@@ -5,10 +5,17 @@
     display: inline-flex;
     max-width: 800px;
     padding-right: 10px;
+    font-family:"SHOFAR" ;
+    font-size: small;
 
 
     
 
 }
+@font-face {
+    font-family: "BULGARE";
+    src: local("BULGARE"),
+     url("./BULGARE.otf") format("opentype");
+    }
 
 

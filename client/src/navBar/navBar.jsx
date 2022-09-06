@@ -1,7 +1,7 @@
 import React from "react";
 import "./navbar.css";
 import Header from './header/header';
-import Login from "../shared/components/modal/login";
+
 import ModalLogin from "../shared/components/modal/modalLogin";
 import ActivityCenter from "../activityCenter/activityCenter";
 import { Button } from "@mui/material";
@@ -21,10 +21,11 @@ function NavBar(){
     return(
         <>       
             <div className="wrapper">
-                <Header name = "WITS Student Support Centre" />  
+                <Header  name = "WITS STUDENT SUPPORT CENTRE" />  
                 {!(sessionStorage.getItem("logged_id" ))  && (<ModalLogin/>)}
-                {(sessionStorage.getItem("logged_id" ))  && (<Button onClick ={logOut}>Log out</Button>)}
                 {(sessionStorage.getItem("user_role") != "admin"  &&   (sessionStorage.getItem("logged_id" )))  && (<ActivityCenter/>)}
+                {(sessionStorage.getItem("logged_id" ))  && (<Button style={{color:"white", paddingLeft: "60%"}} onClick ={logOut}>Log out</Button>)}
+                
             </div>
     </>
     );

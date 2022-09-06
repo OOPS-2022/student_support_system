@@ -1,7 +1,9 @@
 .imageWrapper{
-    height: 60px;
-    width: 60px;
+    background-color: blanchedalmond;
+    height: 55px;
+    width: 55px;
     align-self: center;
-    padding: 10px;
+    padding: 5px;
+    border-radius: 7px;
     
 }

@@ -10,7 +10,7 @@ function Welcome(){
     return(
         <div className="welcome" >
             <h1 className="stack-top" style ={{marginLeft: "800px",backgroundColor:"rgb(255,255,255)"}}>Welcome to the WITS Student Support Centre.</h1>
-            <img className ="box" style ={{width: "1200px"}}src={witsImage}></img>
+            <img className ="box" style ={{width: window.innerWidth*0.8}}src={witsImage}></img>
         </div>
 
     );
