@@ -110,8 +110,10 @@ function updateOI(ticket_id,offence_status , callback , db){
 
 
 function getEmail(stdNo, callback , db){
-    const sqlSelect = "select email from users where organization_nr=?"; //get student email from database
+    const sqlSelect = "select email from users where user_id=?"; //get student email from database
+    console.log(stdNo);
     db.query(sqlSelect, [stdNo], (err, result) => {
+        console.log(result);
       callback(null, result[0].email);  
     })
 }
