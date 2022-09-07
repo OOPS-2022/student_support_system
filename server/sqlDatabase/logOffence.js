@@ -73,9 +73,13 @@ function LogOffence(offenderName, offenceID, offenceDetails, offenceCode, offenc
           offenceID = result[0].offence_id;
           const sqlInsert ="INSERT INTO logged_offences ( offender_name, offence_id, details, crs_code, offence_status, submitter_id ) VALUES (?,?,?,?,?,?);"; // insert into log table
           db.query(sqlInsert, [offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy],(err, result) => {
+            if(err!=null){
+              console.log(err);
+            }
               const sqlGetId ="SELECT * FROM logged_offences ORDER BY ticket_id DESC LIMIT 1"; // get ticket_id the ticket we just created
               db.query(sqlGetId, (err, result) => {
                 ticket_id = result[0].ticket_id;
+                console.log(ticket_id);
                 const sqlInsert = "INSERT INTO other (ticket_id, offence_name) VALUES (?,?);"; // insert into log table
                 if (offenceType === "other") {
                   db.query(sqlInsert, [ticket_id, offenceOther], (err, result) => {
@@ -103,7 +107,12 @@ function LogOffence(offenderName, offenceID, offenceDetails, offenceCode, offenc
     
                 const sqlGetStudent ="select user_id from users where organization_nr=?"; //get student user id from database
                 const sqlInsertAction ="Insert into actions (student_id, tables, table_id, seen, date, action_desc) values (?, ?, ?, ?, ?, ?)"; //this will allow the student to get an alert
+                console.log(offenderName);
                 db.query(sqlGetStudent, [offenderName], (err, result) => {
+                  console.log(result);
+                  if (err!=null){
+                    console.log(err);
+                  }
                   let student_id = result[0].user_id;
                   let table = "logged_offence"; //this will later allow us to redirect the notifiaction to appropriate page
                   let tableID = ticket_id;

@@ -57,7 +57,7 @@ function sendMail(offenderEmail,offenceType){
       const submittedBy = req.body.submittedBy;
       const offenceStatus = req.body.offenceStatus;
       let offenceID;
-      
+      console.log(req.body);
       database.LogOffenceNoFile(offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther,function(err, result){
         if ( result != null){
           const dir = "./Uploads/Evidence/ticket" + result;
@@ -95,7 +95,7 @@ function sendMail(offenderEmail,offenceType){
         const offenceStatus = req.body.offenceStatus;
         let offenceID;
         let ticket_id;
-        
+        console.log(req.body);
         database.LogOffence(offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther, function(err, result){
           if ( result != null){
             const dir = "./Uploads/Evidence/ticket" + result;

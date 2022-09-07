@@ -184,6 +184,7 @@ function sendMail(mailOptions, callback){
   router.post("/UploadEvidence", uploadEvidenceDoc.single("file"), (req, res) => {
       //let fileType=req.file.mimetype.split("/")[1];
       const ticketID = req.body.ticket_id;
+      console.log(req.file);
       let newFileName = Date.now() + req.file.originalname;
       let oldPath = "./Uploads/Evidence/" + req.file.filename; //file just uploaded
       let newPath = "./Uploads/Evidence/ticket" + ticketID + "/" + newFileName; //move to appropriate diectory named for ticket id
