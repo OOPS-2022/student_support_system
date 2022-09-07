@@ -51,9 +51,10 @@ function Pledges(database){
   router.post("/createClickedPledge", function (req, res) {
     const name = req.body.name;
     const desc = req.body.desc;
+    const sessions = req.body.sessions;
     const pledge_type = "Clicked Pledge";
     database.createClickedPledge(name, desc, pledge_type ,sessions, function(err, result){
-      res.send(result);
+      //res.send(result);
     })
   });
 
