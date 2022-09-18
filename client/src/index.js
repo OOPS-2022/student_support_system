@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
 import App from "./website"
 import Login from "./shared/components/modal/login"
 import ClickTable from "./menu/possible/possible";
@@ -26,6 +26,7 @@ import CheckList from "./menu/checkList/checkList";
 import AddCheckList from "./menu/checkList/addCheckList";
 import CheckTable from "./menu/checkTable/checkTable";
 import SessionPledges from "./menu/mySessions/sessionPledges";
+import EmbeddedSession from "./menu/mySessions/embedSession";
 
 
 
@@ -55,7 +56,7 @@ ReactDOM.render(
             <Route path ="/AddCheckList" element={<App page={<AddCheckList/>} />}  />
             <Route path ="/CheckedSessions" element={<App page={<CheckTable/>} />}  />
             <Route path ="/SessionPledges" element={<App page={<SessionPledges/>} />}  />
-
+            <Route path ="/EmbeddedSession:id" element={<App page={<EmbeddedSession/>} />}  />
         </Routes>
     </Router>
     , document.getElementById("root")
