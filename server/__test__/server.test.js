@@ -534,9 +534,6 @@ describe("Test LogOffence", ()=>{
     })
 })
 
-
-
-
 const addCheckList= jest.fn(function (c){
     c(null, 200)
 });

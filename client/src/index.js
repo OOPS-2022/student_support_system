@@ -56,7 +56,7 @@ ReactDOM.render(
             <Route path ="/AddCheckList" element={<App page={<AddCheckList/>} />}  />
             <Route path ="/CheckedSessions" element={<App page={<CheckTable/>} />}  />
             <Route path ="/SessionPledges" element={<App page={<SessionPledges/>} />}  />
-            <Route path ="/EmbeddedSession:id" element={<App page={<EmbeddedSession/>} />}  />
+            <Route path ="/EmbeddedSession:id" element={<EmbeddedSession/>}   />
         </Routes>
     </Router>
     , document.getElementById("root")
