@@ -116,14 +116,9 @@ let navigate = useNavigate();
 
   return (
     <div className="pageWrapper">
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Sessions Calendar"></Tab>
+     
 
-        </Tabs>
-      </Box>
-
-      <TabPanel value={value} index={0}>
+     
         <div>
           <h1>Pick A Session</h1>
           <Calendar 
@@ -140,7 +135,7 @@ let navigate = useNavigate();
           />
 
         </div>
-      </TabPanel>
+
 
     </div>
   );

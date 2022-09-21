@@ -50,6 +50,7 @@ export default function ModalLogin(props){
               sessionStorage.setItem("user_id",lgcUser_id );
               sessionStorage.setItem("user_role",lgRole );
               sessionStorage.setItem("logged_id",true);
+              sessionStorage.setItem("auth",true);
               isTrue = true ;
             }else{
               console.log("if false");

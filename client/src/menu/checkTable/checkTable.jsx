@@ -149,6 +149,7 @@ export default function CheckTable() {
     return (
         <>
             <div>
+                
                 {getAllSessions()}
                 <div style={{ display: "inline-flex", padding: "20px" }}>
                     <TableContainer component={Paper} className="pageWrapper" id="cT">
@@ -235,6 +236,7 @@ export default function CheckTable() {
                     </>
                 ))}
             </div>
+            
         </>
 
 
