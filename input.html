@@ -9,6 +9,7 @@
     <input type="text" placeholder="Paste URL here..." id="myInput">
     <br>
     <button type="button" onclick="getInputValue();">Embed</button>
+    <button type="button" onclick="sendUserID();">Send User ID</button>
     <br>
     <iframe id="MyFrame" width="100%" height="750"></iframe>
     
@@ -17,7 +18,12 @@
             // Selecting the input element and get its value 
             var inputVal = document.getElementById("myInput").value;
             document.getElementById("MyFrame").src=inputVal;
+            
             // Displaying the value
+        }
+
+        function sendUserID(){
+            MyFrame.contentWindow.postMessage({userid: 3}, "*");
         }
     </script>
 </body>

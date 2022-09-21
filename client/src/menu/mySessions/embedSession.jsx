@@ -66,8 +66,9 @@ export default function EmbeddedSSession() {
     const [answer, setAnswer]=React.useState("");
     const [index, setIndex] = React.useState("");
     const [checkID, setCheckID]= React.useState("");
-    
-    
+    const [checked, setChecked] = useState("");
+    const [studentID, setStudentID]=useState(0);
+    //const studentID=0;
 let {id} = useParams();
 //function getChecklist(id){
 
@@ -82,13 +83,24 @@ function getData(id){
 }
 
      useEffect(() => {
-        
+          
+        getID();
         getData(id);
-        
+        //setStudentID(getID());
+
     }, []);
 
-
-   
+    function getID(){
+        window.addEventListener('message', function(event) {
+        //alert(`Received ${event.data} from ${event.origin}`);
+        event.preventDefault();
+            console.log("event data:",event.data.userid);
+        setStudentID(event.data.userid);
+        //return event.data.userid;
+      });
+    }
+    //let studentId=getID();
+    //console.log(studentId);
     
     function getQuestions() {
         let qs = [];
@@ -109,9 +121,15 @@ function getData(id){
         setChecked(true);
     }
 
+ 
     const submit = () =>{
+        getID();
+        console.log("StudentID:", studentID);
+        console.log("CheckID: ", checklist[0].check_id);
+        console.log("Answers: ", answers);
+        console.log("Questions: ", questions);
         Axios.post('http://localhost:3001/studentChecklistAnswers', {
-            studentID:sessionStorage.getItem("user_id"),
+            studentID: studentID,
             checkID: checklist[0].check_id,
             answers: answers,
             questions: questions
