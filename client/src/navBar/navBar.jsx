@@ -6,10 +6,17 @@ import ModalLogin from "../shared/components/modal/modalLogin";
 import ActivityCenter from "../activityCenter/activityCenter";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import {msalConfig,  loginRequest} from "../shared/components/authConfig";
+import * as Msal from "msal";
+
+const myMSALObj = new Msal.UserAgentApplication(msalConfig);
 
 function NavBar(){
     let navigate = useNavigate();
     const logOut =() => {
+        if (sessionStorage.getItem("microOBJ")){
+            myMSALObj.logout();
+        } 
         sessionStorage.clear();
         navigate("/");
         window.location.reload();

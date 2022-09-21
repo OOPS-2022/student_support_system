@@ -77,7 +77,7 @@ function LogOffence() {
       formData.append('offenceDetails', offenceDetails);
       formData.append('offenceCode', offenceCode);
       formData.append('offenceOther', offenceOther);
-      formData.append('submittedBy', localStorage.getItem("user_id"));
+      formData.append('submittedBy', sessionStorage.getItem("user_id"));
       formData.append('offenceStatus', "Pending");
       fetch('http://localhost:3001/LogOffence', {
         method: "post",

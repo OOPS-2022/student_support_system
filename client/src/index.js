@@ -2,10 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
+<<<<<<< HEAD
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
+=======
+import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
+>>>>>>> main
 import App from "./website"
-import Login from "./shared/components/modal/login"
 import ClickTable from "./menu/possible/possible";
 import { getTableRowUtilityClass, Modal } from "@mui/material";
 import CustomTable from "./menu/table/table";
@@ -27,6 +30,7 @@ import CheckList from "./menu/checkList/checkList";
 import AddCheckList from "./menu/checkList/addCheckList";
 import CheckTable from "./menu/checkTable/checkTable";
 import SessionPledges from "./menu/mySessions/sessionPledges";
+import EmbeddedSession from "./menu/mySessions/embedSession";
 
 
 const ProtectedRoute = ({
@@ -42,6 +46,7 @@ const ProtectedRoute = ({
 
 
 ReactDOM.render(
+
     <Router>
         <Routes>
             <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route>
@@ -68,7 +73,10 @@ ReactDOM.render(
                 <Route path="/AddCheckList" element={<ProtectedRoute><App page={<AddCheckList />} /></ProtectedRoute>} />
                 <Route path="/CheckedSessions" element={<ProtectedRoute><App page={<CheckTable />} /></ProtectedRoute>} />
                 <Route path="/SessionPledges" element={<ProtectedRoute><App page={<SessionPledges />} /></ProtectedRoute>} />
+                <Route path ="/EmbeddedSession:id" element={<EmbeddedSession/>}   />
 
+           
+           
         </Routes>
     </Router>
     , document.getElementById("root")
