@@ -115,7 +115,7 @@ function Checklist(database){
     }else{
       const sessionId=req.query['session_id'];
       database.ckecklistForSession( sessionId,function(err, result){
-        res.send(result);
+        // res.send(result);
       })
     }
   });
