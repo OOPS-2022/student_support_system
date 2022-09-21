@@ -20,7 +20,7 @@ function App(database){
 
     //------------------------------------------------------------login
     const login=require("./login");// js file where code resides
-    app.use('/Login', login(database));
+    app.use('/', login(database));
     // app.use('/Login', login.default(database));
 
     //-------------------------------------------------------------end login

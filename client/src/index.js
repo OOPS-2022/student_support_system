@@ -4,7 +4,6 @@ import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from "./website"
-import Login from "./shared/components/modal/login"
 import ClickTable from "./menu/possible/possible";
 import { getTableRowUtilityClass, Modal } from "@mui/material";
 import CustomTable from "./menu/table/table";
@@ -30,8 +29,8 @@ import SessionPledges from "./menu/mySessions/sessionPledges";
 
 
 
-
 ReactDOM.render(
+
     <Router>
         <Routes>
             <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route> 
