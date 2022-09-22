@@ -19,6 +19,7 @@ import Modal from '@mui/material/Modal';
 import { Stack } from '@mui/material';
 import Multiline from '../multiline';
 import { shouldForwardProp } from '@mui/styled-engine';
+import { CopyAllOutlined } from "@mui/icons-material";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -110,7 +111,17 @@ export default function checkList() {
       setChecki(response.data)
     })
   }
-  useEffect(() => viewCheck_id(), []);
+
+
+
+  useEffect(() => {
+    viewCheck_id();
+  })
+
+  const copyToClipboard = () => {
+    const embedUrl = "http://localhost:3000/EmbeddedSession"+ sessionStorage.getItem("session_id");
+    navigator.clipboard.writeText(embedUrl);
+  }
 
 
   //Table
@@ -170,7 +181,14 @@ export default function checkList() {
     setCheckList(response.data);
   }
 
-  useEffect(() => setCheck(), []);
+  useEffect(() => {
+    const setCheck = async (checkID) => {
+      const response = await Axios.post('http://localhost:3001/allCheckListQuestions', { session_id: sessionStorage.getItem('session_id'), checklist_id: checkID });
+      setCheckList(response.data);
+    }
+
+    setCheck();
+  }, []);
 
   colNames = colNamesPossible;
 
@@ -183,7 +201,7 @@ export default function checkList() {
   }
 
   const [submitted, setSubmitted] = React.useState(false);
-
+  const [sessionID, setSessionID] = React.useState(0);
   const handleClose = () => setOpen(false);
   const handleQuestion = () => { addQuestion(); viewCheck_id(); setCheck(); setSubmitted(true); }
 
@@ -208,7 +226,7 @@ export default function checkList() {
             value={checkids["check_id"]}
           >
             {checki.map((checkids) => (
-              <MenuItem key={checkids["check_id"]} value={checkids["check_id"]} id={checkids["check_id"]} onClick={(e) => { setCheck(e.target.innerText); }}>
+              <MenuItem key={checkids["check_id"]} value={checkids["check_id"]} id={checkids["check_id"]} onClick={(e) => { setCheck(e.target.innerText); setSessionID(e.target.innerText) }}>
                 {checkids["check_id"]}
               </MenuItem>
             ))}
@@ -216,7 +234,7 @@ export default function checkList() {
         </div>
         <div style={{ paddingTop: "2%" }}>
 
-          <Button variant="contained" onClick={(e) => { }}>Embed Checklist</Button>
+          <Button variant="contained" onClick={(e) => {copyToClipboard(); }}>Embed Checklist</Button>
         </div>
 
         <div style={{ paddingLeft: "20%", paddingTop: "2%" }}>

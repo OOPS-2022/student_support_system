@@ -70,30 +70,30 @@ export default function SessionPledges() {
     const [type, setType] = useState(""); //type of pledge
     const [checked, setChecked] = useState("");
     const [checklist, setChecklist] = React.useState([]);
-    const [answer, setAnswer]=React.useState("");
+    const [answer, setAnswer] = React.useState("");
     const [index, setIndex] = React.useState("");
-    const [checkID, setCheckID]= React.useState("");
-    
-    
-    
-    
+    const [checkID, setCheckID] = React.useState("");
+
+
 
     useEffect(() => {
 
-        let id = sessionStorage.getItem("mysession_id");
-        Axios.get('http://localhost:3001/ckecklistForSession', {
-            params: { "session_id": id }
-        }).then(response => {
-            console.log(response.data);
+        const getQ = async () => {
+            const response = await Axios.get('http://localhost:3001/checklistForSession', {
+                params: { "session_id": sessionStorage.getItem("mysession_id") }
+            });
             setChecklist(response.data);
+           
         }
-        );
+        getQ();
     }, []);
 
-    
+
+
+
     function getQuestions() {
         let qs = [];
-        for(let i=0; i<checklist.length; i++){
+        for (let i = 0; i < checklist.length; i++) {
             qs.push(checklist[i].question_number);
         }
         return qs;
@@ -102,7 +102,7 @@ export default function SessionPledges() {
     let questions = getQuestions();
     console.log(questions);
     let answers = [];
-    for(let i=0;i<questions.length;i++){
+    for (let i = 0; i < questions.length; i++) {
         answers.push(-1);
     }
     const validate = () => {
@@ -185,20 +185,20 @@ export default function SessionPledges() {
     const handleOpen = () => {
         setOpen(true);
     }
-    
 
 
-    const submit = () =>{
+
+    const submit = () => {
         Axios.post('http://localhost:3001/studentChecklistAnswers', {
-            studentID:sessionStorage.getItem("user_id"),
+            studentID: sessionStorage.getItem("user_id"),
             checkID: checklist[0].check_id,
             answers: answers,
             questions: questions
 
-         }
+        }
         )
     }
-    
+
 
     const handleClose = () => { setOpen(false); }
 
@@ -241,9 +241,9 @@ export default function SessionPledges() {
                             <StyledTableRow >
                                 {checklist.map((obj, index) => (
                                     <>
-                                    <StyledTableCell align="center">
-                                        <Button onClick ={()=>{answers[index]= 1; }}>Yes</Button>
-                                        <Button onClick ={()=>{answers[index]= 0; }}>No</Button>
+                                        <StyledTableCell align="center">
+                                            <Button onClick={() => { answers[index] = 1; }}>Yes</Button>
+                                            <Button onClick={() => { answers[index] = 0; }}>No</Button>
                                         </StyledTableCell>
                                     </>
                                 ))}

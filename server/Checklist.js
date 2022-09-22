@@ -109,13 +109,13 @@ function Checklist(database){
   });
     
   //get checklists associated with session
-  router.get('/ckecklistForSession' ,(req,res)=>{
+  router.get('/checklistForSession' ,(req,res)=>{
     if(Object.keys(req.query).length != 1){
       res.send(null);
     }else{
       const sessionId=req.query['session_id'];
-      database.ckecklistForSession( sessionId,function(err, result){
-        // res.send(result);
+      database.checklistForSession( sessionId,function(err, result){
+        res.send(result);
       })
     }
   });

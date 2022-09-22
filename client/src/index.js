@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
-<<<<<<< HEAD
+
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
-=======
-import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
->>>>>>> main
+
+
+
 import App from "./website"
 import ClickTable from "./menu/possible/possible";
 import { getTableRowUtilityClass, Modal } from "@mui/material";

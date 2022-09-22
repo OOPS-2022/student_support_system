@@ -185,6 +185,7 @@ function Session(database){
       const studentID = req.query['studentID'];
       database.mySessions( studentID, function(err, result){
         res.send(result);
+        console.log("numtimes");
       })
   });
     
