@@ -3,6 +3,7 @@ function addCheckList(callback, db){
     const sqlGetId ="SELECT check_id FROM checklist ORDER BY check_id DESC LIMIT 1"; //get last  created checklist id
     db.query(sqlGetId, (err, result) => {
         callback(null, result[0]);
+        console.log(err);
     // console.log(result[0])
     });
 }
@@ -95,7 +96,7 @@ function studentChecklistAnswers(checkID, studentID,questions, answers, callback
     }
 }
 
-function ckecklistForSession(sessionId , callback , db){
+function checklistForSession(sessionId , callback , db){
     const sqlSelect='SELECT * from checklist where session_id=?';
     db.query(sqlSelect, [sessionId], (err,result)=>{
       if (err!=null){
@@ -107,4 +108,4 @@ function ckecklistForSession(sessionId , callback , db){
     })
 }
 
-module.exports= {ckecklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion, updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckList,addCheckListQuestion};
+module.exports= {checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion, updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckList,addCheckListQuestion};

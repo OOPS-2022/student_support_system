@@ -63,48 +63,52 @@ const style = {
 
 
 export default function MySessions() {
-    
+
     let navigate = useNavigate();
     const [sessions, setSessions] = React.useState([]);
 
 
-    const colNamesPossible = ["Session Type", "Course", "Course Code","Date", "Time"];
+    const colNamesPossible = ["Session Type", "Course", "Course Code", "Date", "Time"];
     let colNames = [];
-    let rows = [];
 
 
 
 
-   
+
+
 
     useEffect(() => {
-        Axios.get("http://localhost:3001/mySessions", {
-           params: { 'studentID': sessionStorage.getItem("user_id") }
-       }).then((res) => {
-       setSessions(res.data);
-       })
-    },[]
-   );
 
-    
+        const getSess = async () => {
+            const response = await Axios.get('http://localhost:3001/mySessions', {
+                params: { 'studentID': sessionStorage.getItem("user_id") }
+            });
+            setSessions(response.data)
+
+
+        }
+        getSess();
+    }, []);
+
+
 
 
 
 
 
     colNames = colNamesPossible;
-    rows = sessions;
+
 
     const [filter, setFilter] = React.useState("");
     const handleFilter = (event) => {
         setFilter(event.target.value);
     };
 
-    const [copyList, setCopyList] = React.useState(rows);
+    const [copyList, setCopyList] = React.useState(sessions);
     const requestSearch = (searched) => {
         console.log(filter);
-  
-        setCopyList(Object.values(rows).filter((item) =>
+
+        setCopyList(Object.values(sessions).filter((item) =>
             item[filter].toLowerCase().includes(searched.toLowerCase())))
             ;
     }
@@ -115,42 +119,42 @@ export default function MySessions() {
 
     return (
 
-        <>      
+        <>
             <div>
                 <TableContainer component={Paper} className="pageWrapper" id="cT">
-                <div style={{ display: "inline-flex" }}>
-        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
-            <TextField style={{ minWidth: "20%" , paddingRight: "15px"}}
-                id="outlined-name"
-                select
-                defaultValue={"session_type"}
-                value={filter}
-                onChange={handleFilter}
-                label = "Select"
-            >
-                <MenuItem  value={"session_type"}>
-                      Session Type
-                    </MenuItem>
-                    <MenuItem  value={"course_name"}>
-                    Course
-                    </MenuItem>
+                    <div style={{ display: "inline-flex" }}>
+                        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
+                        <TextField style={{ minWidth: "20%", paddingRight: "15px" }}
+                            id="outlined-name"
+                            select
+                            defaultValue={"session_type"}
+                            value={filter}
+                            onChange={handleFilter}
+                            label="Select"
+                        >
+                            <MenuItem value={"session_type"}>
+                                Session Type
+                            </MenuItem>
+                            <MenuItem value={"course_name"}>
+                                Course
+                            </MenuItem>
 
 
-              
 
-            </TextField>
-        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
-            <TextField 
-            style={{ minWidth: "50%" }}
 
-                variant='outlined'
-                placeholder='Search...'
-                type='search'
-                onInput={(e) => requestSearch(e.target.value)}
-            />
-            
-            
-        </div>
+                        </TextField>
+                        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
+                        <TextField
+                            style={{ minWidth: "50%" }}
+
+                            variant='outlined'
+                            placeholder='Search...'
+                            type='search'
+                            onInput={(e) => requestSearch(e.target.value)}
+                        />
+
+
+                    </div>
                     <Table sx={{ minWidth: 700 }} aria-label="customized table"  >
                         <TableHead>
                             <TableRow >
@@ -161,8 +165,8 @@ export default function MySessions() {
 
                         </TableHead>
                         <TableBody>
-                            {Object.values(copyList.length > 0 ? copyList : rows).map((obj, index) => (
-                                <StyledTableRow key={index} hover={true} onClick={() => {sessionStorage.setItem("mysession_id",obj["session_id"]); navigate("/SessionPledges") }}>
+                            {Object.values(copyList.length > 0 ? copyList : sessions).map((obj, index) => (
+                                <StyledTableRow key={index} hover={true} onClick={() => { sessionStorage.setItem("mysession_id", obj["session_id"]); navigate("/SessionPledges") }}>
                                     <StyledTableCell >{obj["session_type"]}</StyledTableCell>
                                     <StyledTableCell >{obj["course_name"]}</StyledTableCell>
                                     <StyledTableCell >{obj["course_code"]}</StyledTableCell>

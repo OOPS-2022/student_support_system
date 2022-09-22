@@ -73,7 +73,7 @@ let {id} = useParams();
 //function getChecklist(id){
 
 function getData(id){
-    Axios.get('http://localhost:3001/ckecklistForSession', {
+    Axios.get('http://localhost:3001/checklistForSession', {
             params: { "session_id": id }
         }).then(response => {
             console.log(response.data);

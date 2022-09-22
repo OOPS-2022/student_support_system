@@ -2,7 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
-import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
+
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+
+
+
+
 import App from "./website"
 import ClickTable from "./menu/possible/possible";
 import { getTableRowUtilityClass, Modal } from "@mui/material";
@@ -28,35 +33,50 @@ import SessionPledges from "./menu/mySessions/sessionPledges";
 import EmbeddedSession from "./menu/mySessions/embedSession";
 
 
-
+const ProtectedRoute = ({
+    redirectPath = '/',
+    children,
+  }) => {
+    if (!sessionStorage.getItem("auth")) {
+      return <Navigate to={redirectPath} replace />;
+    }
+  
+    return children;
+  };
 
 
 ReactDOM.render(
 
     <Router>
         <Routes>
-            <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route> 
-            
-            <Route path="/" element={<App page={<Welcome />}/>} />
-            <Route path="/LogOffence" element={<App page={<LogOffence />} />} />
-            <Route path="/PossibleOffences" element={<App page={<ClickTable page = "possible" />} />} />
-            <Route path="/SubmittedOffences" element={<App page={<Submitted page = "submitted" />} />} />
-            <Route path ="/Display" />
-            <Route path ="/Ticket" element={<App page={<Ticket/>} />}  />
-            <Route path ="/Pledge" element={<App page={<Pledge/>} />}  />
-            <Route path ="/ClickedPledge" element={<App page={<CreateClickedPledge/>} />}  />
-            <Route path ="/OIMenu" element={<App page={<OI/>} />}  />
-            <Route path ="/CreateTest" element={<App page={<CreateTest/>} />}  />
-            <Route path ="/DoTest" element={<App page={<DoTest/>} />}  />
-            <Route path ="/MyOffences" element={<App page={<MyOffence/>} />}  />
-            <Route path ="/MyTickets" element={<App page={<MyTickets/>} />}  />
-            <Route path ="/MySessions" element={<App page={<MySessions/>} />}  />
-            <Route path ="/Sessions" element={<App page={<Sessions/>} />}  />
-            <Route path ="/CheckList" element={<App page={<CheckList/>} />}  />
-            <Route path ="/AddCheckList" element={<App page={<AddCheckList/>} />}  />
-            <Route path ="/CheckedSessions" element={<App page={<CheckTable/>} />}  />
-            <Route path ="/SessionPledges" element={<App page={<SessionPledges/>} />}  />
-            <Route path ="/EmbeddedSession:id" element={<EmbeddedSession/>}   />
+            <Route path="/" element={<App page={<Welcome />} />}><Route path="/:Login" element={<ModalLogin />} /></Route>
+
+            <Route path="/" element={<App page={<Welcome />} />} />
+           
+         
+
+
+                <Route path="/LogOffence" element={<ProtectedRoute><App page={<LogOffence />} /></ProtectedRoute>} />
+                <Route path="/PossibleOffences" element={<ProtectedRoute><App page={<ClickTable page="possible" />} /></ProtectedRoute>} />
+                <Route path="/SubmittedOffences" element={<ProtectedRoute><App page={<Submitted page="submitted" />} /> </ProtectedRoute>} />
+                <Route path="/Ticket" element={<ProtectedRoute><App page={<Ticket />} /> </ProtectedRoute>} />
+                <Route path="/Pledge" element={<ProtectedRoute><App page={<Pledge />} /> </ProtectedRoute>} />
+                <Route path="/ClickedPledge" element={<ProtectedRoute><App page={<CreateClickedPledge />} /> </ProtectedRoute>} />
+                <Route path="/OIMenu" element={<ProtectedRoute><App page={<OI />} /> </ProtectedRoute>} />
+                <Route path="/CreateTest" element={<ProtectedRoute><App page={<CreateTest />} /> </ProtectedRoute>} />
+                <Route path="/DoTest" element={<ProtectedRoute><App page={<DoTest />} /> </ProtectedRoute>} />
+                <Route path="/MyOffences" element={<ProtectedRoute><App page={<MyOffence />} /> </ProtectedRoute>} />
+                <Route path="/MyTickets" element={<ProtectedRoute><App page={<MyTickets />} /> </ProtectedRoute>} />
+                <Route path="/MySessions" element={<ProtectedRoute><App page={<MySessions />} /> </ProtectedRoute>} />
+                <Route path="/Sessions" element={<ProtectedRoute><App page={<Sessions />} /> </ProtectedRoute>} />
+                <Route path="/CheckList" element={<ProtectedRoute><App page={<CheckList />} /> </ProtectedRoute>} />
+                <Route path="/AddCheckList" element={<ProtectedRoute><App page={<AddCheckList />} /></ProtectedRoute>} />
+                <Route path="/CheckedSessions" element={<ProtectedRoute><App page={<CheckTable />} /></ProtectedRoute>} />
+                <Route path="/SessionPledges" element={<ProtectedRoute><App page={<SessionPledges />} /></ProtectedRoute>} />
+                <Route path ="/EmbeddedSession:id" element={<EmbeddedSession/>}   />
+
+           
+           
         </Routes>
     </Router>
     , document.getElementById("root")
