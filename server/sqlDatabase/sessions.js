@@ -98,7 +98,6 @@ function insertses(course_id, session_type, date, time, session_name, creator_id
 function insertsesCont(session_id,pledges, callback , db){
   const sqlGetStudents = "select user_id from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id where sessions.session_id=?;"
   db.query(sqlGetStudents, [session_id], (err, result) => {
-    //console.log(result);
     for (let i = 0; i < result.length; i++) {
       let student_id = result[i].user_id;
       let table = "sessions";
@@ -114,6 +113,7 @@ function insertsesCont(session_id,pledges, callback , db){
         }
       })
     }
+
     //linking all the pledes associated with a session to the session ID
     const sqlInsertSesLink = 'Insert into session_link (session_id, pledge_id) values (?,?)';
     for (let j = 0; j < pledges.length; j++) {
@@ -124,6 +124,9 @@ function insertsesCont(session_id,pledges, callback , db){
         }
       })
     }
+    // console.log(result);
+    callback(null , null)
+
   })
 }
 
