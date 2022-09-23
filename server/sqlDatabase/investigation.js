@@ -69,7 +69,6 @@ function insertOI(studNo, meetDate, meetLink, ticket_id, callback , db){
     });
 }
 
-
 function updateOI(ticket_id,offence_status , callback , db){
     const sqlSelect ="UPDATE logged_offences SET offence_status = ? WHERE ticket_id = ?";
     db.query(sqlSelect, [offence_status, ticket_id], (err, result) => {
@@ -107,7 +106,6 @@ function updateOI(ticket_id,offence_status , callback , db){
         }
     });
 }
-
 
 function getEmail(stdNo, callback , db){
     const sqlSelect = "select email from users where user_id=?"; //get student email from database

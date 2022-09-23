@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.11% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/36</span>
+                <span class='fraction'>34/36</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">46.66% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/15</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.11% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/36</span>
+                <span class='fraction'>34/36</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -179,28 +179,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -250,29 +250,29 @@
   });
     
   //do we still use this??
-  router.get("/selectOffence", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-      const ticket_id = <span class="cstat-no" title="statement not covered" >req.query["ticket_id"];</span>
-<span class="cstat-no" title="statement not covered" >      database.selectOffence(ticket_id, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
+  router.get("/selectOffence", (req, res) =&gt; {
+      const ticket_id = req.query["ticket_id"];
+      database.selectOffence(ticket_id, function(err, result){
+        res.send(result);
       })
   });
     
   //query called when a possible offence get deleted
-  router.post("/delete", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-      const offenceId = <span class="cstat-no" title="statement not covered" >req.body.offenceId;</span>
-<span class="cstat-no" title="statement not covered" >      database.deleteOffence(offenceId, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
+  router.post("/delete", (req, res) =&gt; {
+      const offenceId = req.body.offenceId;
+      database.deleteOffence(offenceId, function(err, result){
+        res.send(result);
       })
   });
     
   //query called a possible offence is edited
-  router.post("/update", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-      const offenceName = <span class="cstat-no" title="statement not covered" >req.body.offenceName;</span>
-      const severity = <span class="cstat-no" title="statement not covered" >req.body.severity;</span>
-      const desc = <span class="cstat-no" title="statement not covered" >req.body.desc;</span>
-      const offenceId = <span class="cstat-no" title="statement not covered" >req.body.offenceId;</span>
-<span class="cstat-no" title="statement not covered" >      database.update(severity, offenceName, desc, offenceId, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
+  router.post("/update", (req, res) =&gt; {
+      const offenceName = req.body.offenceName;
+      const severity = req.body.severity;
+      const desc = req.body.desc;
+      const offenceId = req.body.offenceId;
+      database.update(severity, offenceName, desc, offenceId, function(err, result){
+        res.send(result);
       })
   });
 &nbsp;
@@ -286,7 +286,7 @@ module.exports=manageOffences;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Sep 06 2022 09:40:28 GMT+0200 (South Africa Standard Time)
+                at 2022-09-23T10:26:47.293Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

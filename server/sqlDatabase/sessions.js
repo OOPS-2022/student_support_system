@@ -172,7 +172,6 @@ function updateses(date, time, session_name, session_id , callback , db){
   });
 }
 
-
 function mySessions(studentID, callback , db){
  const sqlSelect  = 'select sessions.session_id, session_type, course_name, course_code, date,time from sessions left join session_link on sessions.session_id=session_link.session_id left join course_link on sessions.course_id=course_link.course_id left join student_link on course_link.pro_id=student_link.program_id left join courses on course_link.course_id=courses.course_id where user_id=?';
   db.query(sqlSelect, [studentID], (err, result) => {

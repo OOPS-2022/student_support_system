@@ -50,7 +50,6 @@ function createSignedPledge(name, desc, type, saveLink, sessions , callback , db
     });
 }
 
-
 function createClickedPledge(name, desc, pledge_type ,sessions, callback , db){
     const sqlInsert = "INSERT INTO pledges (pledge_name, pledge_desc, pledge_type) VALUES (?,?,?);";
     db.query(sqlInsert, [name, desc, pledge_type], (error, result) => {
