@@ -21,7 +21,8 @@ import { MenuItem } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "rgb(252,179,5,0.4)",
+    backgroundColor: "rgb(79,147,210)",
+    fontSize: 20,
 
   },
   [`&.${tableCellClasses.body}`]: {
@@ -84,7 +85,7 @@ export default function Submitted() {
 }, []);
 
 
-  const [filter, setFilter] = React.useState("");
+  const [filter, setFilter] = React.useState("offender_name");
   const handleFilter = (event) => {
     setFilter(event.target.value);
   };
@@ -104,15 +105,24 @@ export default function Submitted() {
 <div>
       
       <TableContainer component={Paper} className="pageWrapper" id="cT">
-      <div style={{ display: "inline-flex" }}>
-        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
-        <TextField style={{ minWidth: "20%", paddingRight: "15px" }}
+
+      <div style={{ display: "inline-flex", padding :"15px" }}>
+        <TextField
+          style={{ minWidth: "75%" }}
+
+          variant='outlined'
+          placeholder='Search...'
+          type='search'
+          onInput={(e) => requestSearch(e.target.value)}
+        />
+      
+        <TextField style={{ minWidth: "22%", paddingLeft: "15px" }}
           id="outlined-name"
           select
           default= {"offender_name"}
           value={filter}
           onChange={handleFilter}
-          label="Select"
+          label="Filter by"
         >
           <MenuItem value={"offender_name"}>
             Offender
@@ -122,15 +132,7 @@ export default function Submitted() {
 
 
         </TextField>
-        <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
-        <TextField
-          style={{ minWidth: "50%" }}
-
-          variant='outlined'
-          placeholder='Search...'
-          type='search'
-          onInput={(e) => requestSearch(e.target.value)}
-        />
+        
 
 
       </div>

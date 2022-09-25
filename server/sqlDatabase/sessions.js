@@ -124,6 +124,7 @@ function insertsesCont(session_id,pledges, callback , db){
         }
       })
     }
+    callback(null,null);
   })
 }
 

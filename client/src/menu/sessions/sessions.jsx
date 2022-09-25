@@ -50,7 +50,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.head}`]: {
 
-        backgroundColor: "rgb(252,179,5,0.4)",
+        backgroundColor: "rgb(79,147,210)",
+        fontSize: 20,
 
 
     },
@@ -154,7 +155,7 @@ export default function Sessions() {
 
 
 
-    const [filter, setFilter] = React.useState("");
+    const [filter, setFilter] = React.useState("session_name");
     const handleFilter = (event) => {
         setFilter(event.target.value);
     };
@@ -277,22 +278,30 @@ export default function Sessions() {
     }
     const addHandle = (e) => { setLabel("Add"); setOpen(true); setHide(false); setDate(""); setTime(""); setCourse(""); setSessionType("") }
     const add = async (e) => {
-        console.log(pledgeList); const response = await addSessions(course, sessionType, date, time, sessionName, pledgeList); const response2 = await getSessions(); setSessions(response2.data); const response3 = await getSessionPledges(); setSessionPledges(response3);
-        handleClose();
+        const response = await addSessions(course, sessionType, date, time, sessionName, pledgeList); const response2 = await getSessions(); setSessions(response2.data); const response3 = await getSessionPledges(); setSessionPledges(response3); handleClose();
     }
     return (
 
         <>
             <div className="pageWrapper">
-                <div style={{ display: "inline-flex" }}>
-                <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Filter by</h2>
-                    <TextField style={{ minWidth: "20%" , paddingRight: "15px"}}
+                <div style={{ display: "inline-flex", padding: "10px" }}>
+               
+                    <TextField 
+                    style={{ minWidth: "75%" }}
+
+                        variant='outlined'
+                        placeholder='Search...'
+                        type='search'
+                        onInput={(e) => requestSearch(e.target.value)}
+                    />
+                
+                    <TextField style={{ minWidth: "22%" , paddingLeft: "15px"}}
                         id="outlined-name"
                         select
                         defaultValue={"session_name"}
                         value={filter}
                         onChange={handleFilter}
-                        label = "Select"
+                        label = "Filter by"
                     >
                         <MenuItem  value={"session_name"}>
                               Sessions
@@ -305,15 +314,7 @@ export default function Sessions() {
                       
 
                     </TextField>
-                <h2 style={{ paddingLeft: "15px", paddingRight: "15px" }}>Search</h2>
-                    <TextField 
-                    style={{ minWidth: "50%" }}
-
-                        variant='outlined'
-                        placeholder='Search...'
-                        type='search'
-                        onInput={(e) => requestSearch(e.target.value)}
-                    />
+              
                     
                     
                 </div>

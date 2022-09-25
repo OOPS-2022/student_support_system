@@ -132,17 +132,10 @@ function Session(database){
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
                   })
-                }else{
-                  res.send(null)
                 }
               })
-            }else{
-              res.send(null)
             }
           })
-        }else{
-      // console.log("errr")
-          res.send(null)
         }
       })
     }
@@ -185,7 +178,7 @@ function Session(database){
       const studentID = req.query['studentID'];
       database.mySessions( studentID, function(err, result){
         res.send(result);
-        console.log("numtimes");
+
       })
   });
     
