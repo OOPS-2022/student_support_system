@@ -19,7 +19,8 @@ import { shouldForwardProp } from '@mui/styled-engine';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "rgb(252,179,5,0.4)",
+    backgroundColor: "rgb(79,147,210)",
+    fontSize: 20,
     
   },
   [`&.${tableCellClasses.body}`]: {

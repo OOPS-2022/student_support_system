@@ -17,7 +17,8 @@ import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "rgb(252,179,5,0.4)",
+        backgroundColor: "rgb(79,147,210)",
+    fontSize: 20,
 
     },
     [`&.${tableCellClasses.body}`]: {
@@ -27,7 +28,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor:"rgb(147,183,214,0.4)",
+        backgroundColor: "rgb(147,183,214,0.4)",
 
     },
     // hide last border
@@ -60,19 +61,33 @@ export default function MyOffence() {
 
     const [offences, setOffences] = React.useState([]);
     useEffect(() => {
-         Axios.get("http://localhost:3001/viewMyOffences", {
+        Axios.get("http://localhost:3001/viewMyOffences", {
             params: { 'userID': sessionStorage.getItem("user_id") }
         }).then((res) => {
-        console.log(res.data);
-        setOffences(res.data);
+            console.log(res.data);
+            setOffences(res.data);
         }
-       )
+        )
 
-    },[]
+    }, []
     );
-    const handleClick = () =>{
+    const handleClick = () => {
         navigate("/MyTickets");
 
+    }
+
+    const [filter, setFilter] = React.useState("offence_name");
+    const handleFilter = (event) => {
+        setFilter(event.target.value);
+    };
+
+    const [copyList, setCopyList] = React.useState(offences);
+    const requestSearch = (searched) => {
+        console.log(filter);
+
+        setCopyList(Object.values(offences).filter((item) =>
+            item[filter].toLowerCase().includes(searched.toLowerCase())))
+            ;
     }
 
     const colNames = ["Offence Name", "Course Code", "Offence Status"]
@@ -80,31 +95,65 @@ export default function MyOffence() {
         <>
             <div className="pageWrapper">
 
-                        <TableContainer component={Paper} className="pageWrapper" id="cT">
-                            <Table sx={{ minWidth: 500 }} aria-label="customized table"  >
-                                <TableHead>
-                                    <TableRow >
-                                        {colNames.map((headerItem, index) => (
-                                            <StyledTableCell key={index}>{headerItem}</StyledTableCell>
-                                        ))}
-                                    </TableRow>
+                <TableContainer component={Paper} className="pageWrapper" id="cT">
+                    <div style={{ display: "inline-flex", padding: "10px" }}>
+                   
+                        <TextField
+                            style={{ minWidth: "75%" }}
 
-                                </TableHead>
-                                <TableBody>
-                                    {offences.map((obj, index) => (
-                                        <StyledTableRow key={index} onClick ={ () =>{ handleClick();sessionStorage.setItem("ticket_id_student",obj["ticket_id"]);}}  >
-                                            <StyledTableCell >{obj["offence_name"]}</StyledTableCell>
-                                            <StyledTableCell >{obj["crs_code"]}</StyledTableCell>
-                                            <StyledTableCell>{obj["offence_status"]}</StyledTableCell>
+                            variant='outlined'
+                            placeholder='Search...'
+                            type='search'
+                            onInput={(e) => requestSearch(e.target.value)}
+                        />
 
-                                        </StyledTableRow>
-                                    ))}
 
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-              
-                        </div>
+                        
+                        <TextField style={{ minWidth: "22%", paddingLeft: "15px" }}
+                            id="outlined-name"
+                            select
+                            defaultValue={"offence_name"}
+                            value={filter}
+                            onChange={handleFilter}
+                            label="Filter by"
+                        >
+                            <MenuItem value={"offence_name"}>
+                                Offence name
+                            </MenuItem>
+                            <MenuItem value={"crs_code"}>
+                                Course code
+                            </MenuItem>
+
+
+
+
+                        </TextField>
+                        
+                    </div>
+                    <Table sx={{ minWidth: 500 }} aria-label="customized table"  >
+                        <TableHead>
+                            <TableRow >
+                                {colNames.map((headerItem, index) => (
+                                    <StyledTableCell key={index}>{headerItem}</StyledTableCell>
+                                ))}
+                            </TableRow>
+
+                        </TableHead>
+                        <TableBody>
+                            {Object.values(copyList.length > 0 ? copyList : offences).map((obj, index) => (
+                                <StyledTableRow key={index} onClick={() => { handleClick(); sessionStorage.setItem("ticket_id_student", obj["ticket_id"]); }}  >
+                                    <StyledTableCell >{obj["offence_name"]}</StyledTableCell>
+                                    <StyledTableCell >{obj["crs_code"]}</StyledTableCell>
+                                    <StyledTableCell>{obj["offence_status"]}</StyledTableCell>
+
+                                </StyledTableRow>
+                            ))}
+
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+            </div>
         </>
     );
 
