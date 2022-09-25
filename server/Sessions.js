@@ -120,12 +120,15 @@ function Session(database){
       const creator_id = req.body.creator_id;
       const pledges = req.body.pledges;
       //console.log(pledges);
+
       database.insertses(course_id, session_type, date, time, session_name, creator_id,pledges ,function(err, result){
         if(err == null){
           var session_id = result
           database.insertsesCont(session_id,pledges,function(err, result){
+
             if(err == null){
-              var session_id = result
+
+              console.log("result")
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               fs.mkdir(dir, err => {
                 if (err == null) {
@@ -134,8 +137,14 @@ function Session(database){
                   })
                 }
               })
+
+            }else{
+              console.log(err)
+              res.send(null)
             }
           })
+        }else{
+          res.send(null)
         }
       })
     }

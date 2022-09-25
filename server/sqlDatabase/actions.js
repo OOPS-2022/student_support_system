@@ -1,6 +1,6 @@
-function myActions(studentNr, callback,db){
+function myActions(userID, callback,db){
     const sqlSelect ='select * from actions where student_id=? and seen="false";';
-    db.query(sqlSelect, [studentNr], (err, result) => {
+    db.query(sqlSelect, [userID], (err, result) => {
       if (err != null) {
         console.log(err);
         callback(err, null);

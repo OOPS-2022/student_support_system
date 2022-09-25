@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.39% </span>
+                <span class="strong">90.76% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>59/66</span>
+                <span class='fraction'>59/65</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.95% </span>
+                <span class="strong">95.23% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>17/21</span>
+                <span class='fraction'>20/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.39% </span>
+                <span class="strong">90.76% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>59/66</span>
+                <span class='fraction'>59/65</span>
             </div>
         
             
@@ -277,34 +277,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -400,9 +400,9 @@
   });
     
   //get the answers that students filled in with the checklists
-  router.get("/getChecklistAns", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    database.getChecklistAns( <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >      res.send(result);</span>
+  router.get("/getChecklistAns", (req, res) =&gt; {
+    database.getChecklistAns( function(err, result){
+      res.send(result);
     })
   });
     
@@ -410,25 +410,25 @@
   router.post('/studentChecklistAnswers', (req, res)=&gt;{
     if(Object.keys(req.body).length != 4){
       res.send(null);
-    }else{
-      const studentID=req.body.studentID;
-      const checkID=req.body.checkID;
-      const questions=req.body.questions;
-      const answers=req.body. questions;
-      database.studentChecklistAnswers( checkID, studentID,questions, answers,function(err, result){
-        res.send(result);
+    }else<span class="missing-if-branch" title="else path not taken" >E</span>{
+      const studentID=<span class="cstat-no" title="statement not covered" >req.body.studentID;</span>
+      const checkID=<span class="cstat-no" title="statement not covered" >req.body.checkID;</span>
+      const questions=<span class="cstat-no" title="statement not covered" >req.body.questions;</span>
+      const answers=<span class="cstat-no" title="statement not covered" >req.body.answers;</span>
+<span class="cstat-no" title="statement not covered" >      database.studentChecklistAnswers( checkID, studentID,questions, answers,<span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
+       //res.send(result);
       })
     }
   });
     
   //get checklists associated with session
-  router.get('/ckecklistForSession' ,<span class="fstat-no" title="function not covered" >(r</span>eq,res)=&gt;{
-<span class="cstat-no" title="statement not covered" >    if(Object.keys(req.query).length != 1){</span>
+  router.get('/checklistForSession' ,(req,res)=&gt;{
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(Object.keys(req.query).length != 1){
 <span class="cstat-no" title="statement not covered" >      res.send(null);</span>
     }else{
-      const sessionId=<span class="cstat-no" title="statement not covered" >req.query['session_id'];</span>
-<span class="cstat-no" title="statement not covered" >      database.ckecklistForSession( sessionId,<span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >        res.send(result);</span>
+      const sessionId=req.query['session_id'];
+      database.checklistForSession( sessionId,function(err, result){
+        res.send(result);
       })
     }
   });
@@ -442,7 +442,7 @@ module.exports=Checklist;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Sep 06 2022 09:40:28 GMT+0200 (South Africa Standard Time)
+                at 2022-09-23T10:26:47.293Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

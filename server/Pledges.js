@@ -54,7 +54,7 @@ function Pledges(database){
     const sessions = req.body.sessions;
     const pledge_type = "Clicked Pledge";
     database.createClickedPledge(name, desc, pledge_type ,sessions, function(err, result){
-      //res.send(result);
+      res.send(result);
     })
   });
 
