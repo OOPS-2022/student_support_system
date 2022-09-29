@@ -37,7 +37,7 @@ const ProtectedRoute = ({
     redirectPath = '/',
     children,
   }) => {
-    if (!sessionStorage.getItem("auth")) {
+    if (sessionStorage.getItem("auth")=="false") {
       return <Navigate to={redirectPath} replace />;
     }
   
