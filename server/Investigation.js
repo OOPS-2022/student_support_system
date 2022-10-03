@@ -233,6 +233,22 @@ function sendMail(mailOptions, callback){
     })
   });
 
+  //get whether person is observer or collaborator
+  router.post("/getRole", (req, res)=>{
+    if(Object.keys(req.body).length < 2){
+      res.send(null);
+    }
+    else{
+      const userID = req.body.UserID;
+      const ticketID = req.body.ticketID;
+      
+      database.getRole(userID, ticketID, function(err, result){
+        res.send(result);
+      })
+    }
+    
+  })
+
   return router;
 }
 

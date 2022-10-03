@@ -122,6 +122,10 @@ function getAllMeetings(callback){
   return investigation.getAllMeetings(callback, db)
 }
 
+function getRole(UserID, TicketID, callback){
+  return investigation.getRole(UserID, ticketID, callback, db)
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 const manageOffences = require('./manageOffences');
@@ -241,4 +245,4 @@ function sessionPledges(session_id,callback ){
 
 
 
-module.exports={FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+module.exports={getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};

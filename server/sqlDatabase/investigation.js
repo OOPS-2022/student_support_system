@@ -123,5 +123,11 @@ function getAllMeetings(callback, db){
       });
 }
 
+function getRole(userID, ticketID, callback, db){
+    const sqlQuery="Select role from collaborators where usr_id=? and ticket_id=?";
+    db.query(sqlQuery, [userID, ticketID], (err, result)=>{
+        callback(null, result);
+    });
+}
 
-module.exports= {getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing};
+module.exports= {getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole};
