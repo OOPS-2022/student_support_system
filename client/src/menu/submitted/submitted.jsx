@@ -77,7 +77,7 @@ export default function Submitted() {
   colNames = colNamesSubmitted;
   React.useEffect(() => {
     const getOff = async () => {
-      const response = await Axios.get('http://localhost:3001/SubmittedOffences');
+      const response = await Axios.post('http://localhost:3001/SubmittedOffences', {user_id : sessionStorage.getItem("user_id")});
       setSubmitted(response.data);
     }
   
