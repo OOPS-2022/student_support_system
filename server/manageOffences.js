@@ -12,7 +12,7 @@ function manageOffences(database){
       })
   });
     
-  //fetch the data from the database to send to frontend to show admin all the offences that have been logged
+  //fetch the data from the database to send to frontend to show support staff all the offences that they or are a collaborator of have been logged
   router.post("/SubmittedOffences", (req, res) => {
     if(Object.keys(req.body).length < 1){
       res.send(null);
@@ -23,6 +23,14 @@ function manageOffences(database){
       });
     }
   });
+
+  //
+  router.post("/AllSubmittedOffences", (req, res) => {
+      database.AllSubmittedOffences(function(err , result) {
+        res.send(result);
+      });
+    }
+  );
     
   // //do we still use this or is it the same as possible offences??
   router.get("/offences", (req, res) => {

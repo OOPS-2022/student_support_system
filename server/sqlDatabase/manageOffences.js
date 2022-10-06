@@ -12,6 +12,7 @@ function PossibleOffences(callback, db){
 
 function SubmittedOffences(user_id , callback, db){
   const sqlSelect ="select logged_offences.ticket_id, offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code , offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id left join collaborators on collaborators.ticket_id = logged_offences.ticket_id where collaborators.user_id = ?  or logged_offences.submitter_id = ? ";
+  console.log(user_id);
   db.query(sqlSelect,[user_id, user_id],  (error, result) => {
     if (error != null) {
       callback(error , null)
@@ -22,6 +23,19 @@ function SubmittedOffences(user_id , callback, db){
     }
   });
 }
+
+function AllSubmittedOffences(callback, db){
+  const sqlSelect ="select logged_offences.ticket_id, offender_name, (case when offence_list.offence_name='other' then other.offence_name else offence_list.offence_name end) as offence_name,crs_code , offence_status from logged_offences left join offence_list on logged_offences.offence_id= offence_list.offence_id left join other on logged_offences.ticket_id=other.ticket_id";
+  db.query(sqlSelect, (error, result) => {
+    if (error != null) {
+      callback(error , null)
+
+    }else{
+      callback(null, result);
+
+    }
+  });
+};
 
 function insert(offenceName, severity, desc , callback , db){
   const sqlSelect ="Insert into offence_list(offence_name, severity, offence_desc) values(?,?,?)";
@@ -70,4 +84,4 @@ function update(severity, offenceName, desc, offenceId , callback , db){
   );
 }
 
-module.exports= {update, deleteOffence,selectOffence,insert, SubmittedOffences, PossibleOffences};
+module.exports= {update, deleteOffence,selectOffence,insert, SubmittedOffences, PossibleOffences ,AllSubmittedOffences};

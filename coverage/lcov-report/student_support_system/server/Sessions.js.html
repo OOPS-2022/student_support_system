@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.55% </span>
+                <span class="strong">70.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>83/116</span>
+                <span class='fraction'>81/115</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.55% </span>
+                <span class="strong">70.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>83/116</span>
+                <span class='fraction'>81/115</span>
             </div>
         
             
@@ -272,7 +272,9 @@
 <a name='L207'></a><a href='#L207'>207</a>
 <a name='L208'></a><a href='#L208'>208</a>
 <a name='L209'></a><a href='#L209'>209</a>
-<a name='L210'></a><a href='#L210'>210</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -394,11 +396,14 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -407,12 +412,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -459,7 +463,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -603,28 +607,30 @@
       const creator_id = req.body.creator_id;
       const pledges = req.body.pledges;
       //console.log(pledges);
+&nbsp;
       database.insertses(course_id, session_type, date, time, session_name, creator_id,pledges ,function(err, result){
         if(err == null){
           var session_id = result
           database.insertsesCont(session_id,pledges,function(err, result){
+&nbsp;
             if(err == null){
-              var session_id = result
+&nbsp;
+              console.log("result")
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               fs.mkdir(dir, err =&gt; {
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (err == null) {
 <span class="cstat-no" title="statement not covered" >                    database.insertsesUpdateLink(dir, session_id, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
 <span class="cstat-no" title="statement not covered" >                    res.send(result);</span>
                   })
-                }else{
-                  res.send(null)
                 }
               })
+&nbsp;
             }else<span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >              console.log(err)</span>
 <span class="cstat-no" title="statement not covered" >              res.send(null)</span>
             }
           })
         }else<span class="missing-if-branch" title="else path not taken" >E</span>{
-      // console.log("errr")
 <span class="cstat-no" title="statement not covered" >          res.send(null)</span>
         }
       })
@@ -668,7 +674,7 @@
       const studentID = req.query['studentID'];
       database.mySessions( studentID, function(err, result){
         res.send(result);
-        console.log("numtimes");
+&nbsp;
       })
   });
     
@@ -697,7 +703,7 @@ module.exports=Session;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-09-23T10:26:47.293Z
+                at 2022-10-06T06:42:05.934Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
