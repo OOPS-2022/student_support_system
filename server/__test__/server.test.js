@@ -60,10 +60,10 @@ describe("Test possible offences", ()=>{
 });
 
 describe("Test submitted offences", ()=>{
-    test("Get method for sumitted offences", ()=>{
+    test("Get method for all sumitted offences", ()=>{
         return request(app)
-        .get('/SubmittedOffences')
-        .expect(200).then(()=> expect(SubmittedOffences.mock.calls.length).toBe(1));
+        .get('/AllSubmittedOffences')
+        .expect(200).then(()=> expect(AllSubmittedOffences.mock.calls.length).toBe(1));
     })
 })
 
@@ -734,7 +734,7 @@ const ticketTracker= jest.fn(function (ticketID, c){
 const PossibleOffences = jest.fn(function (c){
     c(null, {result:200})
 });
-const SubmittedOffences = jest.fn(function (c){
+const AllSubmittedOffences = jest.fn(function (c){
     c(null, {result:200})
 });
 const insert = jest.fn( function (n, s , d,c){
@@ -819,4 +819,4 @@ const sessionPledges = jest.fn( function (select_id,c){
     c(null, {result:200})
 });
 
-const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, SubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
+const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, AllSubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
