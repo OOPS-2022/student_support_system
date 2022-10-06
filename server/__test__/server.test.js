@@ -65,6 +65,20 @@ describe("Test submitted offences", ()=>{
         .post('/AllSubmittedOffences')
         .expect(200).then(()=> expect(AllSubmittedOffences.mock.calls.length).toBe(1));
     })
+
+    test('It should test SubmittedOffences (incorrect number of arg sent)', ()=>{
+        return request(app)
+        .get('/SubmittedOffences')
+        .expect(200).then(()=> expect(SubmittedOffences.mock.calls.length).toBe(0));
+    })
+    test('It should test SubmittedOffences (correct number of arg sent)', ()=>{
+        return request(app)
+        .get('/SubmittedOffences')
+        .query({user_id: 1})
+        .expect(200).then(()=> expect(SubmittedOffences.mock.calls.length).toBe(1));
+    })
+
+    SubmittedOffences
 })
 
 describe("Test insert offences", ()=>{
@@ -262,6 +276,46 @@ describe("Test Investigation", ()=>{
         .get('/getAllMeetings')
         .expect(200).then(()=> expect(getAllMeetings.mock.calls.length).toBe(1));
     })
+
+    test('It should test getRole (incorrect number of arg sent)', ()=>{
+        const insert={
+            userID: "1234567"
+        };
+        return request(app)
+        .post('/getRole').send(insert)
+        .expect(200).then(()=> expect(getRole.mock.calls.length).toBe(0));
+    })
+
+    test('It should test getRole (correct number of arg sent)', ()=>{
+        const insert={
+            userID: "1234567",
+            ticketID: "12"
+        };
+        return request(app)
+        .post('/getRole').send(insert)
+        .expect(200).then(()=> expect(getRole.mock.calls.length).toBe(1));
+    })
+
+    test('It should test addCollab (incorrect number of arg sent)', ()=>{
+        const insert={
+            userID: "1234567"
+        };
+        return request(app)
+        .post('/addCollab').send(insert)
+        .expect(200).then(()=> expect(addCollab.mock.calls.length).toBe(0));
+    })
+
+    test('It should test addCollab (correct number of arg sent)', ()=>{
+        const insert={
+            ticket_id:"12", 
+            user_id: "12", 
+            role:"collaborator"
+        };
+        return request(app)
+        .post('/addCollab').send(insert)
+        .expect(200).then(()=> expect(addCollab.mock.calls.length).toBe(1));
+    })
+
 })
 
 describe("Test Session", ()=>{
@@ -819,4 +873,19 @@ const sessionPledges = jest.fn( function (select_id,c){
     c(null, {result:200})
 });
 
-const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, AllSubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
+
+const getRole = jest.fn( function (userID, ticketID,c){
+    c(null, {result:200})
+});
+const addCollab = jest.fn( function (ticket_id, user_id, role,c){
+    c(null, {result:200})
+});
+const SubmittedOffences = jest.fn( function (user_id,c){
+    c(null, {result:200})
+});
+const getUserId = jest.fn( function (email,c){
+    c(null, {result:200})
+});
+
+
+const app = makeApp({getUserId,SubmittedOffences,addCollab,getRole,insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, AllSubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
