@@ -62,7 +62,7 @@ describe("Test possible offences", ()=>{
 describe("Test submitted offences", ()=>{
     test("Get method for all sumitted offences", ()=>{
         return request(app)
-        .get('/AllSubmittedOffences')
+        .post('/AllSubmittedOffences')
         .expect(200).then(()=> expect(AllSubmittedOffences.mock.calls.length).toBe(1));
     })
 })
