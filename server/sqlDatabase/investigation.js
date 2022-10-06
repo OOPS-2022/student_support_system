@@ -130,4 +130,18 @@ function getRole(userID, ticketID, callback, db){
     });
 }
 
-module.exports= {getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole};
+function getUserId(email, callback, db){
+    const sqlQuery= "select user_id from users where email=?";
+    db.query(sqlQuery, [email], (err, result) =>{
+        callback(null, result);
+    });
+}
+
+function addCollab(ticket_id, user_id, role, callback, db){
+    const sqlQuery="insert into collaborators (ticket_id, user_id, role) values (?, ?, ?)";
+    db.query(sqlQuery, [ticket_id, user_id, role], (err, result) =>{
+        callback(null, "successful");
+    })
+}
+
+module.exports= {getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, getUserId, addCollab};

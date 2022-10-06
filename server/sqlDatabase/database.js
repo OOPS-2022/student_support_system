@@ -123,7 +123,15 @@ function getAllMeetings(callback){
 }
 
 function getRole(UserID, TicketID, callback){
-  return investigation.getRole(UserID, ticketID, callback, db)
+  return investigation.getRole(UserID, TicketID, callback, db)
+}
+
+function getUserId(email, callback, db){
+  return investigation.getUserId(email, callback, db);
+}
+
+function addCollab(ticket_id, user_id, role, callback, db){
+  return investigation.addCollab(ticket_id, user_id, role, callback, db);
 }
 
 
@@ -249,4 +257,4 @@ function sessionPledges(session_id,callback ){
 
 
 
-module.exports={AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+module.exports={getUserId, addCollab,AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};

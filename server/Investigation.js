@@ -249,6 +249,25 @@ function sendMail(mailOptions, callback){
     
   })
 
+  //add either observer or collaborator
+  router.post("/addCollab", (req, res) => {
+    if(Object.keys(req.body).length <3){
+      res.send(null);
+    }
+    else{
+      const email=req.body.email;
+      const role=req.body.role;
+      const ticket_id=req.body.ticket_id;
+
+      database.getUserId(email, function(err, result){
+        const user_id=result[0];
+        database.addCollab(ticket_id, user_id, role, function(err, result){
+          res.send("Success");
+        })
+      })
+    }
+  })
+
   return router;
 }
 
