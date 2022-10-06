@@ -67,14 +67,18 @@ describe("Test submitted offences", ()=>{
     })
 
     test('It should test SubmittedOffences (incorrect number of arg sent)', ()=>{
+        const insert={};
+
         return request(app)
-        .get('/SubmittedOffences')
+        .post('/SubmittedOffences').send(insert)
         .expect(200).then(()=> expect(SubmittedOffences.mock.calls.length).toBe(0));
     })
     test('It should test SubmittedOffences (correct number of arg sent)', ()=>{
+        
+        const insert={user_id: "12"};
+
         return request(app)
-        .get('/SubmittedOffences')
-        .query({user_id: 1})
+        .post('/SubmittedOffences').send(insert)
         .expect(200).then(()=> expect(SubmittedOffences.mock.calls.length).toBe(1));
     })
 
