@@ -26,13 +26,7 @@ function sendMail(mailOptions, callback){
         callback(null, 200);
         return
       }
-      console.log(err);
-      callback("Unable to send email to offender", null);
-    } else {
-      console.log("Email sent to " + offenderEmail);
-      callback(null,"Successful");
-    }
-  });
+      console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);callback(null,"Successful");}});
 }
 
   //get the amount of files that are in a directory for a ticket
@@ -232,6 +226,41 @@ function sendMail(mailOptions, callback){
       res.send(result);
     })
   });
+
+  //get whether person is observer or collaborator
+  router.post("/getRole", (req, res)=>{
+    if(Object.keys(req.body).length < 2){
+      res.send(null);
+    }
+    else{
+      const userID = req.body.UserID;
+      const ticketID = req.body.ticketID;
+      
+      database.getRole(userID, ticketID, function(err, result){
+        res.send(result);
+      })
+    }
+    
+  })
+
+  //add either observer or collaborator
+  router.post("/addCollab", (req, res) => {
+    if(Object.keys(req.body).length <3){
+      res.send(null);
+    }
+    else{
+      const email=req.body.email;
+      const role=req.body.role;
+      const ticket_id=req.body.ticket_id;
+
+      database.getUserId(email, function(err, result){
+        const user_id=result[0];
+        database.addCollab(ticket_id, user_id, role, function(err, result){
+          res.send("Success");
+        })
+      })
+    }
+  })
 
   return router;
 }

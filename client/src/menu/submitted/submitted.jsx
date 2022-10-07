@@ -68,8 +68,15 @@ export default function Submitted() {
   colNames = colNamesSubmitted;
   React.useEffect(() => {
     const getOff = async () => {
-      const response = await Axios.get('http://localhost:3001/SubmittedOffences');
-      setSubmitted(response.data);
+      if(sessionStorage.getItem("user_role")=="support"){
+        const response = await Axios.post('http://localhost:3001/SubmittedOffences', {user_id : sessionStorage.getItem("user_id")});
+        setSubmitted(response.data);
+      }
+      else if (sessionStorage.getItem("user_role")=="admin"){
+        const response = await Axios.post('http://localhost:3001/AllSubmittedOffences');
+        setSubmitted(response.data);
+      }
+      
     }
   
   getOff();

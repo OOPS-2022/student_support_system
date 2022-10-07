@@ -122,6 +122,18 @@ function getAllMeetings(callback){
   return investigation.getAllMeetings(callback, db)
 }
 
+function getRole(UserID, TicketID, callback){
+  return investigation.getRole(UserID, TicketID, callback, db)
+}
+
+function getUserId(email, callback, db){
+  return investigation.getUserId(email, callback, db);
+}
+
+function addCollab(ticket_id, user_id, role, callback, db){
+  return investigation.addCollab(ticket_id, user_id, role, callback, db);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 const manageOffences = require('./manageOffences');
@@ -130,8 +142,12 @@ function PossibleOffences(callback){
   return manageOffences.PossibleOffences(callback, db);
 }
 
-function SubmittedOffences(callback){
-  return manageOffences.SubmittedOffences(callback, db)
+function SubmittedOffences(user_id, callback){
+  return manageOffences.SubmittedOffences(user_id, callback, db)
+}
+
+function AllSubmittedOffences(callback){
+  return manageOffences.AllSubmittedOffences(callback, db)
 }
 
 function insert(offenceName, severity, desc , callback ){
@@ -241,4 +257,4 @@ function sessionPledges(session_id,callback ){
 
 
 
-module.exports={FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+module.exports={getUserId, addCollab,AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};

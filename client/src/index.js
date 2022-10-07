@@ -39,8 +39,10 @@ const ProtectedRoute = ({
     
     children,
   }) => {
+
     if (sessionStorage.getItem("auth") == null) {
       return <Navigate to='/' replace />;
+
     }
   
     return children;
