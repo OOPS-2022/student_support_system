@@ -16,6 +16,7 @@ function Pledges(database){
   router.get("/viewFile", function (req, res) {
       const id = req.query["id"]; //gets id from frontend
       database.viewFile(id, function(err, result){
+
         const filePath = result[0].pledge_link;
     
         if (err != null) {
@@ -23,8 +24,12 @@ function Pledges(database){
         }
         //read the file into a blob of content type pdf
         fs.readFile(__dirname + filePath, function (err, data) {
-          res.contentType("application/pdf");
-          res.send(data);
+          if(err != null){
+            res.send(null);
+          }else{
+            res.contentType("application/pdf");
+            res.send(data);
+          }
         });
       })
   });

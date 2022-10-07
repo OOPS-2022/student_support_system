@@ -7,7 +7,7 @@ function Session(database){
 
   ///create a test and add a pledge...!!!!!extend to sessions
   router.post("/createTest", (req, res) => {
-    if(Object.keys(req.body).length != 2){
+    if(Object.keys(req.body).length < 5){
       res.send(null);
     }else{
       const testName = req.body.testName;
@@ -25,7 +25,6 @@ function Session(database){
           res.send(null);
         }
       });
-      
     }
   });
     
@@ -72,28 +71,27 @@ function Session(database){
           database.selectSession_folder(sessionID ,function(err, result){
             if(err == null){
               const sessionLink = result[0].session_folder;
-        
               let newFileName = studentNr + ".pdf";
-              let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
               let newPath = sessionLink + "/" + newFileName;
               let saveLink = newPath.slice(1);
+              if(!req.file){
+                res.send(null);
+                return;
+              }
+              let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
               fs.rename(oldPath, newPath, function (err) {
                 if(err == null){
                   database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
-                    res.send(result);
-                  })
+                    res.send(result);})
                 }else{
                   res.send(null);
-                }
-              });
+                }});
             }else{
               res.send(null);
-            }
-          })
+            }})
         }else{
           res.send(null);
-        }
-      })
+        }})
     } 
   });
     
@@ -135,9 +133,10 @@ function Session(database){
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
                   })
+                }else{
+                  res.send(null);
                 }
               })
-
             }else{
               console.log(err)
               res.send(null)
@@ -149,8 +148,6 @@ function Session(database){
       })
     }
   });
-    
-    
   //view all the sessions...if admin..show only created by certain admin? why would they change others' stuff?
   router.get("/sessions", (req, res) => {
     database.sessionss(function(err, result){

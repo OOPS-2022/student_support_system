@@ -26,13 +26,7 @@ function sendMail(mailOptions, callback){
         callback(null, 200);
         return
       }
-      console.log(err);
-      callback("Unable to send email to offender", null);
-    } else {
-      console.log("Email sent to " + offenderEmail);
-      callback(null,"Successful");
-    }
-  });
+      console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);callback(null,"Successful");}});
 }
 
   //get the amount of files that are in a directory for a ticket

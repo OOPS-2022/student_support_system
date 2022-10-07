@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.53% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/43</span>
+                <span class='fraction'>30/45</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.46% </span>
+                <span class="strong">76.92% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/13</span>
+                <span class='fraction'>10/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.53% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/43</span>
+                <span class='fraction'>30/45</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -135,7 +135,12 @@
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -151,17 +156,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,12 +196,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,18 +232,23 @@
   });
     
   //query to view pledge file if the pledge is a signed pledge
-  router.get("/viewFile", <span class="fstat-no" title="function not covered" >fu</span>nction (req, res) {
-      const id = <span class="cstat-no" title="statement not covered" >req.query["id"];</span> //gets id from frontend
-<span class="cstat-no" title="statement not covered" >      database.viewFile(id, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-        const filePath = <span class="cstat-no" title="statement not covered" >result[0].pledge_link;</span>
+  router.get("/viewFile", function (req, res) {
+      const id = req.query["id"]; //gets id from frontend
+      database.viewFile(id, function(err, result){
+&nbsp;
+        const filePath = result[0].pledge_link;
     
-<span class="cstat-no" title="statement not covered" >        if (err != null) {</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (err != null) {
 <span class="cstat-no" title="statement not covered" >          console.log(err);</span>
         }
         //read the file into a blob of content type pdf
-<span class="cstat-no" title="statement not covered" >        fs.readFile(__dirname + filePath, <span class="fstat-no" title="function not covered" >fu</span>nction (err, data) {</span>
-<span class="cstat-no" title="statement not covered" >          res.contentType("application/pdf");</span>
-<span class="cstat-no" title="statement not covered" >          res.send(data);</span>
+        fs.readFile(__dirname + filePath, function (err, data) {
+          if(err != null){
+            res.send(null);
+          }else<span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >            res.contentType("application/pdf");</span>
+<span class="cstat-no" title="statement not covered" >            res.send(data);</span>
+          }
         });
       })
   });
@@ -257,13 +272,13 @@
   });
 &nbsp;
   //creating a clicked pledge, has no file upload
-  router.post("/createClickedPledge", <span class="fstat-no" title="function not covered" >fu</span>nction (req, res) {
-    const name = <span class="cstat-no" title="statement not covered" >req.body.name;</span>
-    const desc = <span class="cstat-no" title="statement not covered" >req.body.desc;</span>
-    const sessions = <span class="cstat-no" title="statement not covered" >req.body.sessions;</span>
-    const pledge_type = <span class="cstat-no" title="statement not covered" >"Clicked Pledge";</span>
-<span class="cstat-no" title="statement not covered" >    database.createClickedPledge(name, desc, pledge_type ,sessions, <span class="fstat-no" title="function not covered" >fu</span>nction(err, result){</span>
-<span class="cstat-no" title="statement not covered" >      res.send(result);</span>
+  router.post("/createClickedPledge", function (req, res) {
+    const name = req.body.name;
+    const desc = req.body.desc;
+    const sessions = req.body.sessions;
+    const pledge_type = "Clicked Pledge";
+    database.createClickedPledge(name, desc, pledge_type ,sessions, function(err, result){
+      res.send(result);
     })
   });
 &nbsp;
@@ -286,7 +301,7 @@ module.exports=Pledges;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-10-06T06:42:05.934Z
+                at 2022-10-07T15:02:15.845Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
