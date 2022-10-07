@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import LogOffence from "./menu/logOffence/logOffence";
 import Welcome from "./menu/welcome/welcome";
 
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes  } from 'react-router-dom';
 
 
 
@@ -33,12 +33,16 @@ import SessionPledges from "./menu/mySessions/sessionPledges";
 import EmbeddedSession from "./menu/mySessions/embedSession";
 
 
+
+
 const ProtectedRoute = ({
-    redirectPath = '/',
+    
     children,
   }) => {
-    if (sessionStorage.getItem("auth")=="false") {
-      return <Navigate to={redirectPath} replace />;
+
+    if (sessionStorage.getItem("auth") == null) {
+      return <Navigate to='/' replace />;
+
     }
   
     return children;
@@ -53,7 +57,7 @@ ReactDOM.render(
 
             <Route path="/" element={<App page={<Welcome />} />} />
            
-         
+            <Route path="*" element={<p>There's nothing here: 404!</p>} />
 
 
                 <Route path="/LogOffence" element={<ProtectedRoute><App page={<LogOffence />} /></ProtectedRoute>} />
