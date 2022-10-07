@@ -67,7 +67,7 @@ function Checklist(database){
       const question_details = req.body.question_details;
       // console.log(question_details);
       database.updateCheckListQuestion(question_details, checklist_id, question_num, session_id, function(err, result){
-        res.send(result);
+        res.sendStatus(result);
       })
     }
   });
@@ -81,7 +81,7 @@ function Checklist(database){
       const session_id = req.body.session_id;
       const checklist_id = req.body.checklist_id;
       database.deleteCheckListQuestion(checklist_id, question_num, session_id, function(err, result){
-        res.send(result);
+        res.sendStatus(result);
       })
     }
   });

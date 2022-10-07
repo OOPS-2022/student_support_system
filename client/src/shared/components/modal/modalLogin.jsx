@@ -31,9 +31,9 @@ const style = {
   alignItems: "center"
   
 };
+
   const myMSALObj = new Msal.UserAgentApplication(msalConfig);
-  sessionStorage.setItem("auth", false);
-  // sessionStorage.setItem("micro", false);
+
 
 
 
@@ -73,6 +73,7 @@ export default function ModalLogin(props){
             sessionStorage.setItem("user_id",lgcUser_id );
             sessionStorage.setItem("user_role",lgRole );
             sessionStorage.setItem("logged_id",true);
+        
             isTrue = true ;
             handleClose()
           }
@@ -134,10 +135,9 @@ export default function ModalLogin(props){
    
     return(
     <div>
-    <Button style ={{padding: "25px", color:"white"}} onClick={handleOpen}>Log in</Button>
+   
     <Modal id ="modal"
     open ={open}
-    onClose ={handleClose}
     aria-labelledby="modal-modal-title"
     aria-describedby="modal-modal-description"
     >

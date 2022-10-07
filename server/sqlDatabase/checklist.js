@@ -52,9 +52,12 @@ function updateCheckListQuestion(question_details, checklist_id, question_num, s
     db.query(sqlUpdate, [question_details, checklist_id, question_num, session_id], (err, result) => {
         if (err != null) {
             callback(err, null)
+        }else{
+            callback(null, 200);
         }
       }
     );
+    
 }
 
 function deleteCheckListQuestion(checklist_id, question_num, session_id, callback , db){

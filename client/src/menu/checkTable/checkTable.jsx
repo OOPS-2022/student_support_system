@@ -179,7 +179,7 @@ export default function CheckTable() {
                        
                                 <StyledTableRow>
                                     <StyledTableCell key={i}><FaceIcon ></FaceIcon></StyledTableCell>
-                                            <StyledTableCell style={{fontSize: "large"}} component="th" scope="row" align="left" key={i}>{headerItem} </StyledTableCell>
+                                            <StyledTableCell  style={{fontSize: "large"}} component="th" scope="row" align="left" key={i}>{headerItem} </StyledTableCell>
                                            
 
 
@@ -203,7 +203,7 @@ export default function CheckTable() {
 
                                     <TableHead>
                                         <TableRow>
-                                            <StyledTableCell align="center" >Session {headerItem[0]}</StyledTableCell>
+                                            <StyledTableCell colSpan={2} align="center" >Session {headerItem[0]}</StyledTableCell>
                                         </TableRow>
 
 
@@ -224,7 +224,7 @@ export default function CheckTable() {
         
                                                 {row[1].map((check, s) => (
 
-                                                    <StyledTableCell align='center' key={s}>{check}</StyledTableCell>
+                                                    <StyledTableCell  align='center' key={s}>{check}</StyledTableCell>
 
                                                 ))}
                                             </StyledTableRow>

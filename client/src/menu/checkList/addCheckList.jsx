@@ -92,6 +92,11 @@ TabPanel.propTypes = {
 };
 
 
+
+async function setChecklist(sessionID,checkID) {
+  return Axios.post('http://localhost:3001/allCheckListQuestions', { session_id: sessionID, checklist_id: checkID });
+}
+
 export default function checkList() {
   const events = [];
 
@@ -129,7 +134,7 @@ export default function checkList() {
   const [open, setOpen] = React.useState(false);
 
 
-  const [check_id, setCheckid] = React.useState("");
+  const [check_id, setCheckid] = React.useState(0);
   const [questionNum, setQuestionNum] = React.useState("");
   const [details, setDetails] = React.useState("");
   const [session_id, setid] = React.useState("");
@@ -139,16 +144,13 @@ export default function checkList() {
   const [questions, setQuestions] = React.useState([]);
 
 
-  const handleChangeID = (event) => {
-    setCheckid(event.target.value);
-  };
+  
   const [label, setLabel] = React.useState("");
   // console.log(sessionStorage.getItem("session_id"))
   // setid(sessionStorage.getItem("session_id"));
 
   const colNamesPossible = ["Question Number", "Question details"];
   let colNames = [];
-  let rows = [];
 
   const [check_list, setCheckList] = React.useState([]);
   //let page = props.page;
@@ -157,11 +159,12 @@ export default function checkList() {
 
   const deleteOffence = async () => {
     const response = await Axios.post("http://localhost:3001/deleteCheckListQuestion", { session_id: sessionStorage.getItem("session_id"), checklist_id: check_id, question_num: questionNum });
+   
   }
 
   const edit = async () => {
     const response = await Axios.post("http://localhost:3001/updateCheckListQuestion", { session_id: sessionStorage.getItem("session_id"), checklist_id: check_id, question_num: questionNum, question_details: details });
-    // check();
+    
   }
 
 
@@ -177,13 +180,14 @@ export default function checkList() {
   }
 
   const setCheck = async (checkID) => {
+    setCheckid(checkID);
     const response = await Axios.post('http://localhost:3001/allCheckListQuestions', { session_id: sessionStorage.getItem('session_id'), checklist_id: checkID });
     setCheckList(response.data);
   }
 
   useEffect(() => {
-    const setCheck = async (checkID) => {
-      const response = await Axios.post('http://localhost:3001/allCheckListQuestions', { session_id: sessionStorage.getItem('session_id'), checklist_id: checkID });
+    const setCheck = async () => {
+      const response = await Axios.post('http://localhost:3001/allCheckListQuestions', { session_id: sessionStorage.getItem('session_id'), checklist_id: check_id });
       setCheckList(response.data);
     }
 
@@ -192,8 +196,6 @@ export default function checkList() {
 
   colNames = colNamesPossible;
 
-  // check()
-  rows = check_list;
   const handleOpen = () => {
     setLabel("Edit");
     setOpen(true);
@@ -203,10 +205,10 @@ export default function checkList() {
   const [submitted, setSubmitted] = React.useState(false);
   const [sessionID, setSessionID] = React.useState(0);
   const handleClose = () => setOpen(false);
-  const handleQuestion = () => { addQuestion(); viewCheck_id(); setCheck(); setSubmitted(true); }
+  const handleQuestion = () => { addQuestion(); viewCheck_id(); setCheck(check_id); setSubmitted(true);}
 
-  const editHandle = () => { edit(); handleClose(); }
-  const deleteHandle = () => { deleteOffence(); handleClose(); }
+  const editHandle = async () => {await edit(); await setCheck(check_id); handleClose(); }
+  const deleteHandle = async () => {await deleteOffence(); await setCheck(check_id); handleClose(); }
 
 
   return (
@@ -222,11 +224,11 @@ export default function checkList() {
           <TextField style={{ minWidth: "30vw", padding: "15px" }}
             id="outlined-name"
             label=" Check list"
-            select
+            select 
             value={checkids["check_id"]}
           >
             {checki.map((checkids) => (
-              <MenuItem key={checkids["check_id"]} value={checkids["check_id"]} id={checkids["check_id"]} onClick={(e) => { setCheck(e.target.innerText); setSessionID(e.target.innerText) }}>
+              <MenuItem key={checkids["check_id"]} value={checkids["check_id"]} id={checkids["check_id"]} onClick={(e) => { setCheck(e.target.innerText); setCheckid(e.target.innerText);}}>
                 {checkids["check_id"]}
               </MenuItem>
             ))}
@@ -293,7 +295,7 @@ export default function checkList() {
                   />
 
                   <Button variant="contained" onClick={handleQuestion}>Add Question</Button>
-                  <Button variant="contained" onClick={handleClose}>Submit</Button>
+                  <Button variant="contained" onClick ={() => {handleClose(); setQuestions([]);}}>Submit</Button>
                   {Object.values(questions).map((obj) => (<p1 style={{ fontFamily: "Arial, Helvetica, sans-serif" }} >{obj}</p1>))}
                 </Stack>)}
 
@@ -312,8 +314,8 @@ export default function checkList() {
                   />
 
                   <div>
-                    {hide && (<Button variant="contained" sx={{ marginRight: "10px" }} onClick={edit} >Update</Button>)}
-                    {hide && (<Button variant="contained" onClick={deleteOffence}  >Delete</Button>)}
+                    {hide && (<Button variant="contained" sx={{ marginRight: "10px" }} onClick={editHandle} >Update</Button>)}
+                    {hide && (<Button variant="contained" onClick={deleteHandle}  >Delete</Button>)}
 
                   </div>
                 </Stack>)}
