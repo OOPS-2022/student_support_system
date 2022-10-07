@@ -17,6 +17,10 @@ import Multiline from '../multiline';
 import { shouldForwardProp } from '@mui/styled-engine';
 import { useNavigate } from 'react-router-dom';
 import { MenuItem } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import FaceIcon from '@mui/icons-material/Face';
+import Popover from '@mui/material/Popover';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,21 +48,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 500,
-  height: 550,
-  bgcolor: 'background.paper',
-  borderRadius: '7px',
-  boxShadow: 24,
-  p: 4,
-  textAlign: "center",
-  alignItems: "center"
 
-};
+
 
 
 
@@ -104,7 +95,7 @@ export default function Submitted() {
       item[filter].toLowerCase().includes(searched.toLowerCase())))
       ;
   }
-
+ 
 
   return (
 
@@ -114,9 +105,9 @@ export default function Submitted() {
       <TableContainer component={Paper} className="pageWrapper" id="cT">
 
       <div style={{ display: "inline-flex", padding :"15px" }}>
+      
         <TextField
-          style={{ minWidth: "75%" }}
-
+          style={{ minWidth: "49%" ,paddingLeft: "15px"}}
           variant='outlined'
           placeholder='Search...'
           type='search'
@@ -165,6 +156,7 @@ export default function Submitted() {
         </Table>
       </TableContainer>
     </div>
+
 
   </>
   );

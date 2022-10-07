@@ -56,6 +56,7 @@ function updateCheckListQuestion(question_details, checklist_id, question_num, s
         }
       }
     );
+    
 }
 
 function deleteCheckListQuestion(checklist_id, question_num, session_id, callback , db){
