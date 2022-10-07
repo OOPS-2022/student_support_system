@@ -65,7 +65,6 @@ function fetchOffenderEmail(offenderName, callback, db){
     });
 }
 
-
 function LogOffence(offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther, callback, db){
     const sqlSelect = "SELECT offence_id FROM offence_list WHERE offence_name = ?"; // get offence_id from table
       db.query(sqlSelect, [offenceType], (err, result) => {

@@ -103,7 +103,7 @@ function Checklist(database){
       const questions=req.body.questions;
       const answers=req.body.answers;
       database.studentChecklistAnswers( checkID, studentID,questions, answers,function(err, result){
-       res.send(result);
+       //res.send(result);
       })
     }
   });

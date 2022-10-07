@@ -46,7 +46,6 @@ function selectOffence(ticket_id , callback , db){
   });
 }
 
-
 function deleteOffence(offenceId , callback , db){
   const sqlSelect = "Delete from offence_list where offence_id = ?";
   db.query(sqlSelect, [offenceId], (err, result) => {

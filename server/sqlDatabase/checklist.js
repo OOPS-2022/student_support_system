@@ -39,7 +39,6 @@ function allCheckListQuestions(session_id, checklist_id, callback , db){
     });
 }
 
-
 function CheckLists(callback, db){
     const sqlSelect ="select check_id, question_number, question_details,session_id from checkList";
     db.query(sqlSelect, (error, result) => {

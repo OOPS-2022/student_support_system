@@ -41,6 +41,14 @@ describe("Test login", ()=>{
             expect(Login.mock.calls[0][1]).toBe("test")
         });
     });
+
+    test('It should test FetchRole', ()=>{
+        const insert={setlgEmail: "test@gmail.com"};
+        return request(app)
+        .post('/FetchRole').send(insert)
+        .expect(200).then(()=> expect(FetchRole.mock.calls.length).toBe(1));
+    })
+
 });
 
 describe("Test possible offences", ()=>{
@@ -81,6 +89,33 @@ describe("Test insert offences", ()=>{
     })
 })
 
+describe("Test Manage Offences", ()=>{
+    test('It should test selectOffence', ()=>{
+        return request(app)
+        .get('/selectOffence')
+        .query({ticket_id: 1})
+        .expect(200).then(()=> expect(selectOffence.mock.calls.length).toBe(1));
+    })
+
+    test('It should test deleteOffence', ()=>{
+        const insert={offenceId: 1};
+        return request(app)
+        .post('/delete').send(insert)
+        .expect(200).then(()=> expect(deleteOffence.mock.calls.length).toBe(1));
+    })
+
+    test('It should test update Offence', ()=>{
+        const insert={
+            offenceName: "test",
+            severity: 1,
+            desc: "This is a test",
+            offenceId: 1};
+        return request(app)
+        .post('/update').send(insert)
+        .expect(200).then(()=> expect(update.mock.calls.length).toBe(1));
+    })
+
+})
 
 describe("Test Investigation", ()=>{
     test('It should test fileNumber (incorrect number of arg sent)', ()=>{
@@ -229,7 +264,6 @@ describe("Test Investigation", ()=>{
     })
 })
 
-
 describe("Test Session", ()=>{
     test("It should test createTest (incorrect number of arg sent)", ()=>{
         const insert={
@@ -337,6 +371,40 @@ describe("Test Session", ()=>{
         .post('/updateses').send(insert)
         .expect(200).then(()=> expect(updateses.mock.calls.length).toBe(1));
     })
+
+    // test('It should test sessions', ()=>{
+    //     return request(app)
+    //     .get('/sessions')
+    //     .expect(200).then(()=> expect(sessions.mock.calls.length).toBe(1));
+    // })
+
+    test('It should test getAllSessions', ()=>{
+        return request(app)
+        .get('/getAllSessions')
+        .expect(200).then(()=> expect(getAllSessions.mock.calls.length).toBe(1));
+    })
+
+    test('It should test getSession', ()=>{
+        return request(app)
+        .get('/getSession')
+        .query({session_id: 1})
+        .expect(200).then(()=> expect(getSession.mock.calls.length).toBe(1));
+    })
+
+    test('It should test mySessions', ()=>{
+        return request(app)
+        .get('/mySessions')
+        .query({studentID: 1})
+        .expect(200).then(()=> expect(mySessions.mock.calls.length).toBe(1));
+    })
+
+    test('It should test sessionPledges', ()=>{
+        return request(app)
+        .get('/sessionPledges')
+        .query({select_id: 1})
+        .expect(200).then(()=> expect(sessionPledges.mock.calls.length).toBe(1));
+    })
+
 })
 
 describe("Test LogOffence", ()=>{
@@ -534,6 +602,60 @@ describe("Test LogOffence", ()=>{
     // })
 })
 
+describe("Test Actions", ()=>{
+    test('It should test myActions', ()=>{
+        return request(app)
+        .get('/myActions')
+        .query({userID: 1})
+        .expect(200).then(()=> expect(myActions.mock.calls.length).toBe(1));
+    })
+
+    test('It should test viewAction', ()=>{
+        const insert={actionID: 1};
+        return request(app)
+        .post('/viewAction').send(insert)
+        .expect(200).then(()=> expect(viewAction.mock.calls.length).toBe(1));
+    })
+})
+
+describe("Test Checklist", ()=>{
+    test('It should test getChecklistAns', ()=>{
+        return request(app)
+        .get('/getChecklistAns')
+        .expect(200).then(()=> expect(getChecklistAns.mock.calls.length).toBe(1));
+    })
+
+    test('It should test checklistForSession', ()=>{
+        return request(app)
+        .get('/checklistForSession')
+        .query({userID: 1})
+        .expect(200).then(()=> expect(checklistForSession.mock.calls.length).toBe(1));
+    })
+
+})
+
+describe("Test pledges", ()=>{
+    test('It should test viewPledges', ()=>{
+        return request(app)
+        .get('/viewPledges')
+        .expect(200).then(()=> expect(viewPledges.mock.calls.length).toBe(1));
+    })
+
+    // test('It should test viewFile', ()=>{
+    //     return request(app)
+    //     .get('/viewFile')
+    //     .query({id: 1})
+    //     .expect(200).then(()=> expect(viewFile.mock.calls.length).toBe(1));
+    // })
+
+    test('It should test pledgeType', ()=>{
+        return request(app)
+        .get('/pledgeType')
+        .query({testID: 1})
+        .expect(200).then(()=> expect(pledgeType.mock.calls.length).toBe(1));
+    })
+})
+
 const addCheckList= jest.fn(function (c){
     c(null, 200)
 });
@@ -556,6 +678,10 @@ const addCheckListQuestion= jest.fn(function (checklist_id, session_id, question
     c(null, 200)
 });
 const allCheckListQuestions= jest.fn(function (session_id, checklist_id,c){
+    c(null, 200)
+});
+
+const getChecklistAns= jest.fn(function (c){
     c(null, 200)
 });
 ///
@@ -632,4 +758,65 @@ const getEmail = jest.fn(function (stdNo,c){
 const getAllMeetings= jest.fn(function ( c){
     c(null, {result:200})
 });
-const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, SubmittedOffences, insert,ticketTracker});
+
+const myActions = jest.fn( function (userID,c){
+    c(null, {result:200})
+});
+
+const viewAction = jest.fn( function (actionID,c){
+    c(null, {result:200})
+});
+
+const checklistForSession = jest.fn( function (session_id,c){
+    c(null, {result:200})
+});
+
+const FetchRole = jest.fn( function (setlgEmail,c){
+    c(null, {result:200})
+});
+
+const selectOffence = jest.fn( function (ticket_id,c){
+    c(null, {result:200})
+});
+
+const deleteOffence = jest.fn( function (offenceId,c){
+    c(null, {result:200})
+});
+
+const update = jest.fn( function (offenceName, severity, desc, offenceId,c){
+    c(null, {result:200})
+});
+
+const viewPledges = jest.fn( function (c){
+    c(null, {result:200})
+});
+
+const viewFile = jest.fn( function (id,c){
+    c(null, {result:200})
+});
+
+const pledgeType = jest.fn( function (testID,c){
+    c(null, {result:200})
+});
+
+const sessions = jest.fn( function (c){
+    c(null, {result:200})
+});
+
+const getSession = jest.fn( function (session_id,c){
+    c(null, {result:200})
+});
+
+const mySessions = jest.fn( function (studentID,c){
+    c(null, {result:200})
+});
+
+const getAllSessions = jest.fn( function (c){
+    c(null, {result:200})
+});
+
+const sessionPledges = jest.fn( function (select_id,c){
+    c(null, {result:200})
+});
+
+const app = makeApp({insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, SubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
