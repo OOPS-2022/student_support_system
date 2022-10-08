@@ -130,18 +130,37 @@ function getRole(userID, ticketID, callback, db){
     });
 }
 
-function getUserId(email, callback, db){
-    const sqlQuery= "select user_id from users where email=?";
-    db.query(sqlQuery, [email], (err, result) =>{
-        callback(null, result);
-    });
+function addCollab(email, ticket_id,role, callback, db){
+    const sqlSelect="select user_id from users where email=?";
+    const sqlQuery="insert into collaborators (ticket_id, user_id, role) values (?, ?, ?)";
+    db.query(sqlSelect, [email], (err, result)=>{
+        //console.log(result[0].user_id);
+        const user_id=result[0].user_id;
+        db.query(sqlQuery, [ticket_id, user_id, role], (err, result) =>{
+        callback(null, "successful");
+        })
+    })
+    
 }
 
-function addCollab(ticket_id, user_id, role, callback, db){
-    const sqlQuery="insert into collaborators (ticket_id, user_id, role) values (?, ?, ?)";
-    db.query(sqlQuery, [ticket_id, user_id, role], (err, result) =>{
+function getPeople(ticket_id, callback, db){
+    const sqlQuery="Select email, collaborators.role from collaborators left join users on collaborators.user_id=users.user_id where ticket_id=?";
+    db.query(sqlQuery, [ticket_id], (err,result)=>{
+        callback(null, result);
+    })
+
+}
+
+function deleteCollab(email, ticket_id, callback, db){
+    const sqlSelect="select user_id from users where email=?";
+    const sqlQuery="delete from collaborators where user_id=? and ticket_id=?";
+    db.query(sqlSelect, [email], (err, result)=>{
+        //console.log(result[0].user_id);
+        const user_id=result[0].user_id;
+        db.query(sqlQuery, [user_id, ticket_id], (err, result) =>{
         callback(null, "successful");
+        })
     })
 }
 
-module.exports= {getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, getUserId, addCollab};
+module.exports= {deleteCollab,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, addCollab, getPeople};

@@ -252,12 +252,36 @@ function sendMail(mailOptions, callback){
       const email=req.body.email;
       const role=req.body.role;
       const ticket_id=req.body.ticket_id;
-
-      database.getUserId(email, function(err, result){
-        const user_id=result[0];
-        database.addCollab(ticket_id, user_id, role, function(err, result){
+      //console.log(email);
+        database.addCollab(email, ticket_id, role, function(err, result){
           res.send("Success");
         })
+    }
+  })
+
+  router.post("/getPeople", (req,res)=>{
+    if(Object.keys(req.body).length>1){
+      res.send(null);
+    }
+    else{
+        const ticket_id=req.body.ticket_id;
+        console.log(ticket_id);
+        database.getPeople(ticket_id, function(err , result){
+          //console.log(result);
+          res.send(result);
+        })
+    }
+  })
+
+  router.post("/deleteCollab", (req, res)=>{
+    if (Object.keys(req.body).length<2){
+      res.send(null);
+    }
+    else{
+      const email=req.body.email;
+      const ticket_id=req.body.ticket_id;
+      database.deleteCollab(email, ticket_id, function(err, result){
+        res.send("Success");
       })
     }
   })

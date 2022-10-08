@@ -67,24 +67,26 @@ const style = {
 };
 
 async function addPeople(role, email) {
-    return Axios.post("http://localhost:3001/...", {
+    console.log(role);
+    return Axios.post("http://localhost:3001/addCollab", {
         role: role,
-        email: email
+        email: email,
+        ticket_id: sessionStorage.getItem("ticket_id")
+    });
+}
+
+async function deletePeople(email) {
+    return Axios.post("http://localhost:3001/deleteCollab", {
+        email: email,
+        ticket_id: sessionStorage.getItem("ticket_id")
 
     });
 }
 
-async function deletePeople(role, email) {
-    return Axios.post("http://localhost:3001/...", {
-        role: role,
-        email: email
-
-    });
-}
-
-async function getPeople(ticket_id) {
-    return Axios.post("http://localhost:3001/...", {
-       ticket_id: ticket_id
+async function getPeople() {
+    //console.log("ticket_id: ", ticket_id);
+    return Axios.post("http://localhost:3001/getPeople", {
+       ticket_id: sessionStorage.getItem("ticket_id")
 
     });
 }
@@ -103,7 +105,7 @@ export default function Ticket() {
         const response = await Axios.get('http://localhost:3001/selectOffence', {
             params: { 'ticket_id': sessionStorage.getItem("ticket_id") }
         });
-        console.log(response.data["offence_status"]);
+        //console.log(response.data["offence_status"]);
         setStatus(response.data["offence_status"]);
         setDesc(response.data["details"]);
         setCrsCode(response.data["crs_code"]);
@@ -139,7 +141,20 @@ export default function Ticket() {
     }, []);
 
 
-    console.log("files:" + files[0]);
+    useEffect(() => {
+        //console.log(sessionStorage.getItem("ticket_id"));
+        const getPeople = async () => {
+        const result = await Axios.post("http://localhost:3001/getPeople", {
+           ticket_id: sessionStorage.getItem("ticket_id")
+
+        });
+        //console.log(result.data);
+        setPeople(result.data);
+    }
+        getPeople();}, []);
+
+
+    //console.log("files:" + files[0]);
     const oiMenu = () => navigate("/OIMenu");
     const [isObserver, setIsObserver] = React.useState(true);
     const [isContributer, setIsContributer] = React.useState(true);
@@ -185,11 +200,11 @@ export default function Ticket() {
     }
 
     const addHandle = async (e) => {
-        const response = await addPeople(email, role); const response2 = await getPeople(ticket_id); setPeople(response2.data); handleClose();
+        const response = await addPeople(userRole, email); const response2 = await getPeople(); setPeople(response2.data); handleClose();
     }
 
     const deleteHandle = async (e) => {
-        const response = await deletePeople(email, role); const response2 = await getPeople(ticket_id); setPeople(response2.data); handleClose();
+        const response = await deletePeople(email); const response2 = await getPeople(); setPeople(response2.data); handleClose();
     }
 
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -263,8 +278,8 @@ export default function Ticket() {
                                     <TableBody>
                                         <>
                                             {Object.values(people).map((obj, index) => (
-                                                <StyledTableRow key={index} onClick={(e) => {setUserRole(obj["role"]); setEmail(obj["user_name"]); handleClick2(e); }} hover={true}>
-                                                    <StyledTableCell>{obj["user_name"]}</StyledTableCell>
+                                                <StyledTableRow key={index} onClick={(e) => {setUserRole(obj["role"]); setEmail(obj["email"]); handleClick2(e); }} hover={true}>
+                                                    <StyledTableCell>{obj["email"]}</StyledTableCell>
                                                     <StyledTableCell>{obj["role"]}</StyledTableCell>
                                                 </StyledTableRow>
                                             ))}
