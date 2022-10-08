@@ -338,11 +338,28 @@ describe("Test Investigation", ()=>{
         .expect(200).then(()=> expect(addCollab.mock.calls.length).toBe(1));
     })
 
+    test("Test getPeople (2 arguments => incorrect", ()=>{
+        const insert={
+            ticket_id: "1",
+            email: "leandra@gmail.com"
+        }
+        return request(app)
+        .post('/getPeople').send(insert)
+        .expect(200).then(()=> expect(getPeople.mock.calls.length).toBe(0));
+    })
+
     test("Test getPeople (correct)", ()=>{
         const insert={ticket_id: "12"};
         return request(app)
         .post('/getPeople').send(insert)
         .expect(200).then(()=>expect(getPeople.mock.calls.length).toBe(1));
+    })
+
+    test("Test deleteCollab (1 argument => incorrect)", ()=>{
+        const insert={email: "Leandra@gmail.com"};
+        return request(app)
+        .post('/deleteCollab').send(insert)
+        .expect(200).then(()=> expect(deleteCollab.mock.calls.length).toBe(0));
     })
 
     test("Test deleteCollab (correct)", ()=>{
