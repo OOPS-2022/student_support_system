@@ -42,7 +42,13 @@ describe("Test login", ()=>{
         });
     });
 
-    test('It should test FetchRole', ()=>{
+    test('It should test FetchRole no arguments (incorrect)', ()=>{
+        return request(app)
+        .post('/FetchRole')
+        .expect(200).then(()=> expect(FetchRole.mock.calls.length).toBe(0));
+    })
+
+    test('It should test FetchRole (correct)', ()=>{
         const insert={setlgEmail: "test@gmail.com"};
         return request(app)
         .post('/FetchRole').send(insert)

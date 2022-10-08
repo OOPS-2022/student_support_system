@@ -18,10 +18,6 @@ function Pledges(database){
       database.viewFile(id, function(err, result){
 
         const filePath = result[0].pledge_link;
-    
-        if (err != null) {
-          console.log(err);
-        }
         //read the file into a blob of content type pdf
         fs.readFile(__dirname + filePath, function (err, data) {
           if(err != null){
