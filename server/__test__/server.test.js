@@ -320,7 +320,7 @@ describe("Test Investigation", ()=>{
 
     test('It should test addCollab (incorrect number of arg sent)', ()=>{
         const insert={
-            userID: "1234567"
+            email: "leandra@gmail.com"
         };
         return request(app)
         .post('/addCollab').send(insert)
@@ -330,12 +330,28 @@ describe("Test Investigation", ()=>{
     test('It should test addCollab (correct number of arg sent)', ()=>{
         const insert={
             ticket_id:"12", 
-            user_id: "12", 
+            email: "leandra@gmail.com", 
             role:"collaborator"
         };
         return request(app)
         .post('/addCollab').send(insert)
         .expect(200).then(()=> expect(addCollab.mock.calls.length).toBe(1));
+    })
+
+    test("Test getPeople (correct)", ()=>{
+        const insert={ticket_id: "12"};
+        return request(app)
+        .post('/getPeople').send(insert)
+        .expect(200).then(()=>expect(getPeople.mock.calls.length).toBe(1));
+    })
+
+    test("Test deleteCollab (correct)", ()=>{
+        const insert={
+            ticket_id: "12",
+            email: "leandra@gmail.com"};
+        return request(app)
+        .post('/deleteCollab').send(insert)
+        .expect(200).then(()=>expect(deleteCollab.mock.calls.length).toBe(1));
     })
 
 })
@@ -918,7 +934,7 @@ const sessionPledges = jest.fn( function (select_id,c){
 const getRole = jest.fn( function (userID, ticketID,c){
     c(null, {result:200})
 });
-const addCollab = jest.fn( function (ticket_id, user_id, role,c){
+const addCollab = jest.fn( function (ticket_id, email, role,c){
     c(null, {result:200})
 });
 const SubmittedOffences = jest.fn( function (user_id,c){
@@ -928,5 +944,13 @@ const getUserId = jest.fn( function (email,c){
     c(null, {result:200})
 });
 
+const getPeople=jest.fn(function (ticket_id, c){
+    c(null, {result:200})
+})
 
-const app = makeApp({createClickedPledge,sendUpdateEmail,getUserId,SubmittedOffences,addCollab,getRole,insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, AllSubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});
+const deleteCollab=jest.fn(function (email, ticket_id, c){
+    c(null, {result:200})
+})
+
+
+const app = makeApp({deleteCollab, getPeople,createClickedPledge,sendUpdateEmail,getUserId,SubmittedOffences,addCollab,getRole,insertsesUpdateLink,addCheckList,studentChecklistAnswers,addCheckListQuestion,allCheckListQuestions,CheckLists,deleteCheckListQuestion,viewCheck_id,updateCheckListQuestion,LogOffence,fetchOffenderEmail,LogOffenceNoFile,updateses,insertsesCont,insertses,selectSession_folder,testReport,submitSession,sessionPledgeLink,createTest,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,myHearing, Login, PossibleOffences, AllSubmittedOffences, insert,ticketTracker, myActions, viewAction, getChecklistAns, checklistForSession, FetchRole, selectOffence, deleteOffence,update, viewPledges, viewFile, pledgeType, sessions, getSession, mySessions, getAllSessions, sessionPledges});

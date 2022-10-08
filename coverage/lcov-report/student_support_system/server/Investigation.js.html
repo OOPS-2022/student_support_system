@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.3% </span>
+                <span class="strong">82.39% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>107/130</span>
+                <span class='fraction'>117/142</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.14% </span>
+                <span class="strong">78.12% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>23/28</span>
+                <span class='fraction'>25/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.17% </span>
+                <span class="strong">91.89% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>31/34</span>
+                <span class='fraction'>34/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.25% </span>
+                <span class="strong">84.17% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>107/127</span>
+                <span class='fraction'>117/139</span>
             </div>
         
             
@@ -332,7 +332,31 @@
 <a name='L267'></a><a href='#L267'>267</a>
 <a name='L268'></a><a href='#L268'>268</a>
 <a name='L269'></a><a href='#L269'>269</a>
-<a name='L270'></a><a href='#L270'>270</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -589,9 +613,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -855,12 +903,36 @@ function sendMail(mailOptions, callback){
       const email=req.body.email;
       const role=req.body.role;
       const ticket_id=req.body.ticket_id;
-&nbsp;
-      database.getUserId(email, function(err, result){
-        const user_id=result[0];
-        database.addCollab(ticket_id, user_id, role, function(err, result){
+      //console.log(email);
+        database.addCollab(email, ticket_id, role, function(err, result){
           res.send("Success");
         })
+    }
+  })
+&nbsp;
+  router.post("/getPeople", (req,res)=&gt;{
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(Object.keys(req.body).length&gt;1){
+<span class="cstat-no" title="statement not covered" >      res.send(null);</span>
+    }
+    else{
+        const ticket_id=req.body.ticket_id;
+        console.log(ticket_id);
+        database.getPeople(ticket_id, function(err , result){
+          //console.log(result);
+          res.send(result);
+        })
+    }
+  })
+&nbsp;
+  router.post("/deleteCollab", (req, res)=&gt;{
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (Object.keys(req.body).length&lt;2){
+<span class="cstat-no" title="statement not covered" >      res.send(null);</span>
+    }
+    else{
+      const email=req.body.email;
+      const ticket_id=req.body.ticket_id;
+      database.deleteCollab(email, ticket_id, function(err, result){
+        res.send("Success");
       })
     }
   })
@@ -877,7 +949,7 @@ module.exports=investigation;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-10-07T15:02:15.845Z
+                at 2022-10-08T17:51:38.803Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

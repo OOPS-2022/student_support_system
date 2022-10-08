@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1665154935922" clover="3.2.0">
-  <project timestamp="1665154935923" name="All files">
-    <metrics statements="527" coveredstatements="437" conditionals="104" coveredconditionals="71" methods="140" coveredmethods="119" elements="771" coveredelements="627" complexity="0" loc="527" ncloc="527" packages="2" files="10" classes="10"/>
+<coverage generated="1665251498877" clover="3.2.0">
+  <project timestamp="1665251498877" name="All files">
+    <metrics statements="539" coveredstatements="447" conditionals="108" coveredconditionals="73" methods="143" coveredmethods="122" elements="790" coveredelements="642" complexity="0" loc="539" ncloc="539" packages="2" files="10" classes="10"/>
     <package name="student_support_system">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="sum.js" path="C:\Users\User\Desktop\student_support_system\sum.js">
+      <file name="sum.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\sum.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="2" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
       </file>
     </package>
     <package name="student_support_system.server">
-      <metrics statements="525" coveredstatements="435" conditionals="104" coveredconditionals="71" methods="139" coveredmethods="118"/>
-      <file name="Actions.js" path="C:\Users\User\Desktop\student_support_system\server\Actions.js">
+      <metrics statements="537" coveredstatements="445" conditionals="108" coveredconditionals="73" methods="142" coveredmethods="121"/>
+      <file name="Actions.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\Actions.js">
         <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -27,7 +27,7 @@
         <line num="23" count="1" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
       </file>
-      <file name="Checklist.js" path="C:\Users\User\Desktop\student_support_system\server\Checklist.js">
+      <file name="Checklist.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\Checklist.js">
         <metrics statements="65" coveredstatements="59" conditionals="14" coveredconditionals="12" methods="21" coveredmethods="20"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -95,8 +95,8 @@
         <line num="123" count="1" type="stmt"/>
         <line num="125" count="1" type="stmt"/>
       </file>
-      <file name="Investigation.js" path="C:\Users\User\Desktop\student_support_system\server\Investigation.js">
-        <metrics statements="127" coveredstatements="107" conditionals="28" coveredconditionals="23" methods="34" coveredmethods="31"/>
+      <file name="Investigation.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\Investigation.js">
+        <metrics statements="139" coveredstatements="117" conditionals="32" coveredconditionals="25" methods="37" coveredmethods="34"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -220,12 +220,24 @@
         <line num="254" count="1" type="stmt"/>
         <line num="256" count="1" type="stmt"/>
         <line num="257" count="1" type="stmt"/>
-        <line num="258" count="1" type="stmt"/>
-        <line num="259" count="1" type="stmt"/>
-        <line num="265" count="1" type="stmt"/>
+        <line num="262" count="1" type="stmt"/>
+        <line num="263" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="264" count="0" type="stmt"/>
+        <line num="267" count="1" type="stmt"/>
         <line num="268" count="1" type="stmt"/>
+        <line num="269" count="1" type="stmt"/>
+        <line num="271" count="1" type="stmt"/>
+        <line num="276" count="1" type="stmt"/>
+        <line num="277" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="278" count="0" type="stmt"/>
+        <line num="281" count="1" type="stmt"/>
+        <line num="282" count="1" type="stmt"/>
+        <line num="283" count="1" type="stmt"/>
+        <line num="284" count="1" type="stmt"/>
+        <line num="289" count="1" type="stmt"/>
+        <line num="292" count="1" type="stmt"/>
       </file>
-      <file name="Pledges.js" path="C:\Users\User\Desktop\student_support_system\server\Pledges.js">
+      <file name="Pledges.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\Pledges.js">
         <metrics statements="45" coveredstatements="30" conditionals="4" coveredconditionals="2" methods="13" coveredmethods="10"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -273,7 +285,7 @@
         <line num="74" count="1" type="stmt"/>
         <line num="78" count="1" type="stmt"/>
       </file>
-      <file name="Sessions.js" path="C:\Users\User\Desktop\student_support_system\server\Sessions.js">
+      <file name="Sessions.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\Sessions.js">
         <metrics statements="119" coveredstatements="97" conditionals="30" coveredconditionals="19" methods="31" coveredmethods="25"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -395,7 +407,7 @@
         <line num="205" count="1" type="stmt"/>
         <line num="209" count="1" type="stmt"/>
       </file>
-      <file name="index.js" path="C:\Users\User\Desktop\student_support_system\server\index.js">
+      <file name="index.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\index.js">
         <metrics statements="32" coveredstatements="32" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -430,7 +442,7 @@
         <line num="64" count="1" type="stmt"/>
         <line num="67" count="1" type="stmt"/>
       </file>
-      <file name="logOffence.js" path="C:\Users\User\Desktop\student_support_system\server\logOffence.js">
+      <file name="logOffence.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\logOffence.js">
         <metrics statements="64" coveredstatements="41" conditionals="18" coveredconditionals="7" methods="12" coveredmethods="6"/>
         <line num="1" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -497,7 +509,7 @@
         <line num="131" count="1" type="stmt"/>
         <line num="136" count="1" type="stmt"/>
       </file>
-      <file name="login.js" path="C:\Users\User\Desktop\student_support_system\server\login.js">
+      <file name="login.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\login.js">
         <metrics statements="19" coveredstatements="17" conditionals="6" coveredconditionals="4" methods="5" coveredmethods="5"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -519,7 +531,7 @@
         <line num="40" count="1" type="stmt"/>
         <line num="43" count="1" type="stmt"/>
       </file>
-      <file name="manageOffences.js" path="C:\Users\User\Desktop\student_support_system\server\manageOffences.js">
+      <file name="manageOffences.js" path="C:\Users\27793\Documents\Uni\Year 3 2022\Sem 2\SDP\student_support_system\server\manageOffences.js">
         <metrics statements="42" coveredstatements="40" conditionals="4" coveredconditionals="4" methods="17" coveredmethods="15"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>

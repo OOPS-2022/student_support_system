@@ -204,7 +204,7 @@ export default function Ticket() {
     }
 
     const deleteHandle = async (e) => {
-        const response = await deletePeople(email); const response2 = await getPeople(); setPeople(response2.data); handleClose();
+        const response = await deletePeople(email); const response2 = await getPeople(); setPeople(response2.data); handleClose2();
     }
 
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
