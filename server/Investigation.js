@@ -234,7 +234,7 @@ function sendMail(mailOptions, callback){
       res.send(null);
     }
     else{
-      const userID = req.body.UserID;
+      const userID = req.body.userID;
       const ticketID = req.body.ticketID;
       
       database.getRole(userID, ticketID, function(err, result){

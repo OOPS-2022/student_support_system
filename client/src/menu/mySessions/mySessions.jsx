@@ -84,7 +84,8 @@ export default function MySessions() {
             const response = await Axios.get('http://localhost:3001/mySessions', {
                 params: { 'studentID': sessionStorage.getItem("user_id") }
             });
-            setSessions(response.data)
+            setSessions(response.data);
+            console.log(response.data);
 
 
         }

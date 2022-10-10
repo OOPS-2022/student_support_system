@@ -99,6 +99,7 @@ export default function Ticket() {
     const [ticket_id, setID] = useState("");
     const [fileNum, setFileNum] = useState(0);
     const [files, setFiles] = useState([]);
+    const [adminRole, setAdminRole] = useState("");
     let navigate = useNavigate();
 
     const getTicket = async () => {
@@ -116,7 +117,21 @@ export default function Ticket() {
 
     getTicket();
 
+   
+    const getRole = async () => {
+            const response = await Axios.post("http://localhost:3001/getRole", {
+                ticketID: sessionStorage.getItem("ticket_id"), userID: sessionStorage.getItem("user_id") });
+            setAdminRole(response.data[0]["role"]);
+            
+            
+        }
+    
+    
+    
+
+
     useEffect(() => {
+
         const getFiles = async () => {
             const response = await Axios('http://localhost:3001/fileNumber', {
                 method: 'GET',
@@ -132,10 +147,11 @@ export default function Ticket() {
                     [response.data],
                     { type: 'application/pdf' });
                 setFiles(OldArray => [...OldArray, file]);
-
+                
                 //Open the URL on new Window
 
             }
+            getRole();
         }
         getFiles();
     }, []);
@@ -187,10 +203,11 @@ export default function Ticket() {
         setAnchorEl2(null);
     };
 
+
     const openPop = Boolean(anchorEl);
     const openPop2 = Boolean(anchorEl2);
-    const id = open ? 'simple-popover' : undefined;
-    const id2 = open ? 'simple-popover2' : undefined;
+    const id = openPop ? 'simple-popover' : undefined;
+    const id2 = openPop2 ? 'simple-popover2' : undefined;
 
     const [email, setEmail] = React.useState("");
     const [userRole, setUserRole] = React.useState("");
@@ -204,7 +221,7 @@ export default function Ticket() {
     }
 
     const deleteHandle = async (e) => {
-        const response = await deletePeople(email); const response2 = await getPeople(); setPeople(response2.data); handleClose2();
+        handleClose2(); const response = await deletePeople(email); const response2 = await getPeople(); setPeople(response2.data); 
     }
 
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -220,7 +237,7 @@ export default function Ticket() {
             <h1> Student: {studentNumber}</h1>
             <div className="ticketForm">
                 <div>
-                    <Button variant="contained" onClick={oiMenu}>Investigate</Button>
+                {(adminRole != "observer"  &&     (<Button variant="contained" onClick={oiMenu}>Investigate</Button>))}
                 </div>
                 <div>
                     <label>Status: </label>
@@ -297,7 +314,7 @@ export default function Ticket() {
                 </Modal>
             </div><div>
                 <Popover
-                    id={id2}
+                    id={id}
                     open={openPop}
                     anchorEl={anchorEl}
                     onClose={handleClose}
@@ -339,7 +356,7 @@ export default function Ticket() {
 
                 </Popover>
                 <Popover
-                id="pop2"
+                id={id2}
                 open={openPop2}
                 anchorEl={anchorEl2}
                 onClose={handleClose2}
@@ -347,8 +364,10 @@ export default function Ticket() {
                     vertical: 'bottom',
                     horizontal: 'left',
                 }}>
+                <Box>
                 <Button onClick={deleteHandle}>Delete</Button>
                 <Button onClick = {handleClose2}>Cancel</Button>
+                </Box>
                 </Popover>
             </div></>
 

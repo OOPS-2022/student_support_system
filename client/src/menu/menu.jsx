@@ -39,6 +39,12 @@ export default function Menu(props) {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  const [support, setSupport] = React.useState(false);
+  React.useEffect(() => {
+  if(sessionStorage.getItem("user_role") == "admin" || sessionStorage.getItem("user_role") == "support" ){
+    setSupport(true);
+  }
+ });
 
 
   return (
@@ -55,41 +61,44 @@ export default function Menu(props) {
 
           
           <AccordionDetails>
-          {(sessionStorage.getItem("user_role") != "admin"  &&   (sessionStorage.getItem("logged_id" )))  &&( <Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0}}>
+          {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  &&( <Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0}}>
             
           <AccordionSummary
   
           >
            <h1 style = {{ fontSize: "medium", color:"white"}}>Academic Offence Menu</h1>
           </AccordionSummary>
-          <AccordionDetails>
-          {(/*sessionStorage.getItem("user_role") != "admin"  &&  */ (sessionStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
+          <AccordionDetails >
+          <Stack direction="column" spacing={2} padding="15px">
+          {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
           
-           {(sessionStorage.getItem("user_role") != "admin" && sessionStorage.getItem("user_role") != "support"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={mySess} description="My Sessions"/>)}
-           {(sessionStorage.getItem("user_role") != "admin" && sessionStorage.getItem("user_role") != "support"&&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
+           {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={mySess} description="My Sessions"/>)}
+           {(sessionStorage.getItem("user_role") == "student" &&(sessionStorage.getItem("logged_id" )))   &&(<Btn action = {myBut} description="My Offences"/>)}
+           </Stack>
            </AccordionDetails>
            </Accordion>)}
           
-          {((sessionStorage.getItem("user_role") == "admin" || sessionStorage.getItem("user_role") == "support") &&   (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
+          {(support &&   (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
               <AccordionSummary>
               <h1 style = {{ fontSize: "medium", color:"white"}}>Sessions</h1>
               </AccordionSummary>
               <AccordionDetails>
+              
               <Btn style = {{fontFamily: "BULGARE"}} action={sess} description="Manage Sessions"/>
               <Btn action={checkedBut} description="Session Report" />
-              {((sessionStorage.getItem("user_role") == "admin" || sessionStorage.getItem("user_role") == "support")&&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action = {pledgeBut} description="Manage Pledges" />)}
+              {(support  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action = {pledgeBut} description="Manage Pledges" />)}
               
               </AccordionDetails>
               </Accordion>)}
 
-              {((sessionStorage.getItem("user_role") == "admin" || sessionStorage.getItem("user_role") == "support")  &&   (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
+              {(support  &&   (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
               <AccordionSummary>
               <h1 style = {{ fontSize: "medium", color:"white"}}>Offences</h1>
               </AccordionSummary>
               <AccordionDetails>
               
-              <Btn action={possBut} description="Manage Offences" />
-              <Btn action ={subBut} description ="Logged Offences" />
+              {(support  &&   (sessionStorage.getItem("logged_id" )))  &&( <Btn action={possBut} description="Manage Offences" />)}
+              {(support  &&   (sessionStorage.getItem("logged_id" )))  &&( <Btn action ={subBut} description ="Logged Offences" />)}
               
               </AccordionDetails>
             
@@ -101,7 +110,7 @@ export default function Menu(props) {
               
   
               
-              {((sessionStorage.getItem("user_role") == "admin" || sessionStorage.getItem("user_role") == "support")&&(sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
+              {(support && (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
               <AccordionSummary>
               <h1 style = {{ fontSize: "medium", color:"white"}}>Check List</h1>
               </AccordionSummary>

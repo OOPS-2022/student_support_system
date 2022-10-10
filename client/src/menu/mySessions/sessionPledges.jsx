@@ -207,7 +207,7 @@ export default function SessionPledges() {
     return (
         <><div className="pageWrapper">
             <div>
-                <h1>Session</h1>
+                <h1>Session {sessionStorage.getItem("mysession_id")}</h1>
                 <h1>Pledges To Do</h1>
                 {Object.values(sessionPledges).map((pledge, index) => <div>
                     <Button onClick={() => { setPledge(pledge); handleOpen(); }} variant="text" key={index}>{pledge.pledge_name}({pledge.pledge_type})</Button>

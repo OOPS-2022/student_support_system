@@ -124,8 +124,9 @@ function getAllMeetings(callback, db){
 }
 
 function getRole(userID, ticketID, callback, db){
-    const sqlQuery="Select role from collaborators where usr_id=? and ticket_id=?";
+    const sqlQuery="Select role from collaborators where user_id=? and ticket_id=?";
     db.query(sqlQuery, [userID, ticketID], (err, result)=>{
+        console.log(result);
         callback(null, result);
     });
 }

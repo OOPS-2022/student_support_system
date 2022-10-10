@@ -30,7 +30,7 @@ function NavBar(){
             <div className="wrapper">
                 <Header  name = "WITS STUDENT SUPPORT CENTRE" />  
                 {!(sessionStorage.getItem("logged_id" ))  && (<ModalLogin/>)}
-                {(sessionStorage.getItem("user_role") != "admin"  &&   (sessionStorage.getItem("logged_id" )))  && (<ActivityCenter/>)}
+                {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  && (<ActivityCenter/>)}
                 {(sessionStorage.getItem("logged_id" ))  && (<Button style={{color:"white", paddingLeft: "60%"}} onClick ={logOut}>Log out</Button>)}
                 
             </div>
