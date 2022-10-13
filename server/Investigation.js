@@ -5,6 +5,7 @@ function investigation(database){
   const uploadEvidenceDoc = multer({ dest: "./Uploads/Evidence" });
   const fs = require("fs");
   const nodemailer = require("nodemailer");
+  // const outlook = require('node-outlook');
 
   //set up our email.
   const transporter = nodemailer.createTransport({
@@ -152,10 +153,44 @@ function sendMail(mailOptions, callback){
       const date = req.body.meetDate;
       const link = req.body.meetLink;
       const stdNo = req.body.stdNo;
+    //   const token = req.body.token;
+    //   const event = {
+    //     subject: 'Let\'s go for lunch',
+    //     body: {
+    //       contentType: 'HTML',
+    //       content: 'Does noon work for you?'
+    //     },
+    //     start: {
+    //         dateTime: '2017-04-15T12:00:00',
+    //         timeZone: 'Pacific Standard Time'
+    //     },
+    //     end: {
+    //         dateTime: '2017-04-15T14:00:00',
+    //         timeZone: 'Pacific Standard Time'
+    //     },
+    //     location: {
+    //         displayName: 'Harry\'s Bar'
+    //     },
+    //     allowNewTimeProposals: false,
+    //     transactionId: '7E163156-7762-4BEB-A1C6-729EA81755A7'
+    //   };
+
+    //   let createEventParameters = {
+    //     token: token,
+    //     event: event
+    // };
+    // console.log("FSF")
+    // outlook.calendar.createEvent(createEventParameters, function (error, event) {
+    //   if(error) {
+    //       console.log(error);                 
+    //   } else {
+    //       console.log(event);                         
+    //   }
+    // });
       
       database.getEmail(stdNo, function(err, result){
           let mailOptions = {
-            from: "<sdteamoops@gmail.com",
+            from: "sdteamoops@gmail.com",
             to: result,
             subject: "Hearing - scheduled date",
             text:
@@ -201,7 +236,7 @@ function sendMail(mailOptions, callback){
       database.getEmail(stdNo, function(err, result){
         //send email to alert student that their ticket has been updated
       let mailOptions = {
-        from: "<sdteamoops@gmail.com",
+        from: "sdteamoops@gmail.com",
         to: result,
         subject: "Offence Status Update",
         text:

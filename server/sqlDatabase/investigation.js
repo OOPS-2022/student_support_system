@@ -44,25 +44,24 @@ function insertOI(studNo, meetDate, meetLink, ticket_id, callback , db){
             let student_id;
             db.query(sqlSelect, [studNo], (err, result) => {
                 if (err != null) {
-                console.log(err);
+                    console.log(err);
                 } 
                 else {
-                console.log(result);
-                student_id = result[0].user_id;
-                let table = "meeting";
-                let tableID = ticket_id;
-                let seen = "false";
-                let date = new Date().toISOString().slice(0, 10);
-                let actionDesc = "Hearing has been scheduled"; //message of alert sent to student
-                db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
-                    if (err != null) {
-                        callback(err, null) 
-                    } 
-                    else {
-                        callback(null, "successful");
-                    }
-                    }
-                );
+                    student_id = result[0].user_id;
+                    let table = "meeting";
+                    let tableID = ticket_id;
+                    let seen = "false";
+                    let date = new Date().toISOString().slice(0, 10);
+                    let actionDesc = "Hearing has been scheduled"; //message of alert sent to student
+                    db.query(sqlInsertAction, [student_id, table, tableID, seen, date, actionDesc], (err, result) => {
+                        if (err != null) {
+                            callback(err, null) 
+                        } 
+                        else {
+                            callback(null, "successful");
+                        }
+                        }
+                    );
                 }
             });
         }
@@ -108,7 +107,7 @@ function updateOI(ticket_id,offence_status , callback , db){
 }
 
 function getEmail(stdNo, callback , db){
-    const sqlSelect = "select email from users where user_id=?"; //get student email from database
+    const sqlSelect = "select email from users where organization_nr=?"; //get student email from database
     console.log(stdNo);
     db.query(sqlSelect, [stdNo], (err, result) => {
         console.log(result);

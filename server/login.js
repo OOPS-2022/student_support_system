@@ -9,7 +9,7 @@ function Login(database){
       const setlgEmail = req.body.setlgEmail;
       // res.sendStatus(200);
       const setlgPassword = req.body.setlgPassword;
-      // // console.log(setlgEmail)
+      // console.log(database)
       database.Login(setlgEmail, setlgPassword, function(err, result){
         res.send(result);
       });
