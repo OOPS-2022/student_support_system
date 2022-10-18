@@ -61,6 +61,11 @@ function App(database){
     const checklist=require('./Checklist');
     app.use('/', checklist(database));
     //---------------end checklists
+
+    //-------------schedule (create schedule, create time table, edit time table)
+    const schedule=require('./Schedule');
+    app.use('/', schedule(database));
+
     return app
 }
 
