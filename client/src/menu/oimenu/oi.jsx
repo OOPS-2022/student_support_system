@@ -177,6 +177,7 @@ export default function OI() {
       stdNo: sessionStorage.getItem("studentNumber"),
       meetDate: formateDate(calDate),
       meetLink: meeting,
+      token: sessionStorage.getItem("accessToken")
     })
     window.location.reload(1);
   }

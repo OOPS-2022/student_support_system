@@ -13,7 +13,7 @@ import { CreateLogin } from '../../../index.js';
 import { resolvePath, useNavigate } from 'react-router-dom';
 
 import * as Msal from "msal";
-import {msalConfig,  loginRequest} from "../authConfig";
+import {msalConfig,  loginRequest, tokenRequest} from "../authConfig";
 
 
 const style = {
@@ -63,6 +63,21 @@ export default function ModalLogin(props){
           var lgRole ="";
           sessionStorage.setItem("auth", true);
           sessionStorage.setItem("microOBJ", true);
+
+          myMSALObj.acquireTokenSilent(tokenRequest)
+          .then(response => {
+            sessionStorage.setItem("accessToken", response.accessToken);
+          })            
+          .catch(err => {
+            if (err.name === "InteractionRequiredAuthError") {
+                return myMSALObj.acquireTokenPopup(tokenRequest)
+                    .then(response => {
+                      sessionStorage.setItem("accessToken", response.accessToken);
+                    })
+                    .catch(err => {
+                    });
+            }
+        });
 
           setlgEmail(myMSALObj.getAccount().userName);
           const response = await Axios.post("http://localhost:3001/FetchRole",{setlgEmail: myMSALObj.getAccount().userName });
