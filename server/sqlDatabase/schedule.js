@@ -1,5 +1,5 @@
 function createSchedule(userID, startDate, endDate, callback, db){
-    const sqlQuery="Insert into schedule (user_id, start_date, end_date) values (?, TO_DATE(?, 'DD/MM/YYYY'), TO_DATE(?, 'DD/MM/YYYY'))";
+    const sqlQuery="Insert into schedule (user_id, start_date, end_date) values (?, ?,?)"; //important date format YYYY-MM-DD
     db.query(sqlQuery, [userID, startDate, endDate], (err, result)=>{
         if(err!=null){
             console.log(err);
@@ -11,7 +11,7 @@ function createSchedule(userID, startDate, endDate, callback, db){
 }
 
 function timeTableEntry(scheduleID, day, time, desc, callback, db){
-    const sqlQuery="Insert into time_table (schedule_id, weekday, time, desc) values (?, ?, ?,?)";
+    const sqlQuery="Insert into time_table (schedule_id, weekday, time, details) values (?, ?, ?,?)";
     db.query(sqlQuery, [scheduleID, day, time, desc], (err, result)=>{
         if(err!=null){
             console.log(err);
@@ -23,7 +23,7 @@ function timeTableEntry(scheduleID, day, time, desc, callback, db){
 }
 
 function changeTimeTableEntry(scheduleID, day, time, desc, callback, db){
-    const sqlQuery="update time_table set desc=? where schedule_id=? and weekday=? and time=?";
+    const sqlQuery="update time_table set details=? where schedule_id=? and weekday=? and time=?";
     db.query(sqlQuery, [desc, scheduleID, day, time], (err, result)=>{
         if(err!=null){
             console.log(err);
