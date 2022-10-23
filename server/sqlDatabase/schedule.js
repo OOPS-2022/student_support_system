@@ -35,7 +35,7 @@ function changeTimeTableEntry(scheduleID, day, time, desc, callback, db){
 }
 
 function getScheduleID(userID, callback, db){
-    const sqlQuery="select schedule_id from schedule where user_id=?";
+    const sqlQuery="select * from schedule where user_id=?";
     db.query(sqlQuery, [userID], (err, result)=>{
         if(err!=null){
             console.log(err);
@@ -46,4 +46,20 @@ function getScheduleID(userID, callback, db){
     })
 }
 
-module.exports={getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};
+function scheduleNotification(userID, scheduleID, callback, db){
+    const table="schedule";
+    const seen ="false";
+    //const date= ""
+    const desc="Your daily schedule";
+    const sqlQuery="insert into actions (student_id, tables, table_id, see, action_desc) values (?, ?, ?, ?, ?)";
+    db.query(sqlQuery, [userID, table, scheduleID, seen, desc], (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, "success");
+        }
+    })
+}
+
+module.exports={scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};

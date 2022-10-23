@@ -67,6 +67,19 @@ function Schedule(database){
         }
     })
 
+    router.post('/scheduleNotification', (req, res)=>{
+        if(Object.keys(req.body).length <2){
+            res.send(null);
+        }
+        else{
+            const userID= req.body.userID;
+            const scheduleID= req.body.scheduleID;
+            database.scheduleNotification(userID, scheduleID, function(err, result){
+                res.send(null);
+            })
+        }
+    })
+
     return router;
 }
 
