@@ -62,4 +62,16 @@ function scheduleNotification(userID, scheduleID, callback, db){
     })
 }
 
-module.exports={scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};
+function getEmails(callback, db){
+    const sqlQuery="select email from schedule left join users on schedule.user_id = users.user_id where end_date>=current_date();"
+    db.query(sqlQuery, (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, result);
+        }
+    })
+}
+
+module.exports={getEmails, scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};
