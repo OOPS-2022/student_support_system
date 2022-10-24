@@ -17,7 +17,11 @@ const createClickedPledge= jest.fn(function (name, desc, pledge_type ,sessions,c
     c(null, 200)
 });
 
-const app = makeApp({createClickedPledge,viewPledges,pledgeType,viewFile})
+const createSignedPledge=jest.fn(function(name, desc, type, saveLink, sessions, c){
+    c(null, 200)
+});
+
+const app = makeApp({createSignedPledge, createClickedPledge,viewPledges,pledgeType,viewFile})
 
 describe("Test pledges", ()=>{
     test('It should test viewPledges', ()=>{
@@ -50,4 +54,8 @@ describe("Test pledges", ()=>{
         .post('/createClickedPledge').send(insert)
         .expect(200).then(()=> expect(createClickedPledge.mock.calls.length).toBe(1));
     })
+
+    // test("It should test createSignedPledge", ()=>{
+    //     const insert
+    // })
 })

@@ -46,4 +46,44 @@ function getScheduleID(userID, callback, db){
     })
 }
 
-module.exports={getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};
+function scheduleNotification(userID, scheduleID, callback, db){
+    const table="schedule";
+    const seen ="false";
+    //const date= ""
+    const desc="Your daily schedule";
+    const sqlQuery="insert into actions (student_id, tables, table_id, see, action_desc) values (?, ?, ?, ?, ?)";
+    db.query(sqlQuery, [userID, table, scheduleID, seen, desc], (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, "success");
+        }
+    })
+}
+
+function getEmails(callback, db){
+    const sqlQuery="select email from schedule left join users on schedule.user_id = users.user_id where end_date>=current_date();"
+    db.query(sqlQuery, (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, result);
+        }
+    })
+}
+
+function getTimeTable(scheduleID, callback, db){
+    const sqlQuery="select * from time_table where schedule_id=?;"
+    db.query(sqlQuery, [scheduleID], (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, result);
+        }
+    })
+}
+
+module.exports={getTimeTable, getEmails, scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};

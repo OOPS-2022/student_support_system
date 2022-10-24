@@ -36,7 +36,7 @@ function Pledges(database){
       let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
       let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName;
       let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName; //link to be saved in database to find pledge pdf with
-      fs.rename(oldPath, newPath, function (err) {
+      fs.rename(oldPath, newPath, function (err) { 
         console.log(err);
       });
       const name = req.body.name;

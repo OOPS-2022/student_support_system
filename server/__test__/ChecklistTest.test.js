@@ -43,7 +43,14 @@ describe("Test Checklist", ()=>{
         .expect(200).then(()=> expect(getChecklistAns.mock.calls.length).toBe(1));
     })
 
-    test('It should test checklistForSession', ()=>{
+    test("It should test checklist for session incorrect nr of args => incorrect", ()=>{
+        return request(app)
+        .get('/checklistForSession')
+        .query({})
+        .expect({}).then(()=>expect(checklistForSession.mock.calls.length).toBe(0));
+    })
+
+    test('It should test checklistForSession correct nr of arguments => correct', ()=>{
         return request(app)
         .get('/checklistForSession')
         .query({userID: 1})
@@ -171,16 +178,16 @@ describe("Test Checklist", ()=>{
         .expect({}).then(()=> expect(studentChecklistAnswers.mock.calls.length).toBe(0));
     })
 
-    // test("It should test studentChecklistAnswers (correct number of arg sent)", ()=>{
-    //     const insert={
-    //         studentID:1,
-    //         checkID: 10,
-    //         questions: "name",
-    //         answers: "name",
+    test("It should test studentChecklistAnswers (correct number of arg sent)", ()=>{
+        const insert={
+            studentID:1,
+            checkID: 10,
+            questions: "name",
+            answers: "name",
 
-    //     };
-    //     return request(app)
-    //     .post('/studentChecklistAnswers').send(insert)
-    //     .expect(200).then(()=> expect(studentChecklistAnswers.mock.calls.length).toBe(1));
-    // })
+        };
+        return request(app)
+        .post('/studentChecklistAnswers').send(insert)
+        .expect(200).then(()=> expect(studentChecklistAnswers.mock.calls.length).toBe(1));
+    })
 })

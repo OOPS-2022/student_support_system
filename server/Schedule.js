@@ -16,7 +16,11 @@ function Schedule(database){
             const startDate=req.body.startDate;
             const endDate=req.body.endDate;
             database.createSchedule(userID, startDate, endDate, function(err, result){
+<<<<<<< HEAD
                 res.send("Success");
+=======
+                res.send(200);
+>>>>>>> e2c63c4734448553be2e3efb155b0081061539f8
             })
         }
     })
@@ -66,6 +70,33 @@ function Schedule(database){
             const userID=req.body.userID;
             database.getScheduleID(userID, function(err, result){
                 console.log(err);
+                res.send(result);
+            })
+        }
+    })
+
+    //putting the new schedule into the notifications table
+    router.post('/scheduleNotification', (req, res)=>{
+        if(Object.keys(req.body).length <2){
+            res.send(null);
+        }
+        else{
+            const userID= req.body.userID;
+            const scheduleID= req.body.scheduleID;
+            database.scheduleNotification(userID, scheduleID, function(err, result){
+                res.send(200);
+            })
+        }
+    })
+
+    //getting the information on the time table
+    router.post('/getTimeTable', (req,res)=>{
+        if(Object.keys(req.body).length <1){
+            res.send(null);
+        }
+        else{
+            const scheduleID=req.body.scheduleID;
+            database.getTimeTable(scheduleID, function(err, result){
                 res.send(result);
             })
         }
