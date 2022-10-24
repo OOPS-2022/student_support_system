@@ -14,7 +14,7 @@ function Schedule(database){
             const userID=req.body.userID;
             const startDate=req.body.startDate;
             const endDate=req.body.endDate;
-            database.createSchedule(userID, startDate, endDate, function(err, res){
+            database.createSchedule(userID, startDate, endDate, function(err, result){
                 res.send(200);
             })
         }

@@ -37,7 +37,7 @@ describe("Testing the creation of a schedule", ()=>{
         return request(app)
         .post('/createSchedule').send(insert)
         //.expect(response=>{console.log(response)})
-        .expect(500).then(()=> expect(createSchedule.mock.calls.length).toBe(1))
+        .expect(200).then(()=> expect(createSchedule.mock.calls.length).toBe(1))
     })
 })
 
