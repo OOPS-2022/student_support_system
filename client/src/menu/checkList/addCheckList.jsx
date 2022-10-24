@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 //import * as React from 'react';
 import "../page.css"
-import { MenuItem, TextField, Button, Box, Typography, Tabs, Tab } from "@mui/material";
+import { MenuItem, TextField, Button, Box, Typography, Tabs, Tab, IconButton } from "@mui/material";
 import Axios from 'axios';
 import PropTypes from 'prop-types';
 import "./oi.css";
@@ -20,6 +20,8 @@ import { Stack } from '@mui/material';
 import Multiline from '../multiline';
 import { shouldForwardProp } from '@mui/styled-engine';
 import { CopyAllOutlined } from "@mui/icons-material";
+import CheckListPreview from "./checkListPreview.jsx";
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -51,8 +53,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height: 550,
+  width: 800,
+  height: 800,
   bgcolor: 'background.paper',
   borderRadius: '7px',
   boxShadow: 24,
@@ -227,7 +229,7 @@ export default function checkList() {
             select 
             value={checkids["check_id"]}
           >
-            {checki.map((checkids) => (
+            {Object.values(checki).map((checkids) => (
               <MenuItem key={checkids["check_id"]} value={checkids["check_id"]} id={checkids["check_id"]} onClick={(e) => { setCheck(e.target.innerText); setCheckid(e.target.innerText);}}>
                 {checkids["check_id"]}
               </MenuItem>
@@ -276,13 +278,13 @@ export default function checkList() {
       <div>
         <Modal
           open={open}
-          onClose={handleClose}
           contentLabel="edit"
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <div>
             <Box sx={style}>
+            <IconButton size ="large" variant ="contained" style = {{marginLeft: "80%"}} color="error" onClick={handleClose}><ClearIcon fontSize="inherit"/></IconButton>
               {isQuestion &&
 
                 (<Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center", marginTop: "15%" }}>
@@ -296,7 +298,9 @@ export default function checkList() {
 
                   <Button variant="contained" onClick={handleQuestion}>Add Question</Button>
                   <Button variant="contained" onClick ={() => {handleClose(); setQuestions([]);}}>Submit</Button>
-                  {Object.values(questions).map((obj) => (<p1 style={{ fontFamily: "Arial, Helvetica, sans-serif" }} >{obj}</p1>))}
+              
+                  <CheckListPreview checklist = {questions}></CheckListPreview>
+                
                 </Stack>)}
 
 
@@ -319,11 +323,12 @@ export default function checkList() {
 
                   </div>
                 </Stack>)}
-              <Button style={{ bottom: "-5%" }} onClick={handleClose}>Cancel</Button>
-
+              
+                
             </Box>
+           
           </div>
-
+          
         </Modal>
 
       </div>

@@ -35,7 +35,7 @@ function changeTimeTableEntry(scheduleID, day, time, desc, callback, db){
 }
 
 function getScheduleID(userID, callback, db){
-    const sqlQuery="select schedule_id from schedule where user_id=?";
+    const sqlQuery="select * from schedule where user_id=?";
     db.query(sqlQuery, [userID], (err, result)=>{
         if(err!=null){
             console.log(err);
