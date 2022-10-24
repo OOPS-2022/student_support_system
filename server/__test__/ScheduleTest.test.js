@@ -22,7 +22,11 @@ const scheduleNotification=jest.fn(function(userID, scheduleID, c){
     c(null, {result: 200})
 })
 
-const app= makeApp({createSchedule, timeTableEntry, changeTimeTableEntry, getScheduleID, scheduleNotification})
+const getTimeTable=jest.fn(function(scheduleID, c){
+    c(null, {result: 200})
+})
+
+const app= makeApp({getTimeTable, createSchedule, timeTableEntry, changeTimeTableEntry, getScheduleID, scheduleNotification})
 
 describe("Testing the creation of a schedule", ()=>{
     test("create pledge with too few arguments => incorrect", ()=>{
@@ -102,5 +106,21 @@ describe("Test schedule notification", ()=>{
         return request(app)
         .post('/scheduleNotification').send(insert)
         .expect(200).then(()=> expect(scheduleNotification.mock.calls.length).toBe(1));
+    })
+})
+
+describe("test getting entries in time table", ()=>{
+    test("testing getTimeTable with no arguments => incorrect", ()=>{
+        const insert={};
+        return request(app)
+        .post('/getTimeTable').send(insert)
+        .expect({}).then(()=>expect(getTimeTable.mock.calls.length).toBe(0));
+    })
+
+    test("test getTimeTable correct arguments => correct", ()=>{
+        const insert={scheduleID: 1};
+        return request(app)
+        .post('/getTimeTable').send(insert)
+        .expect(200).then(()=> expect(getTimeTable.mock.calls.length).toBe(1));
     })
 })

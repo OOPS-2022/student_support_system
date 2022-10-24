@@ -37,7 +37,7 @@ function Session(database){
       database.sessionPledgeLink(id,function(err, result){
         if (err != null) {
           console.log(err);
-          res.send(null);
+          //res.send(null);
           return;
         }
         const filePath = result[0].pledge_link;

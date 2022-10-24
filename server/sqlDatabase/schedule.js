@@ -74,4 +74,16 @@ function getEmails(callback, db){
     })
 }
 
-module.exports={getEmails, scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};
+function getTimeTable(scheduleID, callback, db){
+    const sqlQuery="select * from time_table where schedule_id=?;"
+    db.query(sqlQuery, [scheduleID], (err, result)=>{
+        if(err!=null){
+            console.log(err);
+        }
+        else{
+            callback(null, result);
+        }
+    })
+}
+
+module.exports={getTimeTable, getEmails, scheduleNotification, getScheduleID,changeTimeTableEntry, createSchedule, timeTableEntry};

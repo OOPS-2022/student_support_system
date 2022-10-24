@@ -67,6 +67,7 @@ function Schedule(database){
         }
     })
 
+    //putting the new schedule into the notifications table
     router.post('/scheduleNotification', (req, res)=>{
         if(Object.keys(req.body).length <2){
             res.send(null);
@@ -75,7 +76,20 @@ function Schedule(database){
             const userID= req.body.userID;
             const scheduleID= req.body.scheduleID;
             database.scheduleNotification(userID, scheduleID, function(err, result){
-                res.send(null);
+                res.send(200);
+            })
+        }
+    })
+
+    //getting the information on the time table
+    router.post('/getTimeTable', (req,res)=>{
+        if(Object.keys(req.body).length <1){
+            res.send(null);
+        }
+        else{
+            const scheduleID=req.body.scheduleID;
+            database.getTimeTable(scheduleID, function(err, result){
+                res.send(result);
             })
         }
     })
