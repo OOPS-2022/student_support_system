@@ -163,34 +163,6 @@ function deleteCollab(email, ticket_id, callback, db){
     })
 }
 
-const fs = require("fs");
-
-function readdirSync(directory_name){
-    return fs.readdirSync(directory_name);
-}
-
-function readdirSyncwithFileTypes(directory_name, fileType){
-    return fs.readdirSync(directory_name, fileType);
-}
-
-function readFile(directory_name, c){
-    fs.readFile(directory_name, function (err, data) {
-        console.log(__dirname + "/" + filePath);
-        res.contentType("application/pdf");
-        console.log(err);
-        res.send(data);
-        c(200, data , "application/pdf", err)
-        //console.log(__dirname);
-      });
-}
 
 
-function rename(ticketID,file,c){
-    let newFileName = Date.now() + file.originalname;
-    let oldPath = "./Uploads/Evidence/" + file.filename; //file just uploaded
-    let newPath = "./Uploads/Evidence/ticket" + ticketID + "/" + newFileName; //move to appropriate diectory named for ticket id
-    fs.rename(oldPath, newPath, function (err) {
-        c(err);
-    });
-}
-module.exports= {rename, readFile,readdirSyncwithFileTypes,readdirSync, deleteCollab,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, addCollab, getPeople};
+module.exports= { deleteCollab,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, addCollab, getPeople};
