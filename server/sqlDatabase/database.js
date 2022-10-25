@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const db = mysql.createPool({
     host: "localhost",
     user: "root",
-    password: "password",
+    password: "ICTPass7149",
     database: "sddatabase",
   
   });
@@ -138,7 +138,19 @@ function deleteCollab(email, ticket_id, callback){
   return investigation.deleteCollab(email, ticket_id, callback, db);
 }
 
+function readdirSync(directory_name){
+  return investigation.readdirSync(directory_name);
+}
+function readdirSyncwithFileTypes(directory_name, fileType){
+  return investigation.readdirSync(directory_name, fileType);
+}
+function readFile(directory_name, callback){
+  return investigation.readFile(directory_name, callback);
+}
 
+function rename(ticketID, file, c){
+  return investigation.rename(ticketID, file, c);
+}
 ////////////////////////////////////////////////////////////////////////////////
 const manageOffences = require('./manageOffences');
 
@@ -290,4 +302,4 @@ function getTimeTable(scheduleID, callback){
 }
 
 
-module.exports={getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+module.exports={rename, readFile,readdirSyncwithFileTypes,readdirSync, getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
