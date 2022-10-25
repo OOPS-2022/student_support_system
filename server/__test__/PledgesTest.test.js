@@ -20,8 +20,17 @@ const createClickedPledge= jest.fn(function (name, desc, pledge_type ,sessions,c
 const createSignedPledge=jest.fn(function(name, desc, type, saveLink, sessions, c){
     c(null, 200)
 });
+const mkdir= jest.fn(function (dir, c){
+    c(null)
+});
+const renamePledgeFile = jest.fn( function (file, c){
+    c("link");
+});
+const readFile = jest.fn( function (directory_name, c){
+    c(200, [200] , "application/pdf");
+});
 
-const app = makeApp({createSignedPledge, createClickedPledge,viewPledges,pledgeType,viewFile})
+const app = makeApp({readFile,renamePledgeFile,mkdir,createSignedPledge, createClickedPledge,viewPledges,pledgeType,viewFile})
 
 describe("Test pledges", ()=>{
     test('It should test viewPledges', ()=>{
@@ -55,7 +64,14 @@ describe("Test pledges", ()=>{
         .expect(200).then(()=> expect(createClickedPledge.mock.calls.length).toBe(1));
     })
 
-    // test("It should test createSignedPledge", ()=>{
-    //     const insert
-    // })
+    test("It should test createSignedPledge", ()=>{
+        const insert = {
+            name: "test",
+            desc: "test",
+            sessions: "test"
+        }
+        return request(app)
+        .post('/createSignedPledge').send(insert)
+        .expect(200).then(()=> expect(createSignedPledge.mock.calls.length).toBe(1));
+    })
 })

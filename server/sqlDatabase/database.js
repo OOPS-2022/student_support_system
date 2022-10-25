@@ -317,12 +317,22 @@ function renameSeshFile(studentNr,sessionLink,file ,c){
   let oldPath = "./Uploads/SubmittedSessions/" + file.filename;
   fs.rename(oldPath, newPath, function (err) {
     if(err == null){
-        c(null);
+        c(null, saveLink);
     }else{
-        c(err);
+        c(err, null);
     }});
 }
 
+function renamePledgeFile(file ,c){
+      let newFileName = Date.now() + file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
+      let oldPath = "./Uploads/Pledges/SignedPledges/" + file.filename; //where file has just been uploaded
+      let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName;
+      let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName; //link to be saved in database to find pledge pdf with
+      fs.rename(oldPath, newPath, function (err) { 
+        console.log(err);
+        c(saveLink);
+      });
+}
 
 function readdirSync(directory_name){
     return fs.readdirSync(directory_name);
@@ -345,4 +355,4 @@ function readFile(directory_name, c){
 
 
 
-module.exports={renameSeshFile, mkdir,rename, readFile,readdirSyncwithFileTypes,readdirSync, getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+module.exports={renamePledgeFile,renameSeshFile, mkdir,rename, readFile,readdirSyncwithFileTypes,readdirSync, getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};

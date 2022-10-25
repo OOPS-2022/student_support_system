@@ -87,7 +87,7 @@ function Session(database){
               //     res.send(null);
               //   }});
 
-              database.renameSeshFile(studentNr,sessionLink,req.file , function(err) {
+              database.renameSeshFile(studentNr,sessionLink,req.file , function(err, saveLink) {
                 if(err == null){
                   database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
                     res.send(result);
