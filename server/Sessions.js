@@ -16,7 +16,7 @@ function Session(database){
       const testDate = req.body.testDate;
       const creatorID = req.body.creatorID;
       const dir = "./Uploads/Pledges/Test/" + testName + courseCode; //create directory for test...uploads will happen here
-      fs.mkdir(dir, (err) => {
+      database.mkdir(dir, (err) => {
         if (!err) {
           database.createTest(testName, testDate, courseCode, creatorID, dir, pledgeID,function(err, result){
             res.send(result);
@@ -71,30 +71,48 @@ function Session(database){
           database.selectSession_folder(sessionID ,function(err, result){
             if(err == null){
               const sessionLink = result[0].session_folder;
-              let newFileName = studentNr + ".pdf";
-              let newPath = sessionLink + "/" + newFileName;
-              let saveLink = newPath.slice(1);
-              if(!req.file){
-                res.send(null);
-                return;
-              }
-              let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
-              fs.rename(oldPath, newPath, function (err) {
+              // let newFileName = studentNr + ".pdf";
+              // let newPath = sessionLink + "/" + newFileName;
+              // let saveLink = newPath.slice(1);
+              // // if(!req.file){
+              // //   res.send(null);
+              // //   return;
+              // // }
+              // let oldPath = "./Uploads/SubmittedSessions/" + req.file.filename;
+              // fs.rename(oldPath, newPath, function (err) {
+              //   if(err == null){
+              //     database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
+              //       res.send(result);})
+              //   }else{
+              //     res.send(null);
+              //   }});
+
+              database.renameSeshFile(studentNr,sessionLink,req.file , function(err) {
                 if(err == null){
                   database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
-                    res.send(result);})
-                }else{
-                  res.send(null);
-                }});
-            }else{
-              res.send(null);
-            }})
-        }else{
-          res.send(null);
-        }})
-    } 
+                    res.send(result);
+                    return;
+                  })
+                }
+              });
+            }
+          })
+        //         }else{
+        //           res.send(null);
+        //           return
+        //         }});
+        //       // })
+        //     }else{
+        //       res.send(null);
+        //     }})
+        // }else{
+        //   res.send(null);
+        // }})
+        } 
+      })
+    }
+    res.send(null);
   });
-    
 
   //give admin a report of students that completed test...extend to sessions
   router.get("/testReport", (req, res) => {
@@ -128,26 +146,36 @@ function Session(database){
 
               console.log("result")
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
-              fs.mkdir(dir, err => {
+              database.mkdir(dir, err => {
                 if (err == null) {
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
+                    return;
                   })
-                }else{
-                  res.send(null);
                 }
               })
-            }else{
-              console.log(err)
-              res.send(null)
             }
           })
-        }else{
-          res.send(null)
         }
       })
     }
+    res.send(null);
   });
+      //           }else{
+      //             res.send(null);
+      //           }
+      //         })
+      //       }else{
+      //         console.log(err)
+      //         res.send(null)
+      //       }
+      //     })
+      //   }else{
+      //     res.send(null)
+      //   }
+      // })
+  //   }
+  // });
   //view all the sessions...if admin..show only created by certain admin? why would they change others' stuff?
   router.get("/sessions", (req, res) => {
     database.sessionss(function(err, result){
