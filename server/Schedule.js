@@ -16,11 +16,7 @@ function Schedule(database){
             const startDate=req.body.startDate;
             const endDate=req.body.endDate;
             database.createSchedule(userID, startDate, endDate, function(err, result){
-<<<<<<< HEAD
-                res.send("Success");
-=======
                 res.send(200);
->>>>>>> e2c63c4734448553be2e3efb155b0081061539f8
             })
         }
     })
