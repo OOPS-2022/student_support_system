@@ -53,10 +53,8 @@ function Session(database){
       const sessionID = req.body.sessionID;
       const pledgeID = req.body.pledgeID;
       database.submitSession(studentID ,paragraph ,sessionID,pledgeID,function(err, result){
-        if(err == null){
           const studentNr = result[0].organization_nr;
           database.selectSession_folder(sessionID ,function(err, result){
-            if(err == null){
               const sessionLink = result[0].session_folder;
               // let newFileName = studentNr + ".pdf";
               // let newPath = sessionLink + "/" + newFileName;
@@ -79,9 +77,7 @@ function Session(database){
                     res.send(result);
                   })
               });
-            }
           })
-        } 
       })
     }
   });
@@ -110,23 +106,19 @@ function Session(database){
       //console.log(pledges);
 
       database.insertses(course_id, session_type, date, time, session_name, creator_id,pledges ,function(err, result){
-        if(err == null){
           var session_id = result
           database.insertsesCont(session_id,pledges,function(err, result){
-
-            if(err == null){
-
-              console.log("result")
+              console.log(result)
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               database.mkdir(dir, err => {
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
+                    return
                   })
               })
-            }
           })
-        }
       })
+      res.send(null);
     }
   });
       //           }else{
