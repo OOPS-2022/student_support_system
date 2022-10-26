@@ -7,41 +7,6 @@ function LogOffence(database){
   const multer = require("multer");
   const uploadEvidenceDoc = multer({ dest: "./Uploads/Evidence" });
   const fs = require("fs");
-  const nodemailer = require("nodemailer");
-
-  //set up our email.
-  const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "sdteamoops@gmail.com",
-          pass: "itfwabyrkopdiqfp",
-        },
-        tls: {
-          rejectUnauthorised: false,
-        },
-      });
-
-
-function sendMail(offenderEmail,offenceType){
-  let mailOptions = {
-    from: "sdteamoops@gmail.com",
-    to: offenderEmail,
-    subject: "Logged Offence",
-    text:
-      "This is an auto generated email.\nA student has reported an offence against you under the category of " +
-      offenceType +
-      ", an investigation into this case will follow.",
-  };
-  transporter.sendMail(mailOptions, function (err, success) {
-    if (err) {
-      // console.log(err);
-      return 0;
-    } else {
-      console.log("Email sent to " + offenderEmail);
-      return 1;
-    }
-  });
-}
 
   //log an offence when evidence hasn't been submitted (evidence optional)
   router.post("/LogOffenceNoFile", (req, res) => {
@@ -66,7 +31,7 @@ function sendMail(offenderEmail,offenceType){
               res.send(null);
             }else{
               database.fetchOffenderEmail(offenderName, function(err, result){
-                if(sendMail(result, offenceType)){
+                if(database.sendMail(result, offenceType)){
                   res.send("Successful");
                 }else{
                   res.send("Unable to send email to offender");
@@ -74,7 +39,6 @@ function sendMail(offenderEmail,offenceType){
               });
             }
           });
-          
         }
       });
     }
@@ -107,7 +71,7 @@ function sendMail(offenderEmail,offenceType){
 
             database.rename(result,req.file, function (err) {
               console.log(err);
-              res.send("successful");
+              // res.send("successful");
             });
             //get the file sent through and save it in the directory just created
             // let newFileName = Date.now() + req.file.originalname; //adding date ensures unique file name and lessens possibility of file loss and overwrites
@@ -119,7 +83,7 @@ function sendMail(offenderEmail,offenceType){
 
             // });
             database.fetchOffenderEmail(offenderName, function(err, result){
-              if(sendMail(result, offenceType)){
+              if(database.sendMail(result, offenceType)){
                 res.send("Successful");
               }else{
                 res.send("Unable to send email to offender");

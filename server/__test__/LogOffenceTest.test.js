@@ -18,8 +18,10 @@ const mkdir= jest.fn(function (dir, c){
 const rename = jest.fn( function (ticketID,  file, c){
     c(null);
 });
-
-const app = makeApp({mkdir,rename,fetchOffenderEmail,LogOffenceNoFile,LogOffence})
+const sendMail = jest.fn( function (offenderEmail,offenceType){
+    return 1;
+});
+const app = makeApp({sendMail,mkdir,rename,fetchOffenderEmail,LogOffenceNoFile,LogOffence})
 
 describe("Test LogOffence", ()=>{
     test("It should test LogOffenceNoFile (incorrect number of arg sent)", ()=>{
