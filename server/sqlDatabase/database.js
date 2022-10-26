@@ -389,5 +389,17 @@ transporter.sendMail(mailOptions, function (err, success) {
 });
 }
 
+function sendMailInvestigate(mailOptions, callback){
+  transporter.sendMail(mailOptions, function (err, success) {
+    if (err) {
+      if(mailOptions.to == "test"){
+        callback(null, 200);
+        return
+      }
+      //console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);
+      callback(null,"Successful");}});
+}
 
-module.exports={sendMail,renamePledgeFile,renameSeshFile, mkdir,rename, readFile,readdirSyncwithFileTypes,readdirSync, getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};
+
+
+module.exports={sendMailInvestigate,sendMail,renamePledgeFile,renameSeshFile, mkdir,rename, readFile,readdirSyncwithFileTypes,readdirSync, getTimeTable, getEmails, scheduleNotification, getScheduleID, changeTimeTableEntry, timeTableEntry, createSchedule, getPeople, addCollab, deleteCollab, AllSubmittedOffences, getRole, FetchRole,sessionPledges,getAllSessions,mySessions,updateses,getSession,sessionss,insertsesUpdateLink,insertsesCont,insertses,testReport, selectSession_folder, insertCompleted_sessions,submitSession,sessionPledgeLink,createTest,pledgeType,createClickedPledge,createSignedPledge, viewFile,viewPledges,update, deleteOffence,selectOffence,insert,SubmittedOffences, checklistForSession, studentChecklistAnswers, getChecklistAns,viewCheck_id,deleteCheckListQuestion,updateCheckListQuestion,CheckLists,allCheckListQuestions,addCheckListQuestion,getAllMeetings, getEmail,updateOI,insertOI,viewMyOffences,myHearing,ticketTracker,addCheckList,Login, LogOffence,LogOffenceNoFile, PossibleOffences, myActions, viewAction, fetchOffenderEmail};

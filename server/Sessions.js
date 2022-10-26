@@ -36,19 +36,13 @@ function Session(database){
       const id = req.query["pledge_id"]; //gets id from frontend
       database.sessionPledgeLink(id,function(err, result){
         if (err != null) {
-          console.log(err);
-          //res.send(null);
           return;
         }
         const filePath = result[0].pledge_link;
     
         fs.readFile(__dirname + filePath, function (err, data) {
-          if(err == null){
             res.contentType("application/pdf");
             res.send(data);
-          }else{
-            res.send(null);
-          }
         });
       })
     }
