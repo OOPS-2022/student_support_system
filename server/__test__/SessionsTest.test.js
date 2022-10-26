@@ -45,8 +45,15 @@ const sessionPledges = jest.fn( function (select_id,c){
     c(null, {result:200})
 });
 
+const mkdir= jest.fn(function (dir, c){
+    c(null)
+});
 
-const app = makeApp({getSession,mySessions,getAllSessions,sessionPledges,testReport,sessionPledgeLink,selectSession_folder,createTest,submitSession,insertsesUpdateLink,insertsesCont,updateses,insertses})
+const renameSeshFile = jest.fn( function (studentNr,sessionLink,file, c){
+    c(200);
+});
+
+const app = makeApp({renameSeshFile,mkdir,getSession,mySessions,getAllSessions,sessionPledges,testReport,sessionPledgeLink,selectSession_folder,createTest,submitSession,insertsesUpdateLink,insertsesCont,updateses,insertses})
 describe("Test Session", ()=>{
     test("It should test createTest (incorrect number of arg sent)", ()=>{
         const insert={
@@ -66,7 +73,7 @@ describe("Test Session", ()=>{
         };
         return request(app)
         .post('/createTest').send(insert)
-        .expect(200).then(()=> expect(createTest.mock.calls.length).toBe(0));
+        .expect(200).then(()=> expect(createTest.mock.calls.length).toBe(1));
     })
 
     test("It should test sessionPledgeLink (incorrect number of arg sent)", ()=>{

@@ -4,7 +4,7 @@ function addCheckList(callback, db){
     db.query(sqlGetId, (err, result) => {
         callback(null, result[0]);
         console.log(err);
-    // console.log(result[0])
+       console.log(result[0])
     });
 }
 

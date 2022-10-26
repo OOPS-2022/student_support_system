@@ -121,6 +121,7 @@ export default function Ticket() {
     const getRole = async () => {
             const response = await Axios.post("http://localhost:3001/getRole", {
                 ticketID: sessionStorage.getItem("ticket_id"), userID: sessionStorage.getItem("user_id") });
+            console.log(response.data[0]["role"]);
             setAdminRole(response.data[0]["role"]);
             
             

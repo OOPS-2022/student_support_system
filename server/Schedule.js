@@ -1,3 +1,4 @@
+const { RssFeed } = require("@mui/icons-material");
 
 function Schedule(database){
     const express = require("express");
@@ -22,6 +23,7 @@ function Schedule(database){
 
     //adding an item to the time table
     router.post('/timeTableEntry', (req, res)=>{
+        console.log(req.body);
         if(Object.keys(req.body).length < 4){
             res.send(null);
         }
@@ -47,21 +49,24 @@ function Schedule(database){
             const day=req.body.day;
             const time=req.body.time;
             const desc=req.body.desc;
-
+            console.log(req.body);
             database.changeTimeTableEntry(scheduleID, day, time, desc, function(err, result){
                 res.send("Success");
-            })
+            });
+
         }
     })
 
     //get schedule id
     router.post('/getScheduleID', (req, res)=>{
+        console.log("hello");
         if(Object.keys(req.body).length < 1){
             res.send(null);
         }
         else{
             const userID=req.body.userID;
             database.getScheduleID(userID, function(err, result){
+                console.log(err);
                 res.send(result);
             })
         }

@@ -61,7 +61,7 @@ function sendMail(offenderEmail,offenceType){
       database.LogOffenceNoFile(offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther,function(err, result){
         if ( result != null){
           const dir = "./Uploads/Evidence/ticket" + result;
-          fs.mkdir(dir, (err) => {
+          database.mkdir(dir, (err) => {
             if (err) {
               res.send(null);
             }else{
@@ -99,21 +99,25 @@ function sendMail(offenderEmail,offenceType){
         database.LogOffence(offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther, function(err, result){
           if ( result != null){
             const dir = "./Uploads/Evidence/ticket" + result;
-            fs.mkdir(dir, (err) => {
+            database.mkdir(dir, (err) => {
               if (err) {
                 throw err;
               }
             });
 
-            //get the file sent through and save it in the directory just created
-            let newFileName = Date.now() + req.file.originalname; //adding date ensures unique file name and lessens possibility of file loss and overwrites
-            let oldPath = "./Uploads/Evidence/" + req.file.filename; //file path where it has been uploaded
-            let newPath ="./Uploads/Evidence/ticket" + result + "/" + newFileName; //created directory that we want to move the file to
-            fs.rename(oldPath, newPath, function (err) {
+            database.rename(result,req.file, function (err) {
               console.log(err);
-            //   callback(err, null);
-
+              res.send("successful");
             });
+            //get the file sent through and save it in the directory just created
+            // let newFileName = Date.now() + req.file.originalname; //adding date ensures unique file name and lessens possibility of file loss and overwrites
+            // let oldPath = "./Uploads/Evidence/" + req.file.filename; //file path where it has been uploaded
+            // let newPath ="./Uploads/Evidence/ticket" + result + "/" + newFileName; //created directory that we want to move the file to
+            // database.rename(oldPath, newPath, function (err) {
+            //   console.log(err);
+            // //   callback(err, null);
+
+            // });
             database.fetchOffenderEmail(offenderName, function(err, result){
               if(sendMail(result, offenceType)){
                 res.send("Successful");

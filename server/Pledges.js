@@ -19,11 +19,11 @@ function Pledges(database){
 
         const filePath = result[0].pledge_link;
         //read the file into a blob of content type pdf
-        fs.readFile(__dirname + filePath, function (err, data) {
+        database.readFile(__dirname + filePath, function (status, data, type, err) {
           if(err != null){
             res.send(null);
           }else{
-            res.contentType("application/pdf");
+            res.contentType(type);
             res.send(data);
           }
         });
@@ -32,20 +32,23 @@ function Pledges(database){
 
   //creating a signed pledge, must have pdf that will be downloaded and signed later
   router.post("/createSignedPledge",uploadSignedPledge.single("file"),(req, res) => {
-      let newFileName = Date.now() + req.file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
-      let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
-      let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName;
-      let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName; //link to be saved in database to find pledge pdf with
-      fs.rename(oldPath, newPath, function (err) { 
-        console.log(err);
-      });
-      const name = req.body.name;
-      const desc = req.body.desc;
-      const sessions = req.body.sessions;
-      const type = "Signed Pledge";
-      database.createSignedPledge(name, desc, type, saveLink, sessions , function(err, result){
-        res.send(result);
+      // let newFileName = Date.now() + req.file.originalname; //new name with date to ensure uniqueness and prevernt overwrite
+      // let oldPath = "./Uploads/Pledges/SignedPledges/" + req.file.filename; //where file has just been uploaded
+      // let newPath = "./Uploads/Pledges/SignedPledges/" + newFileName;
+      // let saveLink = "/Uploads/Pledges/SignedPledges/" + newFileName; //link to be saved in database to find pledge pdf with
+      // fs.rename(oldPath, newPath, function (err) { 
+      //   console.log(err);
+      // });
+      database.renamePledgeFile(req.file, function (saveLink) {
+        const name = req.body.name;
+        const desc = req.body.desc;
+        const sessions = req.body.sessions;
+        const type = "Signed Pledge";
+        database.createSignedPledge(name, desc, type, saveLink, sessions , function(err, result){
+          res.send(result);
+        })
       })
+
   });
 
   //creating a clicked pledge, has no file upload

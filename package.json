@@ -27,6 +27,7 @@
     "axios": "^0.27.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-polyfill": "^6.26.0",
+    "bree": "^9.1.2",
     "cors": "^2.8.5",
     "date-fns": "^2.28.0",
     "jest-dom": "^4.0.0",
@@ -47,6 +48,7 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^18.1.0",
     "regenerator-runtime": "^0.13.9",
+    "rrule": "^2.7.1",
     "supertest": "^6.2.4",
     "use-force-update": "^1.0.8"
   },
