@@ -48,6 +48,7 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^18.1.0",
     "regenerator-runtime": "^0.13.9",
+    "rrule": "^2.7.1",
     "supertest": "^6.2.4",
     "use-force-update": "^1.0.8"
   },

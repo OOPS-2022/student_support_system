@@ -38,7 +38,6 @@ export default function ActivityCenter() {
     const [meetings, setMeetings] = React.useState([]);
     const [offences, setOffences] = React.useState([]);
     const [objectWithGroupBySession, setOWGBS ]= React.useState([]);
-    const [objectWithGroupByTicket, setOWGBT ]= React.useState([]);
     const [id, setID] = React.useState(0);
     
     useEffect(() => {
@@ -74,6 +73,13 @@ export default function ActivityCenter() {
 
         console.log(_.groupBy(result.data, 'tables'));
         console.log(_.groupBy(result.data, 'tables')["sessions"]);
+        if(_.groupBy(result.data, 'tables')["logged_offence"] != null){
+            setOffences(_.groupBy(result.data, 'tables')["logged_offence"]);
+        }
+        if(_.groupBy(result.data, 'tables')["meetings"] != null){
+            setOffences(_.groupBy(result.data, 'tables')["meetings"]);
+        }
+        
         setOWGBS(_.groupBy(_.groupBy(result.data, 'tables')["sessions"],'table_id'));
         return result.data;
     }
@@ -91,7 +97,7 @@ export default function ActivityCenter() {
 
 
         
-        if (row["tables"] == "meeting" || row["tables"] == "logged_offences" || row["tables"] == "logged_offence") {
+        if (row["tables"] == "meetings" || row["tables"] == "logged_offences" || row["tables"] == "logged_offence") {
             sessionStorage.setItem("ticket_id_student", row["table_id"]);
             navigate("/MyTickets");
         } else if (row["tables"] == "sessions") {
@@ -221,7 +227,7 @@ export default function ActivityCenter() {
 
 
                 <AccordionDetails>
-                    {offences.map((activity, idx) => (
+                    {Object.values(offences).map((activity, idx) => (
                         <Card id={idx} raised sx={{ width: "80%", height: "175px", marginTop: "15px", textAlign: "center", marginLeft: "7.25%" }}>
                             <CardContent>
                                 <p style={{ textAlign: "left", fontFamily: "Arial, Helvetica, sans-serif" }}>{activity["date"]}</p>

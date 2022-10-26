@@ -57,12 +57,7 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-// function a11yProps(index) {
-//   return {
-//     id: `simple-tab-${index}`,
-//     'aria-controls': `simple-tabpanel-${index}`,
-//   };
-// }
+
 export default function OI() {
   const events=[];//array for the events of the calander (uses object event)
   class event{ //-------------------the class for object event 
@@ -86,6 +81,7 @@ let navigate = useNavigate();
   }, []);
 
   for(var i in prevMeetings){
+    console.log("date:"+prevMeetings[i].date);
     events.push(new event(prevMeetings[i].session_type,prevMeetings[i].date, prevMeetings[i].session_id) );
   }
   
@@ -97,19 +93,6 @@ let navigate = useNavigate();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-//   //------------------------------makes digit to become two digits - tab SHEDULE MEETING
-//   function padTo2Digits(num) {
-//     return num.toString().padStart(2, '0');
-//   }
-//   //------------------------------formates date yyyy-mm-dd - tab SHEDULE MEETING
-//   function formateDate(date){
-//     return[
-//       padTo2Digits(date.getFullYear()),
-//       padTo2Digits(date.getMonth()+1),
-//       padTo2Digits(date.getDate()),
-//     ].join('-');
-//   }
 
   
 

@@ -3,8 +3,8 @@ const mysql = require("mysql2");
 const db = mysql.createPool({
     host: "localhost",
     user: "root",
-    password: "ICTPass7149",
-    database: "sddatabase",
+    password: "password",
+    database: "sddatabase_v2",
   
   });
 

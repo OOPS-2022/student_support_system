@@ -15,7 +15,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
-import witsImage from "./channels4_profile.jpg"
+import witsImage from "./channels4_profile.jpg";
+import CreateTimeTable from "./timeTable/createTimeTable";
 
 
 
@@ -34,6 +35,7 @@ export default function Menu(props) {
   const sess = () => navigate("/Sessions");
   const checkList = () => navigate("/checkList");
   const checkedBut = () => navigate("/CheckedSessions");
+  const timeBut = () => navigate("/CreateTimeTable");
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -77,6 +79,20 @@ export default function Menu(props) {
            </Stack>
            </AccordionDetails>
            </Accordion>)}
+
+           {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  &&( <Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0}}>
+            
+            <AccordionSummary
+            >
+             <h1 style = {{ fontSize: "medium", color:"white", paddingLeft: "25%"}}>Schedule</h1>
+            </AccordionSummary>
+            <AccordionDetails >
+            <Stack direction="column" spacing={2} padding="15px">
+            {(sessionStorage.getItem("user_role") == "student"  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={timeBut} description="Time Table"/>)}
+            
+             </Stack>
+             </AccordionDetails>
+             </Accordion>)}
           
           {(support &&   (sessionStorage.getItem("logged_id" )))  && (<Accordion style ={{backgroundColor:"rgb(21,30,166)", boxShadow: 0 }}>
               <AccordionSummary>
@@ -96,7 +112,7 @@ export default function Menu(props) {
               <h1 style = {{ fontSize: "medium", color:"white"}}>Offences</h1>
               </AccordionSummary>
               <AccordionDetails>
-              
+              {(support  &&   (sessionStorage.getItem("logged_id" )))  &&(<Btn action={logBut} description="Log Offence"/>)}
               {(support  &&   (sessionStorage.getItem("logged_id" )))  &&( <Btn action={possBut} description="Manage Offences" />)}
               {(support  &&   (sessionStorage.getItem("logged_id" )))  &&( <Btn action ={subBut} description ="Logged Offences" />)}
               
