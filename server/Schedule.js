@@ -49,10 +49,11 @@ function Schedule(database){
             const day=req.body.day;
             const time=req.body.time;
             const desc=req.body.desc;
-
+            console.log(req.body);
             database.changeTimeTableEntry(scheduleID, day, time, desc, function(err, result){
                 res.send("Success");
-            })
+            });
+
         }
     })
 
