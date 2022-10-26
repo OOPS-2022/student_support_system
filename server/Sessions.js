@@ -17,13 +17,9 @@ function Session(database){
       const creatorID = req.body.creatorID;
       const dir = "./Uploads/Pledges/Test/" + testName + courseCode; //create directory for test...uploads will happen here
       database.mkdir(dir, (err) => {
-        if (!err) {
           database.createTest(testName, testDate, courseCode, creatorID, dir, pledgeID,function(err, result){
             res.send(result);
           })
-        }else{
-          res.send(null);
-        }
       });
     }
   });
@@ -35,9 +31,6 @@ function Session(database){
     }else{
       const id = req.query["pledge_id"]; //gets id from frontend
       database.sessionPledgeLink(id,function(err, result){
-        if (err != null) {
-          return;
-        }
         const filePath = result[0].pledge_link;
     
         fs.readFile(__dirname + filePath, function (err, data) {
@@ -82,30 +75,15 @@ function Session(database){
               //   }});
 
               database.renameSeshFile(studentNr,sessionLink,req.file , function(err, saveLink) {
-                if(err == null){
                   database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
                     res.send(result);
-                    return;
                   })
-                }
               });
             }
           })
-        //         }else{
-        //           res.send(null);
-        //           return
-        //         }});
-        //       // })
-        //     }else{
-        //       res.send(null);
-        //     }})
-        // }else{
-        //   res.send(null);
-        // }})
         } 
       })
     }
-    res.send(null);
   });
 
   //give admin a report of students that completed test...extend to sessions
@@ -141,19 +119,15 @@ function Session(database){
               console.log("result")
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               database.mkdir(dir, err => {
-                if (err == null) {
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
-                    return;
                   })
-                }
               })
             }
           })
         }
       })
     }
-    res.send(null);
   });
       //           }else{
       //             res.send(null);

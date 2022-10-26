@@ -6,7 +6,7 @@ const updateses= jest.fn(function (date, time, session_name, session_id , c){
     c(null, 200)
 });
 const insertses= jest.fn(function (course_id, session_type, date, time, session_name, creator_id,pledges , c){
-    c(null, 200)
+    c(null, "200")
 });
 const insertsesCont= jest.fn(function (session_id,pledges, c){
     c(null, 200)
@@ -33,6 +33,9 @@ const getSession = jest.fn( function (session_id,c){
     c(null, {result:200})
 });
 
+const sessionss = jest.fn( function (c){
+    c(null,200)
+});
 const mySessions = jest.fn( function (studentID,c){
     c(null, {result:200})
 });
@@ -52,8 +55,10 @@ const mkdir= jest.fn(function (dir, c){
 const renameSeshFile = jest.fn( function (studentNr,sessionLink,file, c){
     c(200);
 });
-
-const app = makeApp({renameSeshFile,mkdir,getSession,mySessions,getAllSessions,sessionPledges,testReport,sessionPledgeLink,selectSession_folder,createTest,submitSession,insertsesUpdateLink,insertsesCont,updateses,insertses})
+const insertCompleted_sessions = jest.fn( function (studentID, sessionID, pledgeID, saveLink, paragraph, c){
+    c(null,200);
+});
+const app = makeApp({sessionss,insertCompleted_sessions,renameSeshFile,mkdir,getSession,mySessions,getAllSessions,sessionPledges,testReport,sessionPledgeLink,selectSession_folder,createTest,submitSession,insertsesUpdateLink,insertsesCont,updateses,insertses})
 describe("Test Session", ()=>{
     test("It should test createTest (incorrect number of arg sent)", ()=>{
         const insert={
@@ -179,6 +184,12 @@ describe("Test Session", ()=>{
         .get('/getSession')
         .query({session_id: 1})
         .expect(200).then(()=> expect(getSession.mock.calls.length).toBe(1));
+    })
+
+    test('It should test sessions', ()=>{
+        return request(app)
+        .get('/sessions')
+        .expect(200).then(()=> expect(sessionss.mock.calls.length).toBe(1));
     })
 
     test('It should test mySessions', ()=>{

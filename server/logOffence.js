@@ -27,9 +27,6 @@ function LogOffence(database){
         if ( result != null){
           const dir = "./Uploads/Evidence/ticket" + result;
           database.mkdir(dir, (err) => {
-            if (err) {
-              res.send(null);
-            }else{
               database.fetchOffenderEmail(offenderName, function(err, result){
                 if(database.sendMail(result, offenceType)){
                   res.send("Successful");
@@ -37,7 +34,6 @@ function LogOffence(database){
                   res.send("Unable to send email to offender");
                 }
               });
-            }
           });
         }
       });
@@ -85,15 +81,12 @@ function LogOffence(database){
             database.fetchOffenderEmail(offenderName, function(err, result){
               if(database.sendMail(result, offenceType)){
                 res.send("Successful");
-              }else{
-                res.send("Unable to send email to offender");
+                return
               }
             });
           }else{
             res.send(null);
-          }
-        })
-      }
+          }})}
   });
 
   return router;
