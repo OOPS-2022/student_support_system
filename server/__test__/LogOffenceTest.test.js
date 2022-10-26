@@ -6,13 +6,20 @@ const LogOffenceNoFile= jest.fn(function (offenderName, offenceID, offenceDetail
     c(null, "200")
 });
 const LogOffence= jest.fn(function (offenderName, offenceID, offenceDetails, offenceCode, offenceStatus, submittedBy,offenceType,offenceOther, c){
-    c("null", null)
+    c(null, "test")
 });
 const fetchOffenderEmail= jest.fn(function (offenderName, c){
     c(null, "200")
 });
 
-const app = makeApp({fetchOffenderEmail,LogOffenceNoFile,LogOffence})
+const mkdir= jest.fn(function (dir, c){
+    c(null)
+});
+const rename = jest.fn( function (ticketID,  file, c){
+    c(null);
+});
+
+const app = makeApp({mkdir,rename,fetchOffenderEmail,LogOffenceNoFile,LogOffence})
 
 describe("Test LogOffence", ()=>{
     test("It should test LogOffenceNoFile (incorrect number of arg sent)", ()=>{

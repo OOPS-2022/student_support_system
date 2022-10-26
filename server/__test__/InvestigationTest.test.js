@@ -39,11 +39,35 @@ const deleteCollab=jest.fn(function (email, ticket_id, c){
 const addCollab = jest.fn( function (ticket_id, email, role,c){
     c(null, {result:200})
 });
+const readdirSync = jest.fn( function (directory_name){
+    return "result";
+});
+const readdirSyncwithFileTypes = jest.fn( function (directory_name, withFileTypes){
+    return "result";
+});
+const readFile = jest.fn( function (directory_name, c){
+    c(200, [200] , "application/pdf");
+});
 
-const app = makeApp({addCollab,deleteCollab,getPeople,getAllMeetings,sendUpdateEmail, getRole,myHearing,ticketTracker, viewMyOffences, insertOI, updateOI, getEmail})
+const rename = jest.fn( function (ticketID,  file, c){
+    c(null);
+});
+const app = makeApp({rename,readFile,readdirSyncwithFileTypes,readdirSync, addCollab,deleteCollab,getPeople,getAllMeetings,sendUpdateEmail, getRole,myHearing,ticketTracker, viewMyOffences, insertOI, updateOI, getEmail})
     
 
 describe("Test Investigation", ()=>{
+
+    test('It should test UploadEvidence (correct number of arg sent)', ()=>{
+        const insert = {
+            ticket_id : 1,
+            file: "avsadv"
+        }
+        return request(app)
+        .post('/UploadEvidence')
+        .send(insert, 'abc.js')
+        .expect({});
+    })
+    
     test('It should test fileNumber (incorrect number of arg sent)', ()=>{
         return request(app)
         .get('/fileNumber')
@@ -59,14 +83,14 @@ describe("Test Investigation", ()=>{
         return request(app)
         .get('/viewTicketFiles')
         .query({ticketID: 1})
-        .expect({});
+        .expect(200);
     })
     test('It should test viewTicketFiles (correct number of arg sent)', ()=>{
         return request(app)
         .get('/viewTicketFiles')
         .query({id: 1})
         .query({i: 1})
-        .expect({});
+        .expect(200);
     })
     test('It should test myHearing', ()=>{
         return request(app)

@@ -163,4 +163,6 @@ function deleteCollab(email, ticket_id, callback, db){
     })
 }
 
-module.exports= {deleteCollab,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, addCollab, getPeople};
+
+
+module.exports= { deleteCollab,getAllMeetings,getEmail,updateOI,insertOI,viewMyOffences,ticketTracker, myHearing, getRole, addCollab, getPeople};

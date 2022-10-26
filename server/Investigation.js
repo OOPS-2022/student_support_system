@@ -20,16 +20,16 @@ function investigation(database){
   });
 
 
-function sendMail(mailOptions, callback){
-  transporter.sendMail(mailOptions, function (err, success) {
-    if (err) {
-      if(mailOptions.to == "test"){
-        callback(null, 200);
-        return
-      }
-      //console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);
-      callback(null,"Successful");}});
-}
+  function sendMail(mailOptions, callback){
+    transporter.sendMail(mailOptions, function (err, success) {
+      if (err) {
+        if(mailOptions.to == "test"){
+          callback(null, 200);
+          return
+        }
+        //console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);
+        callback(null,"Successful");}});
+  }
 
   //get the amount of files that are in a directory for a ticket
   router.get("/fileNumber", function (req, res) {
@@ -38,7 +38,7 @@ function sendMail(mailOptions, callback){
     }else{
       const id = req.query["ticket_id"];
       let directory_name = "Uploads/Evidence/ticket" + id;
-      let filenames = fs.readdirSync(directory_name);
+      let filenames = database.readdirSync(directory_name);
       let result = filenames.length.toString();
       res.send(result);
     }
@@ -53,15 +53,20 @@ function sendMail(mailOptions, callback){
       const id = req.query["id"];
       const i = req.query["i"]; //this is to do with the file number from app.get(filenumber)
       let directory_name = "Uploads/Evidence/ticket" + id; //get the directory since they are named for the ticket ids
-      let filenames = fs.readdirSync(directory_name, { withFileTypes: true }); //get all the file names in directory
+      let filenames = database.readdirSyncwithFileTypes(directory_name, { withFileTypes: true }); //get all the file names in directory
       let filePath = directory_name + "/" + filenames[i].name; //get the next file to create blob with
-      fs.readFile(__dirname + "/" + filePath, function (err, data) {
-        console.log(__dirname + "/" + filePath);
-        res.contentType("application/pdf");
-        console.log(err);
-        res.send(data);
-        //console.log(__dirname);
-      });
+      // fs.readFile(__dirname + "/" + filePath, function (err, data) {
+      //   console.log(__dirname + "/" + filePath);
+      //   res.contentType("application/pdf");
+      //   console.log(err);
+      //   res.send(data);
+      //   //console.log(__dirname);
+      // });
+      database.readFile(__dirname + "/" + filePath , function (status, data, type, err) {
+          res.contentType(type);
+          console.log(err);
+          res.send(data);
+        });
     }
     
   });
@@ -215,10 +220,10 @@ function sendMail(mailOptions, callback){
       //let fileType=req.file.mimetype.split("/")[1];
       const ticketID = req.body.ticket_id;
       console.log(req.file);
-      let newFileName = Date.now() + req.file.originalname;
-      let oldPath = "./Uploads/Evidence/" + req.file.filename; //file just uploaded
-      let newPath = "./Uploads/Evidence/ticket" + ticketID + "/" + newFileName; //move to appropriate diectory named for ticket id
-      fs.rename(oldPath, newPath, function (err) {
+      // let newFileName = Date.now() + req.file.originalname;
+      // let oldPath = "./Uploads/Evidence/" + req.file.filename; //file just uploaded
+      // let newPath = "./Uploads/Evidence/ticket" + ticketID + "/" + newFileName; //move to appropriate diectory named for ticket id
+      database.rename(ticketID,req.file, function (err) {
         console.log(err);
         res.send("successful");
       });
