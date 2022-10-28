@@ -47,11 +47,12 @@ function getScheduleID(userID, callback, db){
 }
 
 function scheduleNotification(userID, scheduleID, callback, db){
+    console.log(userID);
     const table="schedule";
     const seen ="false";
     //const date= ""
     const desc="Your daily schedule";
-    const sqlQuery="insert into actions (student_id, tables, table_id, see, action_desc) values (?, ?, ?, ?, ?)";
+    const sqlQuery="insert into actions (student_id, tables, table_id, seen, action_desc) values (?, ?, ?, ?, ?)";
     db.query(sqlQuery, [userID, table, scheduleID, seen, desc], (err, result)=>{
         if(err!=null){
             console.log(err);

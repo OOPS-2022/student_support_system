@@ -33,6 +33,13 @@ async function createSchedule(start, end) {
     });
 }
 
+async function addNotification(scheduleID) {
+    return Axios.post("http://localhost:3001/scheduleNotification", {
+        userID: sessionStorage.getItem("user_id"),
+        scheduleID: scheduleID
+    });
+}
+
 export default function CreateTimeTable() {
     let navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
@@ -72,6 +79,11 @@ export default function CreateTimeTable() {
     }
     const create = async () => {
         const result = createSchedule(startDate, endDate);
+        Axios.post('http://localhost:3001/getScheduleID',{
+            userID: sessionStorage.getItem("user_id") 
+        }).then((response) => {
+            addNotification(response.data["schedule_id"])
+        })
         navigate("/WeekTable");
     }
     const view = async () => {

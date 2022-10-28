@@ -38,6 +38,7 @@ export default function ActivityCenter() {
     const [meetings, setMeetings] = React.useState([]);
     const [offences, setOffences] = React.useState([]);
     const [objectWithGroupBySession, setOWGBS ]= React.useState([]);
+    const [schedules, setSchedules] = React.useState([]);
     const [id, setID] = React.useState(0);
     
     useEffect(() => {
@@ -71,13 +72,16 @@ export default function ActivityCenter() {
         });
        
 
-        console.log(_.groupBy(result.data, 'tables'));
-        console.log(_.groupBy(result.data, 'tables')["sessions"]);
+        console.log(result.data);
         if(_.groupBy(result.data, 'tables')["logged_offence"] != null){
             setOffences(_.groupBy(result.data, 'tables')["logged_offence"]);
         }
         if(_.groupBy(result.data, 'tables')["meetings"] != null){
             setOffences(_.groupBy(result.data, 'tables')["meetings"]);
+        }
+
+        if(_.groupBy(result.data, 'tables')["schedule"] != null){
+            setSchedules(_.groupBy(result.data, 'tables')["schedule"]);
         }
         
         setOWGBS(_.groupBy(_.groupBy(result.data, 'tables')["sessions"],'table_id'));
@@ -103,7 +107,10 @@ export default function ActivityCenter() {
         } else if (row["tables"] == "sessions") {
             sessionStorage.setItem("mysession_id", row["table_id"]);
             navigate("/sessionPledges");
+
             window.location.reload();
+        }else if(row["tables"] == "schedule"){
+            navigate("/Schedule");
         }
 
 
@@ -238,6 +245,30 @@ export default function ActivityCenter() {
 
                 </AccordionDetails>
             </Accordion> 
+
+            <Accordion style={{ backgroundColor: "white", color: "black", boxShadow: "false" }} expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+                <AccordionSummary
+
+                    aria-controls="panel1bh-content"
+                    id="panel1bh-header"
+                >
+                    <h3 style={{ paddingLeft: "10%", fontFamily: "Arial, Helvetica, sans-serif" }}>Schedule info</h3>
+                </AccordionSummary>
+
+
+                <AccordionDetails>
+                    {schedules.map((activity, idx) => (
+                        <Card id={idx} raised sx={{ width: "80%", height: "175px", marginTop: "15px", textAlign: "center", marginLeft: "7.25%" }}>
+                            <CardContent>
+                                <p style={{ textAlign: "left", fontFamily: "Arial, Helvetica, sans-serif" }}>{activity["date"]}</p>
+                                <p style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>{activity["action_desc"]}</p>
+                                <Button onClick={() => { open(activity, idx); toggleDrawer(anchor, false); }}>See more</Button>
+                            </CardContent>
+                        </Card>))}
+
+                </AccordionDetails>
+            </Accordion>
+
 
 
 
