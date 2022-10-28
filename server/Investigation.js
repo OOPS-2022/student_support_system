@@ -7,29 +7,29 @@ function investigation(database){
   const nodemailer = require("nodemailer");
   // const outlook = require('node-outlook');
 
-  //set up our email.
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "sdteamoops@gmail.com",
-      pass: "itfwabyrkopdiqfp",
-    },
-    tls: {
-      rejectUnauthorised: false,
-    },
-  });
+  // //set up our email.
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   auth: {
+  //     user: "sdteamoops@gmail.com",
+  //     pass: "itfwabyrkopdiqfp",
+  //   },
+  //   tls: {
+  //     rejectUnauthorised: false,
+  //   },
+  // });
 
 
-  function sendMail(mailOptions, callback){
-    transporter.sendMail(mailOptions, function (err, success) {
-      if (err) {
-        if(mailOptions.to == "test"){
-          callback(null, 200);
-          return
-        }
-        //console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);
-        callback(null,"Successful");}});
-  }
+  // function sendMail(mailOptions, callback){
+  //   transporter.sendMail(mailOptions, function (err, success) {
+  //     if (err) {
+  //       if(mailOptions.to == "test"){
+  //         callback(null, 200);
+  //         return
+  //       }
+  //       //console.log(err);callback("Unable to send email to offender", null);} else {console.log("Email sent to " + offenderEmail);
+  //       callback(null,"Successful");}});
+  // }
 
   //get the amount of files that are in a directory for a ticket
   router.get("/fileNumber", function (req, res) {
@@ -138,12 +138,8 @@ function investigation(database){
           subject: "Help Report",
           text: "This is an auto generated email.\nYour Help request has been sent and will be attended to shortly. \n Thank you",
         };
-          sendMail(mailOptions, function(err, result){
-            if(err){
-              res.send(err)
-            }else{
+          database.sendMailInvestigate(mailOptions, function(err, result){
               res.send(result)
-            }
           });
       })
         ///still add SRC email here!!!!
@@ -204,12 +200,8 @@ function investigation(database){
               " \n \n Link for meeeting: " +
               link,
           };
-          sendMail(mailOptions,  function(err, result){
-            if(err){
-              res.send(err)
-            }else{
+          database.sendMailInvestigate(mailOptions,  function(err, result){
               res.send(result)
-            }
           })
       })
     }
@@ -250,12 +242,8 @@ function investigation(database){
           " has been updated to: " +
           status,
       };
-        sendMail(mailOptions,  function(err, result){
-          if(err){
-            res.send(err)
-          }else{
+        database.sendMailInvestigate(mailOptions,  function(err, result){
             res.send(result)
-          }
         })
       });
     }

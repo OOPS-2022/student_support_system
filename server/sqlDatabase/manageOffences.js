@@ -32,7 +32,6 @@ function AllSubmittedOffences(callback, db){
 
     }else{
       callback(null, result);
-
     }
   });
 };

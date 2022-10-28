@@ -20,12 +20,8 @@ function Pledges(database){
         const filePath = result[0].pledge_link;
         //read the file into a blob of content type pdf
         database.readFile(__dirname + filePath, function (status, data, type, err) {
-          if(err != null){
-            res.send(null);
-          }else{
             res.contentType(type);
             res.send(data);
-          }
         });
       })
   });

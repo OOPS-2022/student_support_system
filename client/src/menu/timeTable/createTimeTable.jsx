@@ -36,8 +36,8 @@ async function createSchedule(start, end) {
 export default function CreateTimeTable() {
     let navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
-    const [startDate, setStartDate] = React.useState(null);
-    const [endDate, setEndDate] = React.useState(null);
+    const [startDate, setStartDate] = React.useState(new Date());
+    const [endDate, setEndDate] = React.useState(new Date());
     const [scheduleID, setScheduleID] = React.useState(0);
     const [isCreated, setIsCreated] = React.useState(false);
 
@@ -75,7 +75,7 @@ export default function CreateTimeTable() {
         navigate("/WeekTable");
     }
     const view = async () => {
-        navigate("/TimeTable");
+        navigate("/Schedule");
     }
 
     return (
