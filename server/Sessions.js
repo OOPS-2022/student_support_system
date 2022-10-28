@@ -17,13 +17,9 @@ function Session(database){
       const creatorID = req.body.creatorID;
       const dir = "./Uploads/Pledges/Test/" + testName + courseCode; //create directory for test...uploads will happen here
       database.mkdir(dir, (err) => {
-        if (!err) {
           database.createTest(testName, testDate, courseCode, creatorID, dir, pledgeID,function(err, result){
             res.send(result);
           })
-        }else{
-          res.send(null);
-        }
       });
     }
   });
@@ -35,20 +31,11 @@ function Session(database){
     }else{
       const id = req.query["pledge_id"]; //gets id from frontend
       database.sessionPledgeLink(id,function(err, result){
-        if (err != null) {
-          console.log(err);
-          //res.send(null);
-          return;
-        }
         const filePath = result[0].pledge_link;
     
         fs.readFile(__dirname + filePath, function (err, data) {
-          if(err == null){
             res.contentType("application/pdf");
             res.send(data);
-          }else{
-            res.send(null);
-          }
         });
       })
     }
@@ -66,10 +53,8 @@ function Session(database){
       const sessionID = req.body.sessionID;
       const pledgeID = req.body.pledgeID;
       database.submitSession(studentID ,paragraph ,sessionID,pledgeID,function(err, result){
-        if(err == null){
           const studentNr = result[0].organization_nr;
           database.selectSession_folder(sessionID ,function(err, result){
-            if(err == null){
               const sessionLink = result[0].session_folder;
               // let newFileName = studentNr + ".pdf";
               // let newPath = sessionLink + "/" + newFileName;
@@ -88,30 +73,13 @@ function Session(database){
               //   }});
 
               database.renameSeshFile(studentNr,sessionLink,req.file , function(err, saveLink) {
-                if(err == null){
                   database.insertCompleted_sessions(studentID, sessionID, pledgeID, saveLink, paragraph,function(err, result){
                     res.send(result);
-                    return;
                   })
-                }
               });
-            }
           })
-        //         }else{
-        //           res.send(null);
-        //           return
-        //         }});
-        //       // })
-        //     }else{
-        //       res.send(null);
-        //     }})
-        // }else{
-        //   res.send(null);
-        // }})
-        } 
       })
     }
-    res.send(null);
   });
 
   //give admin a report of students that completed test...extend to sessions
@@ -138,28 +106,20 @@ function Session(database){
       //console.log(pledges);
 
       database.insertses(course_id, session_type, date, time, session_name, creator_id,pledges ,function(err, result){
-        if(err == null){
           var session_id = result
           database.insertsesCont(session_id,pledges,function(err, result){
-
-            if(err == null){
-
-              console.log("result")
+              console.log(result)
               const dir = './Uploads/SubmittedSessions/Session' + session_id;
               database.mkdir(dir, err => {
-                if (err == null) {
                     database.insertsesUpdateLink(dir, session_id, function(err, result){
                     res.send(result);
-                    return;
+                    return
                   })
-                }
               })
-            }
           })
-        }
       })
+      res.send(null);
     }
-    res.send(null);
   });
       //           }else{
       //             res.send(null);

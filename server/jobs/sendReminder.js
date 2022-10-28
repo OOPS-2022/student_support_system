@@ -19,11 +19,16 @@ async function main() {
     });
 
     database.getEmails(function (err, result) {
-        const emails = result;
+        //const emails = result;
         //Email configuration
+        //console.log(result);
+        const arr=result.map(item=>{
+            return item.email;
+        })
+        console.log(arr)
         transporter.sendMail({
             from: "sdteamoops@gmail.com",
-            to: result, //MULTIPLE RECEIVERS
+            to: arr, //MULTIPLE RECEIVERS
             subject: "Daily Schedule Reminder", //EMAIL SUBJECT
             text: "This is your daily reminder to head over to Wits Support System and check out your daily schedule.\nGood luck!", //EMAIL BODY IN TEXT FORMAT
         })

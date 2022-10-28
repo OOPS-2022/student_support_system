@@ -52,7 +52,10 @@ const readFile = jest.fn( function (directory_name, c){
 const rename = jest.fn( function (ticketID,  file, c){
     c(null);
 });
-const app = makeApp({rename,readFile,readdirSyncwithFileTypes,readdirSync, addCollab,deleteCollab,getPeople,getAllMeetings,sendUpdateEmail, getRole,myHearing,ticketTracker, viewMyOffences, insertOI, updateOI, getEmail})
+const sendMailInvestigate = jest.fn( function (mailOptions, callback){
+    callback(null, null);
+});
+const app = makeApp({sendMailInvestigate,rename,readFile,readdirSyncwithFileTypes,readdirSync, addCollab,deleteCollab,getPeople,getAllMeetings,sendUpdateEmail, getRole,myHearing,ticketTracker, viewMyOffences, insertOI, updateOI, getEmail})
     
 
 describe("Test Investigation", ()=>{

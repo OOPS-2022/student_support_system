@@ -59,7 +59,11 @@ describe("Test Manage Offences", ()=>{
         .get('/PossibleOffences')
         .expect(200).then(()=> expect(PossibleOffences.mock.calls.length).toBe(1));
     });
-
+    test("test get offences", ()=>{
+        return request(app)
+        .get('/offences')
+        .expect(200).then(()=> expect(PossibleOffences.mock.calls.length).toBe(2));
+    });
     test("Get method for all sumitted offences", ()=>{
         return request(app)
         .post('/AllSubmittedOffences')
