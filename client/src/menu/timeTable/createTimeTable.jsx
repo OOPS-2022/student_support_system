@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import { Stack } from "@mui/system";
+import { Stack } from "@mui/material";
 import React from "react";
 import "../page.css";
 import Axios from 'axios';
@@ -28,16 +28,16 @@ const style = {
 async function createSchedule(start, end) {
     return Axios.post("http://localhost:3001/createSchedule", {
         userID: sessionStorage.getItem("user_id"),
-        startDate: start,
-        endDate: end
+        startDate: start.toLocaleDateString("fr-CA"),
+        endDate: end.toLocaleDateString("fr-CA")
     });
 }
 
 export default function CreateTimeTable() {
     let navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
-    const [startDate, setStartDate] = React.useState(null);
-    const [endDate, setEndDate] = React.useState(null);
+    const [startDate, setStartDate] = React.useState(new Date());
+    const [endDate, setEndDate] = React.useState(new Date());
     const [scheduleID, setScheduleID] = React.useState(0);
     const [isCreated, setIsCreated] = React.useState(false);
 
@@ -75,7 +75,7 @@ export default function CreateTimeTable() {
         navigate("/WeekTable");
     }
     const view = async () => {
-        navigate("/TimeTable");
+        navigate("/Schedule");
     }
 
     return (
@@ -104,7 +104,7 @@ export default function CreateTimeTable() {
                                 label="Select Date"
                                 value={startDate}
                                 onChange={(newValue) => {
-                                    setStartDate(newValue);
+                                    setStartDate(new Date(newValue));
                                 }}
                                 renderInput={(params) => <TextField sx={{ width: "90%" }} {...params} />}
                             />
@@ -117,7 +117,7 @@ export default function CreateTimeTable() {
                                 label="Select Date"
                                 value={endDate}
                                 onChange={(newValue) => {
-                                    setEndDate(newValue);
+                                    setEndDate(new Date(newValue));
                                 }}
                                 renderInput={(params) => <TextField sx={{ width: "90%" }} {...params} />}
                             />

@@ -34,6 +34,7 @@ import EmbeddedSession from "./menu/mySessions/embedSession";
 import CreateTimeTable from "./menu/timeTable/createTimeTable";
 import TimeTable from "./menu/timeTable/timeTable";
 import WeekTable from "./menu/timeTable/weekTable";
+import Schedule from "./menu/timeTable/schedule";
 
 
 
@@ -82,7 +83,7 @@ ReactDOM.render(
                 <Route path="/SessionPledges" element={<ProtectedRoute><App page={<SessionPledges />} /></ProtectedRoute>} />
                 <Route path ="/EmbeddedSession:id" element={<EmbeddedSession/>}   />
                 <Route path="/CreateTimeTable" element={<ProtectedRoute><App page={<CreateTimeTable />} /></ProtectedRoute>} />
-                <Route path="/TimeTable" element={<ProtectedRoute><App page={<TimeTable />} /></ProtectedRoute>} />
+                <Route path="/Schedule" element={<ProtectedRoute><App page={<Schedule />} /></ProtectedRoute>} />
                 <Route path="/WeekTable" element={<ProtectedRoute><App page={<WeekTable />} /></ProtectedRoute>} />
 
            
