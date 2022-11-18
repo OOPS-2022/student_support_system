@@ -81,6 +81,7 @@ const style = {
 };
 
 async function insertIntoTimeTable(scheduleID,day,time,desc) {
+    console.log("ScheduleID: ",scheduleID);
     return await Axios.post("http://localhost:3001/timeTableEntry", {
         scheduleID: scheduleID,
         day: day,
@@ -115,7 +116,8 @@ export default function WeekTable(props) {
         Axios.post('http://localhost:3001/getScheduleID',{
             userID: sessionStorage.getItem("user_id") 
         }).then((response) => {
-            setScheduleID(response.data);
+            console.log("response: ", response)
+            setScheduleID(response.data.schedule_id);
         })
 
     }, []);
@@ -136,7 +138,7 @@ export default function WeekTable(props) {
                 timeStamp += s;
             }
             let tS = parseInt(timeStamp);
-            const response = await insertIntoTimeTable(scheduleID["schedule_id"],weekday,tS,description);
+            const response = await insertIntoTimeTable(scheduleID,weekday,tS,description);
             console.log(response);
             console.log(eventDays);
         }

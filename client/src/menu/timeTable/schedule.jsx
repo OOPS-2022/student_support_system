@@ -189,12 +189,12 @@ export default function Schedule(props) {
                                 <StyledTableRow  >
                                     <StyledTableCell align="center" minWidth={"100%"} style={{ fontSize: "18px", fontWeight: "bold" }}>{obj}</StyledTableCell>
                                     <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(1); setTime(obj); setTimeKey(index);}}} key={1}>{eventDays[0][index] != 0 && (<h3>{eventDays[0][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(2); setTime(obj); setTimeKey(index);}}} key={2}>{eventDays[1][index] != 0 && (<h3>{eventDays[1][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(3); setTime(obj); setTimeKey(index);}}} key={3}>{eventDays[2][index] != 0 && (<h3>{eventDays[2][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(4); setTime(obj); setTimeKey(index);}}} key={4}>{eventDays[3][index] != 0 && (<h3>{eventDays[3][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(5); setTime(obj); setTimeKey(index);}}} key={5}>{eventDays[4][index]!= 0 && (<h3>{eventDays[4][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(6); setTime(obj); setTimeKey(index);}}} key={6}>{eventDays[5][index]!= 0 && (<h3>{eventDays[5][index] }</h3>)}</StyledTableCell>
-                                    <StyledTableCell onClick={() => { if(eventDays[0][index] != 0){handleOpen(); setWeekday(7); setTime(obj); setTimeKey(index);}}} key={7}>{eventDays[6][index]!= 0 && (<h3>{eventDays[6][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[1][index] != 0){handleOpen(); setWeekday(2); setTime(obj); setTimeKey(index);}}} key={2}>{eventDays[1][index] != 0 && (<h3>{eventDays[1][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[2][index] != 0){handleOpen(); setWeekday(3); setTime(obj); setTimeKey(index);}}} key={3}>{eventDays[2][index] != 0 && (<h3>{eventDays[2][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[3][index] != 0){handleOpen(); setWeekday(4); setTime(obj); setTimeKey(index);}}} key={4}>{eventDays[3][index] != 0 && (<h3>{eventDays[3][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[4][index] != 0){handleOpen(); setWeekday(5); setTime(obj); setTimeKey(index);}}} key={5}>{eventDays[4][index]!= 0 && (<h3>{eventDays[4][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[5][index] != 0){handleOpen(); setWeekday(6); setTime(obj); setTimeKey(index);}}} key={6}>{eventDays[5][index]!= 0 && (<h3>{eventDays[5][index] }</h3>)}</StyledTableCell>
+                                    <StyledTableCell onClick={() => { if(eventDays[6][index] != 0){handleOpen(); setWeekday(7); setTime(obj); setTimeKey(index);}}} key={7}>{eventDays[6][index]!= 0 && (<h3>{eventDays[6][index] }</h3>)}</StyledTableCell>
 
                                 </StyledTableRow>
 

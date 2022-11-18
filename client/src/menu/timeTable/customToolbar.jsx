@@ -2,7 +2,7 @@ import { Button, Icon, IconButton } from "@mui/material";
 import React from "react";
 import { ChevronLeft } from "@mui/icons-material";
 import { ChevronRight } from "@mui/icons-material";
-import { Stack } from "@mui/system";
+import { Stack } from "@mui/material";
 
 export default class CalendarToolbar extends React.Component {
   render() {
